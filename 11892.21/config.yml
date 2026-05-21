@@ -2,10 +2,11 @@ backend:
   name: github
   repo: jirankun/OSIS-SMKN-1-LEMBAH-MELINTANG
   branch: main
-  base_url: https://old-rain-91e1.tkjtogetherness.workers.dev
+  # base_url dihapus karena gak didukung GitHub backend bawaan
+  # kalau butuh custom endpoint, pake proxy atau backend custom aja
 
 media_folder: "img"
-public_folder: "img"
+public_folder: "/img"
 
 collections:
   - name: "posts"
@@ -41,7 +42,7 @@ collections:
             fields:
               - { label: "Judul", name: "title", widget: "string" }
               - { label: "Tanggal", name: "date", widget: "datetime", format: "YYYY-MM-DD", time_format: false }
-              - { label: "Keterangan", name: "description", widget: "string", hint: "Maksimal 50 karakter", pattern: ['^.{0,50}$', "Maksimal 50 karakter"] }
+              - { label: "Keterangan", name: "description", widget: "string", hint: "Maksimal 50 karakter", pattern: ["^.{0,50}$", "Maksimal 50 karakter"] }
               - { label: "Foto", name: "image", widget: "image" }
 
   - name: "pengurus_inti"
