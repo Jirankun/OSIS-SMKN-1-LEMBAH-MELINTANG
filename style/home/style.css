@@ -1,0 +1,33 @@
+/* ================================================
+HOME PAGE STYLES - OSIS SMKN 1 LEMBAH MELINTANG
+=============================================== */
+
+/* ---- HERO SECTION ---- */
+.hero { min-height: 100svh; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; background: var(--bg-gradient); }
+.hero__bg { position: absolute; inset: 0; background-size: cover; background-position: center; background-repeat: no-repeat; opacity: 0.25; transition: opacity 1s; }
+.hero__overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(15,23,42,0.4) 0%, rgba(15,23,42,0.2) 40%, rgba(15,23,42,0.7) 100%); }
+
+/* Animated orbs */
+.hero__orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.3; animation: float 8s ease-in-out infinite; }
+.hero__orb--1 { width: 400px; height: 400px; background: var(--primary); top: -100px; right: -100px; animation-delay: 0s; }
+.hero__orb--2 { width: 300px; height: 300px; background: var(--accent); bottom: -50px; left: -50px; animation-delay: 3s; }
+@keyframes float { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(20px, -20px) scale(1.05); } }
+
+.hero__content { position: relative; z-index: 1; text-align: center; padding: 6rem 1.25rem 7rem; max-width: 760px; margin: 0 auto; }
+.hero__badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(14,165,233,0.2); border: 1px solid rgba(14,165,233,0.4); color: #7dd3fc; padding: 0.4rem 1rem; border-radius: 100px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 1rem; animation: fadeUp 0.6s ease both; }
+.hero__logo { width: 120px; height: 120px; border-radius: 50%; object-fit: contain; margin: 0 auto 1rem; filter: drop-shadow(0 0 24px rgba(14,165,233,0.5)); }
+.hero__title { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 2.8rem); font-weight: 700; color: var(--white); line-height: 1.15; margin-bottom: 0.7rem; animation: fadeUp 0.6s 0.2s ease both; }
+.hero__title span { color: var(--primary); font-style: italic; }
+.hero__subtitle { font-size: clamp(0.85rem, 2.5vw, 1.05rem); color: var(--gray-300); margin-bottom: 2rem; animation: fadeUp 0.6s 0.3s ease both; }
+.hero__actions { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; animation: fadeUp 0.6s 0.4s ease both; }
+.hero__scroll { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); color: var(--gray-400); font-size: 0.75rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; animation: bounce 2s ease infinite; }
+.hero__scroll-arrow { width: 20px; height: 20px; border-right: 2px solid var(--gray-400); border-bottom: 2px solid var(--gray-400); transform: rotate(45deg); }
+@keyframes bounce { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(8px); } }
+
+/* ---- STATS SECTION (Home Only) ---- */
+.stats { background: linear-gradient(135deg, var(--gray-900), #1e3a5f); padding: 3.5rem 0; }
+.stats__grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+@media (min-width: 640px) { .stats__grid { grid-template-columns: repeat(4, 1fr); } }
+.stat-item { text-align: center; color: var(--white); }
+.stat-item__number { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 2.5rem); font-weight: 700; color: var(--primary); line-height: 1; margin-bottom: 0.4rem; }
+.stat-item__label { font-size: 0.8rem; color: var(--gray-400); font-weight: 500; }

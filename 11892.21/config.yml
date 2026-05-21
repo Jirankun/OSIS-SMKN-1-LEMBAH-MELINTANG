@@ -1,0 +1,86 @@
+backend:
+  name: github
+  repo: jirankun/OSIS SMKN 1 LEMBAH MELINTANG
+  branch: main
+
+local_backend: true
+
+media_folder: "img"
+public_folder: "img"
+
+collections:
+  - name: "posts"
+    label: "Artikel & Pengumuman"
+    folder: "post"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{title}}-{{type}}-{{author}}"
+    format: "frontmatter"
+    extension: "md"
+    media_folder: "/img/post"
+    public_folder: "/img/post"
+    fields:
+      - { label: "Judul", name: "title", widget: "string" }
+      - { label: "Tipe", name: "type", widget: "select", options: ["berita", "pengumuman", "agenda"] }
+      - { label: "Tanggal", name: "date", widget: "datetime", format: "YYYY-MM-DD", time_format: false }
+      - { label: "Penulis", name: "author", widget: "string" }
+      - { label: "Thumbnail", name: "image", widget: "image", required: false }
+      - { label: "Konten", name: "body", widget: "markdown" }
+
+  - name: "galeri"
+    label: "Galeri Kegiatan"
+    files:
+      - label: "Galeri Kegiatan"
+        name: "galeri"
+        file: "content/galeri.json"
+        format: "json"
+        media_folder: "/img/galeri"
+        public_folder: "/img/galeri"
+        fields:
+          - label: "Daftar Foto"
+            name: "galeri"
+            widget: "list"
+            fields:
+              - { label: "Judul", name: "title", widget: "string" }
+              - { label: "Tanggal", name: "date", widget: "datetime", format: "YYYY-MM-DD", time_format: false }
+              - { label: "Keterangan", name: "description", widget: "string", hint: "Maksimal 50 karakter", pattern: ['^.{0,50}$', "Maksimal 50 karakter"] }
+              - { label: "Foto", name: "image", widget: "image" }
+
+  - name: "pengurus_inti"
+    label: "Pengurus Inti"
+    files:
+      - label: "Pengurus Inti"
+        name: "pengurus_inti"
+        file: "content/team_1.json"
+        format: "json"
+        media_folder: "/img/pengurus/inti"
+        public_folder: "/img/pengurus/inti"
+        fields:
+          - label: "Anggota Inti"
+            name: "team"
+            widget: "list"
+            fields:
+              - { label: "Nama", name: "name", widget: "string" }
+              - { label: "Jabatan", name: "role", widget: "string" }
+              - { label: "Foto", name: "image", widget: "image" }
+
+  - name: "pengurus_divisi"
+    label: "Divisi OSIS"
+    files:
+      - label: "Divisi OSIS"
+        name: "pengurus_divisi"
+        file: "content/team_2.json"
+        format: "json"
+        media_folder: "/img/pengurus/divisi"
+        public_folder: "/img/pengurus/divisi"
+        fields:
+          - label: "Struktur Divisi"
+            name: "divisions"
+            widget: "list"
+            fields:
+              - { label: "Nama Divisi", name: "division", widget: "string" }
+              - label: "Anggota"
+                name: "members"
+                widget: "list"
+                fields:
+                  - { label: "Nama", name: "name", widget: "string" }
+                  - { label: "Foto", name: "image", widget: "image" }

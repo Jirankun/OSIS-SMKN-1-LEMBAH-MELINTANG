@@ -1,0 +1,149 @@
+/* ============================================
+   PROFIL OSIS - Page Specific Styles
+   Hanya override yang beda dari global/style.css
+   ============================================ */
+
+/* ---- Page Header Spacing Fix ---- */
+.page-header {
+  padding-top: 80px; /* ✅ Kompensasi navbar fixed 64px + spacing */
+}
+
+/* ---- Pengurus Inti Card ---- */
+.inti-card {
+  text-align: center;
+  padding: 1.5rem 1rem;
+}
+.inti-card__img {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 1rem;
+  border: 3px solid var(--primary-light);
+  display: block;
+}
+.inti-card__name {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--gray-800);
+  margin-bottom: 0.25rem;
+}
+.inti-card__role {
+  font-size: 0.75rem;
+  color: var(--primary);
+  font-weight: 600;
+  background: var(--primary-light);
+  padding: 0.2rem 0.6rem;
+  border-radius: 100px;
+  display: inline-block;
+}
+
+/* Fallback placeholder untuk inti-card */
+.inti-card__placeholder {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: var(--gray-100);
+  margin: 0 auto 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray-400);
+  font-size: 2rem;
+}
+
+/* ---- Division Card ---- */
+.division-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--gray-100);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+.division-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow);
+  border-color: var(--gray-200);
+}
+.division-card__title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--gray-800);
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--primary-light);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.division-card__title i {
+  color: var(--primary);
+}
+
+/* Member mini grid dalam divisi */
+.division-members {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+@media (min-width: 640px) {
+  .division-members { grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 900px) {
+  .division-members { grid-template-columns: repeat(4, 1fr); }
+}
+
+.member-mini {
+  text-align: center;
+}
+.member-mini__img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 0.5rem;
+  border: 2px solid var(--primary-light);
+  display: block;
+}
+.member-mini__name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--gray-700);
+}
+
+/* Fallback placeholder untuk member */
+.member-mini__placeholder {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--gray-100);
+  margin: 0 auto 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray-400);
+  font-size: 1.5rem;
+}
+
+/* ---- Ketua Highlight ---- */
+.inti-card--ketua {
+  grid-column: span 2;
+  border: 2px solid var(--primary);
+  background: linear-gradient(135deg, var(--white), var(--primary-light));
+}
+@media (min-width: 640px) {
+  .inti-card--ketua { grid-column: span 1; }
+}
+
+/* ---- Animasi Fade Up ---- */
+.fade-up {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.fade-up.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
