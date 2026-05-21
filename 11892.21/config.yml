@@ -1,6 +1,6 @@
 backend:
   name: github
-  repo: jirankun/OSIS SMKN 1 LEMBAH MELINTANG
+  repo: jirankun/OSIS-SMKN-1-LEMBAH-MELINTANG
   branch: main
 
 local_backend: true
