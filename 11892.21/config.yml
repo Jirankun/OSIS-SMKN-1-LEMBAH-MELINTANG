@@ -4,8 +4,6 @@ backend:
   branch: main
   base_url: https://old-rain-91e1.tkjtogetherness.workers.dev
 
-local_backend: true
-
 media_folder: "img"
 public_folder: "img"
 
