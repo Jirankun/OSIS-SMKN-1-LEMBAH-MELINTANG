@@ -10,7 +10,7 @@ content:
     label: "📰 Artikel & Pengumuman"
     type: collection
     path: post
-    filename: "{year}-{month}-{day}-{fields.title}-{fields.type}-{fields.author}"
+    filename: "{year}-{month}-{day}-{fields.title}-{fields.type}-{fields.author}.md"
     fields:
       - { name: title, label: "📝 Judul", type: string, required: true }
       - name: type
