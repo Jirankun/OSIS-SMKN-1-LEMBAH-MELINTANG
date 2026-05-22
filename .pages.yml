@@ -1,57 +1,81 @@
 media: img
 
 content:
+  # ============================================
+  # KOLEKSI POSTS (Berita, Pengumuman, Agenda)
+  # ============================================
   - name: posts
-    label: Artikel & Pengumuman
+    label: "📰 Artikel & Pengumuman"
     type: collection
     path: post
     fields:
-      - { name: title, label: Judul, type: string }
+      - { name: title, label: "📝 Judul", type: string, required: true }
       - name: type
-        label: Tipe
+        label: "🏷️ Tipe Konten"
         type: select
         options:
-          values:
-            - berita
-            - pengumuman
-            - agenda
-      - { name: date, label: Tanggal, type: date }
-      - { name: author, label: Penulis, type: string }
-      - { name: image, label: Thumbnail, type: image, required: false }
-      - { name: body, label: Konten, type: rich-text }
+          values: [berita, pengumuman, agenda]
+        default: berita
+      - { name: date, label: "📅 Tanggal Publikasi", type: date, required: true }
+      - { name: author, label: "✍️ Penulis", type: string, required: true }
+      - { name: image, label: "🖼️ Thumbnail Gambar", type: image, required: false, widget: image }
+      - { name: body, label: "📄 Isi Konten", type: rich-text, required: true }
 
+  # ============================================
+  # GALERI KEGIATAN
+  # ============================================
   - name: galeri
-    label: Galeri Kegiatan
+    label: "📸 Galeri Kegiatan"
     type: file
     path: content/galeri.json
+    format: json
     list: true
     fields:
-      - { name: title, label: Judul, type: string }
-      - { name: date, label: Tanggal, type: date }
-      - { name: description, label: Keterangan, type: string }
-      - { name: image, label: Foto, type: image }
+      - name: galeri
+        label: "Foto-foto Kegiatan"
+        type: list
+        fields:
+          - { name: title, label: "📷 Judul Foto", type: string, required: true }
+          - { name: date, label: "📅 Tanggal Kegiatan", type: date, required: true }
+          - { name: description, label: "📝 Keterangan", type: string, required: false }
+          - { name: image, label: "🖼️ Upload Foto", type: image, required: true, widget: image }
 
+  # ============================================
+  # PENGURUS INTI OSIS
+  # ============================================
   - name: pengurus_inti
-    label: Pengurus Inti
+    label: "👑 Pengurus Inti OSIS"
     type: file
     path: content/team_1.json
+    format: json
     list: true
     fields:
-      - { name: name, label: Nama, type: string }
-      - { name: role, label: Jabatan, type: string }
-      - { name: image, label: Foto, type: image }
+      - name: team
+        label: "Daftar Pengurus Inti"
+        type: list
+        fields:
+          - { name: name, label: "👤 Nama Lengkap", type: string, required: true }
+          - { name: role, label: "🎯 Jabatan", type: string, required: true }
+          - { name: image, label: "📸 Foto Profil", type: image, required: true, widget: image }
 
+  # ============================================
+  # STRUKTUR DIVISI OSIS
+  # ============================================
   - name: pengurus_divisi
-    label: Divisi OSIS
+    label: "🏢 Struktur Divisi OSIS"
     type: file
     path: content/team_2.json
+    format: json
     list: true
     fields:
-      - { name: division, label: Nama Divisi, type: string }
-      - name: members
-        label: Anggota
-        type: object
-        list: true
+      - name: divisions
+        label: "Daftar Divisi dan Anggota"
+        type: list
         fields:
-          - { name: name, label: Nama, type: string }
-          - { name: image, label: Foto, type: image }
+          - { name: division, label: "🏷️ Nama Divisi", type: string, required: true }
+          - name: members
+            label: "👥 Anggota Divisi"
+            type: list
+            fields:
+              - { name: name, label: "👤 Nama Anggota", type: string, required: true }
+              - { name: image, label: "📸 Foto Anggota", type: image, required: false, widget: image }

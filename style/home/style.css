@@ -31,3 +31,47 @@ HOME PAGE STYLES - OSIS SMKN 1 LEMBAH MELINTANG
 .stat-item { text-align: center; color: var(--white); }
 .stat-item__number { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 2.5rem); font-weight: 700; color: var(--primary); line-height: 1; margin-bottom: 0.4rem; }
 .stat-item__label { font-size: 0.8rem; color: var(--gray-400); font-weight: 500; }
+
+/* ---- HOME NEWS SECTION SPECIFIC ---- */
+#berita .section__header { margin-bottom: 2rem; }
+#berita .search-bar { margin-bottom: 1.5rem; }
+#berita .filter-tabs { margin-bottom: 1.5rem; }
+
+/* Empty State Styling */
+.empty-state { 
+  text-align: center; 
+  padding: 3rem 1.5rem; 
+  background: var(--white); 
+  border-radius: var(--radius-lg); 
+  border: 2px dashed var(--gray-200);
+}
+.empty-state i { 
+  font-size: 3rem; 
+  margin-bottom: 1rem; 
+  display: block;
+}
+.empty-state--loading i { color: var(--primary); }
+.empty-state--empty i { color: var(--gray-300); }
+.empty-state--error i { color: var(--danger); }
+.empty-state p { 
+  color: var(--gray-500); 
+  font-size: 0.9rem; 
+  margin: 0;
+  line-height: 1.5;
+}
+.empty-state code {
+  background: var(--gray-100);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.8rem;
+  color: var(--gray-600);
+}
+
+/* News Grid Animation */
+#newsGrid { 
+  transition: opacity 0.3s ease;
+}
+#newsGrid .card {
+  will-change: transform, opacity;
+}
