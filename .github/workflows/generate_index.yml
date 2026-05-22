@@ -24,7 +24,11 @@ jobs:
           python-version: '3.x'
       
       - name: Run generate script
-        run: python3 .github/workflows/generate_index.py
+        run: |
+          echo "Working directory: $(pwd)"
+          echo "Checking file existence..."
+          ls -la .github/workflows/generate_index.py
+          python3 .github/workflows/generate_index.py
       
       - name: Commit and push if changed
         run: |
