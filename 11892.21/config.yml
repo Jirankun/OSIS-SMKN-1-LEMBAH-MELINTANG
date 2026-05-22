@@ -2,6 +2,7 @@ backend:
   name: github
   repo: Jirankun/OSIS-SMKN-1-LEMBAH-MELINTANG
   branch: main
+  base_url: https://old-rain-91e1.tkjtogetherness.workers.dev
 
 media_folder: "img"
 public_folder: "img"
