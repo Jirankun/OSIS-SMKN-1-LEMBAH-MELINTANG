@@ -2,6 +2,6 @@
 title: Senang
 type: berita
 date: 2026-05-04
-author: Saya sendiri
+author: Zhyllan Fyllah
 ---
-Sekedar contoh,namun saya tidak merasa *suka*
+Jadi, sebenarnya,jika kamu masih pemula,mending jangan dulu,jangan ***pacaran**,haram*
