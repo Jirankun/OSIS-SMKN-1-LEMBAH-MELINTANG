@@ -3,6 +3,8 @@ backend:
   repo: Jirankun/OSIS-SMKN-1-LEMBAH-MELINTANG
   branch: main
 
+local_backend: true
+
 media_folder: "img"
 public_folder: "img"
 
@@ -11,36 +13,18 @@ collections:
     label: "Artikel & Pengumuman"
     folder: "post"
     create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{title}}"
+    slug: "{{year}}-{{month}}-{{day}}-{{title}}-{{type}}-{{author}}"
     format: "frontmatter"
     extension: "md"
     media_folder: "/img/post"
     public_folder: "/img/post"
     fields:
-      - label: "Judul"
-        name: "title"
-        widget: "string"
-      - label: "Tipe"
-        name: "type"
-        widget: "select"
-        options:
-          - "berita"
-          - "pengumuman"
-          - "agenda"
-      - label: "Tanggal"
-        name: "date"
-        widget: "datetime"
-        time_format: false
-      - label: "Penulis"
-        name: "author"
-        widget: "string"
-      - label: "Thumbnail"
-        name: "image"
-        widget: "image"
-        required: false
-      - label: "Konten"
-        name: "body"
-        widget: "richtext"
+      - { label: "Judul", name: "title", widget: "string" }
+      - { label: "Tipe", name: "type", widget: "select", options: ["berita", "pengumuman", "agenda"] }
+      - { label: "Tanggal", name: "date", widget: "datetime", format: "YYYY-MM-DD", time_format: false }
+      - { label: "Penulis", name: "author", widget: "string" }
+      - { label: "Thumbnail", name: "image", widget: "image", required: false }
+      - { label: "Konten", name: "body", widget: "markdown" }
 
   - name: "galeri"
     label: "Galeri Kegiatan"
@@ -56,23 +40,10 @@ collections:
             name: "galeri"
             widget: "list"
             fields:
-              - label: "Judul"
-                name: "title"
-                widget: "string"
-              - label: "Tanggal"
-                name: "date"
-                widget: "datetime"
-                time_format: false
-              - label: "Keterangan"
-                name: "description"
-                widget: "string"
-                hint: "Maksimal 50 karakter"
-                pattern:
-                  - '^.{0,50}$'
-                  - "Maksimal 50 karakter"
-              - label: "Foto"
-                name: "image"
-                widget: "image"
+              - { label: "Judul", name: "title", widget: "string" }
+              - { label: "Tanggal", name: "date", widget: "datetime", format: "YYYY-MM-DD", time_format: false }
+              - { label: "Keterangan", name: "description", widget: "string", hint: "Maksimal 50 karakter", pattern: ['^.{0,50}$', "Maksimal 50 karakter"] }
+              - { label: "Foto", name: "image", widget: "image" }
 
   - name: "pengurus_inti"
     label: "Pengurus Inti"
@@ -88,15 +59,9 @@ collections:
             name: "team"
             widget: "list"
             fields:
-              - label: "Nama"
-                name: "name"
-                widget: "string"
-              - label: "Jabatan"
-                name: "role"
-                widget: "string"
-              - label: "Foto"
-                name: "image"
-                widget: "image"
+              - { label: "Nama", name: "name", widget: "string" }
+              - { label: "Jabatan", name: "role", widget: "string" }
+              - { label: "Foto", name: "image", widget: "image" }
 
   - name: "pengurus_divisi"
     label: "Divisi OSIS"
@@ -112,16 +77,10 @@ collections:
             name: "divisions"
             widget: "list"
             fields:
-              - label: "Nama Divisi"
-                name: "division"
-                widget: "string"
+              - { label: "Nama Divisi", name: "division", widget: "string" }
               - label: "Anggota"
                 name: "members"
                 widget: "list"
                 fields:
-                  - label: "Nama"
-                    name: "name"
-                    widget: "string"
-                  - label: "Foto"
-                    name: "image"
-                    widget: "image"
+                  - { label: "Nama", name: "name", widget: "string" }
+                  - { label: "Foto", name: "image", widget: "image" }
