@@ -1,4 +1,6 @@
-media: img
+media:
+  input: img
+  output: img
 
 content:
   # ============================================
@@ -24,7 +26,8 @@ content:
         type: image
         required: false
         options:
-          media: img/post
+          input: img/post
+          output: img/post
       - { name: body, label: "📄 Isi Konten", type: rich-text, required: true }
 
   # ============================================
@@ -34,7 +37,7 @@ content:
     label: "📸 Galeri Kegiatan"
     type: file
     path: content/galeri.json
-    list: true                     # ✅ list langsung di level file
+    list: true
     fields:
       - { name: title, label: "📷 Judul Foto", type: string, required: true }
       - { name: date, label: "📅 Tanggal Kegiatan", type: date, required: true }
@@ -44,7 +47,8 @@ content:
         type: image
         required: true
         options:
-          media: img/galeri
+          input: img/galeri
+          output: img/galeri
 
   # ============================================
   # PENGURUS INTI OSIS
@@ -53,7 +57,7 @@ content:
     label: "👑 Pengurus Inti OSIS"
     type: file
     path: content/team_1.json
-    list: true                     # ✅ list langsung di level file
+    list: true
     fields:
       - { name: name, label: "👤 Nama Lengkap", type: string, required: true }
       - { name: role, label: "🎯 Jabatan", type: string, required: true }
@@ -62,7 +66,8 @@ content:
         type: image
         required: true
         options:
-          media: img/pengurus/inti
+          input: img/pengurus/inti
+          output: img/pengurus/inti
 
   # ============================================
   # STRUKTUR DIVISI OSIS
@@ -71,7 +76,7 @@ content:
     label: "🏢 Struktur Divisi OSIS"
     type: file
     path: content/team_2.json
-    list: true                     # ✅ list langsung di level file
+    list: true
     fields:
       - { name: division, label: "🏷️ Nama Divisi", type: string, required: true }
       - name: members
@@ -85,4 +90,5 @@ content:
             type: image
             required: false
             options:
-              media: img/pengurus/divisi
+              input: img/pengurus/divisi
+              output: img/pengurus/divisi
