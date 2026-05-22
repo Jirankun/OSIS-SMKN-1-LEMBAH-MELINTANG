@@ -128,6 +128,8 @@ function renderStaticSections() {
 // ================================================
 // 🔥 LOAD PENGURUS INTI - Card Rapi & Konsisten
 // ================================================
+// 🔥 LOAD PENGURUS INTI - Card Rapi & Konsisten (Silent Error)
+// ================================================
 async function loadTeamInti() {
   const grid = document.getElementById('gridInti');
   if (!grid) return;
@@ -135,13 +137,18 @@ async function loadTeamInti() {
   grid.innerHTML = '<div class="empty-state"><i class="fa-solid fa-circle-notch fa-spin"></i><p>Memuat pengurus inti...</p></div>';
   
   try {
-    const res = await fetch('../../content/team_1.json');
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const rawData = await res.json();
+    const rawData = await fetchJsonSilent('../../content/team_1.json', 'pengurus inti');
+    
+    if (!rawData) {
+      grid.style.display = 'none';
+      return;
+    }
+    
     const members = Array.isArray(rawData) ? rawData : (rawData.team || rawData.data || []);
 
     if (!members.length) {
-      grid.innerHTML = '<div class="empty-state"><i class="fa-solid fa-users-slash"></i><p>Belum ada data pengurus inti</p></div>';
+      grid.style.display = 'none';
+      console.log('[Profil OSIS] Belum ada data pengurus inti.');
       return;
     }
 
@@ -163,13 +170,31 @@ async function loadTeamInti() {
       `;
     }).join('');
   } catch (e) {
-    console.error('Error load team_1.json:', e);
-    grid.innerHTML = `<div class="empty-state"><i class="fa-solid fa-triangle-exclamation"></i><p>Gagal memuat data. Pastikan <code>../../content/team_1.json</code> tersedia.</p></div>`;
+    console.error('[Profil OSIS] Error:', e);
+    grid.style.display = 'none';
   }
 }
 
+/**
+ * Fetch JSON dengan error handling silent (hanya log di console)
+ */
+async function fetchJsonSilent(url, description = 'data') {
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
+  } catch (err) {
+    console.error(`[Fetch] Gagal mengambil ${description} dari ${url}:`, err.message);
+    return null;
+  }
+}
+
+/**
+ * Fetch JSON dengan error handling silent (hanya log di console)
+ */
+
 // ================================================
-// 🔥 LOAD TIM DIVISI - Card Rapi & Konsisten
+// 🔥 LOAD TIM DIVISI - Card Rapi & Konsisten (Silent Error)
 // ================================================
 async function loadTeamDivisi() {
   const container = document.getElementById('gridDivisi');
@@ -178,13 +203,18 @@ async function loadTeamDivisi() {
   container.innerHTML = '<div class="empty-state"><i class="fa-solid fa-circle-notch fa-spin"></i><p>Memuat data divisi...</p></div>';
   
   try {
-    const res = await fetch('../../content/team_2.json');
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const rawData = await res.json();
+    const rawData = await fetchJsonSilent('../../content/team_2.json', 'data divisi');
+    
+    if (!rawData) {
+      container.style.display = 'none';
+      return;
+    }
+    
     const divisions = Array.isArray(rawData) ? rawData : (rawData.divisions || rawData.data || []);
 
     if (!divisions.length) {
-      container.innerHTML = '<div class="empty-state"><i class="fa-solid fa-users-slash"></i><p>Belum ada data divisi</p></div>';
+      container.style.display = 'none';
+      console.log('[Profil OSIS] Belum ada data divisi.');
       return;
     }
 
@@ -210,8 +240,8 @@ async function loadTeamDivisi() {
       </div>
     `).join('');
   } catch (e) {
-    console.error('Error load team_2.json:', e);
-    container.innerHTML = `<div class="empty-state"><i class="fa-solid fa-triangle-exclamation"></i><p>Gagal memuat data. Pastikan <code>../../content/team_2.json</code> tersedia.</p></div>`;
+    console.error('[Profil OSIS] Error divisi:', e);
+    container.style.display = 'none';
   }
 }
 
