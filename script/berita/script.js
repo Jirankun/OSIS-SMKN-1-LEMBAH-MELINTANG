@@ -32,6 +32,20 @@ function formatDateID(dateStr) {
   });
 }
 
+/**
+ * Fetch JSON dengan error handling silent (hanya log di console)
+ */
+async function fetchJsonSilent(url, description = 'data') {
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
+  } catch (err) {
+    console.error(`[Fetch] Gagal mengambil ${description} dari ${url}:`, err.message);
+    return null;
+  }
+}
+
 // Init
 document.addEventListener('DOMContentLoaded', async () => {
   console.log('✅ DOMContentLoaded');
@@ -127,10 +141,14 @@ async function loadBeritaIndex() {
   list.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--gray-400)">Loading...</div>';
   
   try {
-    const res = await fetch('../../content/posts-index.json');
-    if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+    const rawData = await fetchJsonSilent('../../content/posts-index.json', 'index berita');
     
-    const rawData = await res.json();
+    if (!rawData) {
+      list.style.display = 'none';
+      console.log('[Berita] Tidak ada data berita.');
+      return;
+    }
+    
     let posts = Array.isArray(rawData) ? rawData : [rawData];
     
     allBerita = posts
@@ -138,18 +156,16 @@ async function loadBeritaIndex() {
       .sort((a, b) => new Date(b.date) - new Date(a.date));
     
     if (!allBerita.length) {
-      list.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--gray-400)">Belum ada berita.</div>';
+      list.style.display = 'none';
+      console.log('[Berita] Tidak ada berita untuk ditampilkan.');
       return;
     }
     
     renderBeritaList(allBerita);
     
   } catch (err) {
-    console.error('❌ Error:', err);
-    list.innerHTML = `<div style="text-align:center;padding:2rem;color:var(--danger)">
-      <i class="fa-solid fa-triangle-exclamation" style="font-size:2rem;margin-bottom:0.5rem;display:block"></i>
-      <p>Gagal memuat: ${err.message}</p>
-    </div>`;
+    console.error('[Berita] Error:', err);
+    list.style.display = 'none';
   }
 }
 
@@ -261,10 +277,10 @@ async function loadMarkdownContent(filename) {
     console.log('✅ Content rendered successfully');
     
   } catch (err) {
-    console.error('❌ Error loading markdown:', err);
-    contentEl.innerHTML = `<div style="text-align:center;padding:3rem;color:var(--danger)">
-      <i class="fa-solid fa-triangle-exclamation" style="font-size:2rem;margin-bottom:0.5rem;display:block"></i>
-      <p>Gagal memuat konten: ${err.message}</p>
+    console.error('[Berita] Error loading markdown:', err);
+    contentEl.innerHTML = `<div style="text-align:center;padding:3rem;color:var(--gray-400)">
+      <i class="fa-solid fa-file-circle-xmark" style="font-size:2rem;margin-bottom:0.5rem;display:block"></i>
+      <p>Konten tidak ditemukan atau telah dihapus.</p>
     </div>`;
   }
 }

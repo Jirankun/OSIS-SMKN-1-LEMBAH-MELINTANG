@@ -1,13 +1,1 @@
-{
-  "divisions": [
-    {
-      "division": "Contoh Divisi",
-      "members": [
-        {
-          "name": "Nama Anggota",
-          "image": "/img/pengurus/divisi/contoh.jpg"
-        }
-      ]
-    }
-  ]
-}
+{"divisions": []}

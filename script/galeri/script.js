@@ -128,7 +128,7 @@ function renderStaticSections() {
 }
 
 // ================================================
-// 🔥 LOAD GALERI - Fixed Path & Scroll
+// 🔥 LOAD GALERI - Fixed Path & Scroll (Silent Error)
 // ================================================
 async function loadGallery() {
   const grid = document.getElementById('galeriFullGrid');
@@ -137,15 +137,20 @@ async function loadGallery() {
   grid.innerHTML = '<div class="empty-state"><i class="fa-solid fa-circle-notch fa-spin"></i><p>Memuat galeri...</p></div>';
 
   try {
-    const res = await fetch('../../content/galeri.json');
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const rawData = await res.json();
+    const rawData = await fetchJsonSilent('../../content/galeri.json', 'galeri');
+    
+    if (!rawData) {
+      grid.style.display = 'none';
+      console.log('[Galeri] Tidak ada data galeri.');
+      return;
+    }
 
     // Handle format: array langsung atau { "galeri": [...] }
     let items = Array.isArray(rawData) ? rawData : (rawData.galeri || rawData.data || []);
 
     if (!items.length) {
-      grid.innerHTML = '<div class="empty-state"><i class="fa-solid fa-images"></i><p>Belum ada foto yang diunggah.</p></div>';
+      grid.style.display = 'none';
+      console.log('[Galeri] Belum ada foto yang diunggah.');
       return;
     }
 
@@ -174,8 +179,22 @@ async function loadGallery() {
       `;
     }).join('');
   } catch (err) {
-    console.error('Gagal load galeri:', err);
-    grid.innerHTML = `<div class="empty-state"><i class="fa-solid fa-triangle-exclamation"></i><p>Gagal memuat data. Pastikan <code>../../content/galeri.json</code> tersedia.</p></div>`;
+    console.error('[Galeri] Error:', err);
+    grid.style.display = 'none';
+  }
+}
+
+/**
+ * Fetch JSON dengan error handling silent (hanya log di console)
+ */
+async function fetchJsonSilent(url, description = 'data') {
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
+  } catch (err) {
+    console.error(`[Fetch] Gagal mengambil ${description} dari ${url}:`, err.message);
+    return null;
   }
 }
 
