@@ -3,8 +3,6 @@ backend:
   repo: Jirankun/OSIS-SMKN-1-LEMBAH-MELINTANG
   branch: main
 
-local_backend: true
-
 media_folder: "img"
 public_folder: "img"
 
