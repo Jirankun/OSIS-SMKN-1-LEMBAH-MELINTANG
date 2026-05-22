@@ -1,1 +1,8 @@
-{"galeri": []}
+[
+  {
+    "title": "Tes 1",
+    "date": "2026-05-22",
+    "description": "Hanya itu",
+    "image": "img/IMG-20260521-WA0143.jpg"
+  }
+]
