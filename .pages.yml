@@ -7,43 +7,43 @@ content:
   # KOLEKSI POSTS
   # ============================================
   - name: posts
-    label: "📰 Artikel & Pengumuman"
+    label: "Artikel & Pengumuman"
     type: collection
     path: post
     filename: "{year}-{month}-{day}-{fields.title}-{fields.type}-{fields.author}.md"
     fields:
-      - { name: title, label: "📝 Judul", type: string, required: true }
+      - { name: title, label: "Judul", type: string, required: true }
       - name: type
-        label: "🏷️ Tipe Konten"
+        label: "Tipe Konten"
         type: select
         options:
           values: [berita, pengumuman, agenda]
         default: berita
-      - { name: date, label: "📅 Tanggal Publikasi", type: date, required: true }
-      - { name: author, label: "✍️ Penulis", type: string, required: true }
+      - { name: date, label: "Tanggal Publikasi", type: date, required: true }
+      - { name: author, label: "Penulis", type: string, required: true }
       - name: image
-        label: "🖼️ Thumbnail Gambar"
+        label: "Thumbnail Gambar"
         type: image
         required: false
         options:
           input: img/post
           output: img/post
-      - { name: body, label: "📄 Isi Konten", type: rich-text, required: true }
+      - { name: body, label: "Isi Konten", type: rich-text, required: true }
 
   # ============================================
   # GALERI KEGIATAN
   # ============================================
   - name: galeri
-    label: "📸 Galeri Kegiatan"
+    label: "Galeri Kegiatan"
     type: file
     path: content/galeri.json
     list: true
     fields:
-      - { name: title, label: "📷 Judul Foto", type: string, required: true }
-      - { name: date, label: "📅 Tanggal Kegiatan", type: date, required: true }
-      - { name: description, label: "📝 Keterangan", type: string, required: false }
+      - { name: title, label: "Judul Foto", type: string, required: true }
+      - { name: date, label: "Tanggal Kegiatan", type: date, required: true }
+      - { name: description, label: "Keterangan", type: string, required: false }
       - name: image
-        label: "🖼️ Upload Foto"
+        label: "Upload Foto"
         type: image
         required: true
         options:
@@ -54,15 +54,15 @@ content:
   # PENGURUS INTI OSIS
   # ============================================
   - name: pengurus_inti
-    label: "👑 Pengurus Inti OSIS"
+    label: "Pengurus Inti OSIS"
     type: file
     path: content/team_1.json
     list: true
     fields:
-      - { name: name, label: "👤 Nama Lengkap", type: string, required: true }
-      - { name: role, label: "🎯 Jabatan", type: string, required: true }
+      - { name: name, label: "Nama Lengkap", type: string, required: true }
+      - { name: role, label: "Jabatan", type: string, required: true }
       - name: image
-        label: "📸 Foto Profil"
+        label: "Foto Profil"
         type: image
         required: true
         options:
@@ -73,20 +73,20 @@ content:
   # STRUKTUR DIVISI OSIS
   # ============================================
   - name: pengurus_divisi
-    label: "🏢 Struktur Divisi OSIS"
+    label: "Struktur Divisi OSIS"
     type: file
     path: content/team_2.json
     list: true
     fields:
-      - { name: division, label: "🏷️ Nama Divisi", type: string, required: true }
+      - { name: division, label: "Nama Divisi", type: string, required: true }
       - name: members
-        label: "👥 Anggota Divisi"
+        label: "Anggota Divisi"
         type: object
         list: true
         fields:
-          - { name: name, label: "👤 Nama Anggota", type: string, required: true }
+          - { name: name, label: "Nama Anggota", type: string, required: true }
           - name: image
-            label: "📸 Foto Anggota"
+            label: "Foto Anggota"
             type: image
             required: false
             options:
