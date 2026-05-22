@@ -30,8 +30,8 @@ collections:
       - label: "Tanggal"
         name: "date"
         widget: "datetime"
-        date_format: "YYYY-MM-DD"
-        time_format: false
+        type: "date"
+        format: "YYYY-MM-DD"
       - label: "Penulis"
         name: "author"
         widget: "string"
@@ -41,7 +41,7 @@ collections:
         required: false
       - label: "Konten"
         name: "body"
-        widget: "markdown"
+        widget: "richtext"
 
   - name: "galeri"
     label: "Galeri Kegiatan"
@@ -63,8 +63,8 @@ collections:
               - label: "Tanggal"
                 name: "date"
                 widget: "datetime"
-                date_format: "YYYY-MM-DD"
-                time_format: false
+                type: "date"
+                format: "YYYY-MM-DD"
               - label: "Keterangan"
                 name: "description"
                 widget: "string"
