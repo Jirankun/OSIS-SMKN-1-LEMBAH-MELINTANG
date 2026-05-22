@@ -1,42 +1,18 @@
 [
   {
-    "id": "001",
-    "title": "Pemilihan Ketua OSIS Periode 2026/2027",
-    "date": "2026-05-18",
-    "author": "Panitia OSIS",
-    "type": "pengumuman",
-    "slug": "pemilihan-ketua-osis-2026",
-    "filename": "2026-05-18-pemilihan-ketua-osis-2026.md",
-    "image": ""
-  },
-  {
-    "id": "002",
-    "title": "Workshop Digital Marketing & Content Creator",
-    "date": "2026-05-22",
-    "author": "Divisi Humas",
-    "type": "agenda",
-    "slug": "workshop-digital-marketing",
-    "filename": "2026-05-22-workshop-digital-marketing.md",
-    "image": ""
-  },
-  {
-    "id": "003",
-    "title": "OSIS SMKN 1 LM Raih Juara 1 LKS Tingkat Provinsi",
-    "date": "2026-05-15",
-    "author": "Admin OSIS",
-    "type": "berita",
-    "slug": "juara-lks-provinsi",
-    "filename": "2026-05-15-juara-lks-provinsi.md",
-    "image": ""
-  },
-  {
-    "id": "004",
+    "filename": "2026-05-22-makan-dan-minum-bareng.md",
     "title": "Senang",
+    "type": "berita",
     "date": "2026-05-04",
     "author": "Saya sendiri",
-    "type": "berita",
-    "slug": "senang",
-    "filename": "2026-05-22-makan-dan-minum-bareng.md",
     "image": ""
+  },
+  {
+    "filename": "2026-05-15-juara-lks-provinsi.md",
+    "title": "OSIS SMKN 1 LM Raih Juara 1 LKS Tingkat Provinsi",
+    "type": "berita",
+    "date": "2026-05-15",
+    "author": "Admin OSIS",
+    "image": "img/asset/logo.webp"
   }
 ]
