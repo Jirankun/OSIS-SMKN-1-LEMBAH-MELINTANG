@@ -4,8 +4,11 @@ on:
   push:
     paths:
       - 'post/*.md'
-      - 'post/**/*.md'
-  workflow_dispatch: # Bisa dijalankan manual
+      - 'content/posts-index.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   generate-index:
@@ -13,19 +16,20 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
-        
+        uses: actions/checkout@v4
+      
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.x'
-          
+      
       - name: Run generate script
         run: python3 .github/workflows/generate_index.py
-        
+      
       - name: Commit and push if changed
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add content/posts-index.json
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update: Regenerate posts-index.json" && git push)
+          git diff --staged --quiet || git commit -m "Auto-update: posts-index.json [skip ci]"
+          git push

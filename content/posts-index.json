@@ -1,17 +1,18 @@
 [
   {
-    "title": "OSIS SMKN 1 LM Raih Juara 1 LKS Tingkat Provinsi",
-    "type": "berita",
-    "date": "2026-05-15",
-    "author": "Admin OSIS",
-    "image": "img/asset/logo.webp",
-    "filename": "2026-05-15-juara-lks-provinsi.md"
-  },
-  {
+    "filename": "2026-05-22-makan-dan-minum-bareng.md",
     "title": "Senang",
     "type": "berita",
     "date": "2026-05-04",
     "author": "Saya sendiri",
-    "filename": "2026-05-22-makan-dan-minum-bareng.md"
+    "image": ""
+  },
+  {
+    "filename": "2026-05-15-juara-lks-provinsi.md",
+    "title": "OSIS SMKN 1 LM Raih Juara 1 LKS Tingkat Provinsi",
+    "type": "berita",
+    "date": "2026-05-15",
+    "author": "Admin OSIS",
+    "image": "img/asset/logo.webp"
   }
 ]

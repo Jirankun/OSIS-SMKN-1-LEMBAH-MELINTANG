@@ -1,98 +1,101 @@
 #!/usr/bin/env python3
 """
 Script untuk generate posts-index.json dari file markdown di folder post/
-Dijalankan secara otomatis oleh GitHub Actions saat ada push ke repository
+Dijalankan otomatis oleh GitHub Actions saat ada perubahan di folder post/
 """
 
 import os
 import json
 import re
-from datetime import datetime
+from pathlib import Path
 
 # Konfigurasi path
 POST_FOLDER = "post"
 OUTPUT_FILE = "content/posts-index.json"
 
 def extract_frontmatter(content):
-    """Extract data dari frontmatter YAML di file markdown"""
+    """Extract data dari frontmatter YAML"""
     frontmatter = {}
     
-    # Pattern untuk menangkap konten antara ---
-    pattern = r"^---\n(.*?)\n---"
-    match = re.search(pattern, content, re.DOTALL)
+    # Regex untuk mengambil frontmatter
+    match = re.match(r'^---\s*\n(.*?)\n---\s*\n', content, re.DOTALL)
+    if not match:
+        return frontmatter
     
-    if match:
-        yaml_content = match.group(1)
-        lines = yaml_content.split('\n')
-        
-        for line in lines:
-            if ':' in line:
-                key, value = line.split(':', 1)
-                key = key.strip()
-                value = value.strip().strip('"').strip("'")
-                frontmatter[key] = value
+    yaml_content = match.group(1)
+    
+    # Parse manual YAML sederhana
+    for line in yaml_content.split('\n'):
+        if ':' in line:
+            key, value = line.split(':', 1)
+            key = key.strip()
+            value = value.strip().strip('"').strip("'")
+            frontmatter[key] = value
     
     return frontmatter
 
-def get_all_markdown_files():
-    """Ambil semua file .md dari folder post/"""
-    if not os.path.exists(POST_FOLDER):
-        print(f"[Warning] Folder {POST_FOLDER} tidak ditemukan.")
-        return []
+def scan_posts():
+    """Scan semua file .md di folder post/"""
+    posts = []
+    post_path = Path(POST_FOLDER)
     
-    files = []
-    for filename in os.listdir(POST_FOLDER):
-        if filename.endswith('.md'):
-            filepath = os.path.join(POST_FOLDER, filename)
-            try:
-                with open(filepath, 'r', encoding='utf-8') as f:
-                    content = f.read()
-                
-                frontmatter = extract_frontmatter(content)
-                
-                # Tambahkan filename ke data
-                frontmatter['filename'] = filename
-                
-                # Ambil tanggal dari filename jika tidak ada di frontmatter
-                if 'date' not in frontmatter:
-                    date_match = re.match(r'(\d{4}-\d{2}-\d{2})', filename)
-                    if date_match:
-                        frontmatter['date'] = date_match.group(1)
-                
-                files.append(frontmatter)
-                
-            except Exception as e:
-                print(f"[Error] Gagal membaca file {filename}: {e}")
+    if not post_path.exists():
+        print(f"[Info] Folder {POST_FOLDER} tidak ditemukan, membuat folder kosong...")
+        post_path.mkdir(parents=True, exist_ok=True)
+        return posts
     
-    # Sort berdasarkan tanggal (terbaru dulu)
-    files.sort(key=lambda x: x.get('date', ''), reverse=True)
+    # Ambil semua file .md
+    md_files = sorted(post_path.glob("*.md"), reverse=True)
     
-    return files
+    for md_file in md_files:
+        try:
+            with open(md_file, 'r', encoding='utf-8') as f:
+                content = f.read()
+            
+            frontmatter = extract_frontmatter(content)
+            
+            # Hanya tambahkan jika punya title dan date
+            if 'title' in frontmatter and 'date' in frontmatter:
+                post_data = {
+                    "filename": md_file.name,
+                    "title": frontmatter.get('title', 'Tanpa Judul'),
+                    "type": frontmatter.get('type', 'berita'),
+                    "date": frontmatter.get('date', ''),
+                    "author": frontmatter.get('author', 'Admin'),
+                    "image": frontmatter.get('image', '')
+                }
+                posts.append(post_data)
+                print(f"[OK] Ditambahkan: {md_file.name}")
+            else:
+                print(f"[Skip] {md_file.name} - Tidak ada title atau date di frontmatter")
+                
+        except Exception as e:
+            print(f"[Error] Gagal membaca {md_file.name}: {str(e)}")
+    
+    return posts
+
+def save_posts(posts):
+    """Simpan hasil scan ke JSON"""
+    # Pastikan folder content ada
+    output_path = Path(OUTPUT_FILE)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    
+    with open(output_path, 'w', encoding='utf-8') as f:
+        json.dump(posts, f, indent=2, ensure_ascii=False)
+    
+    print(f"[Success] Tersimpan {len(posts)} postingan ke {OUTPUT_FILE}")
 
 def main():
-    print("[Info] Memulai generate posts-index.json...")
+    print("=" * 50)
+    print("Memulai generate posts-index.json...")
+    print("=" * 50)
     
-    # Pastikan folder content ada
-    os.makedirs("content", exist_ok=True)
+    posts = scan_posts()
+    save_posts(posts)
     
-    # Ambil semua file markdown
-    posts = get_all_markdown_files()
-    
-    if not posts:
-        print("[Warning] Tidak ada file markdown ditemukan di folder post/")
-        # Tetap buat file kosong agar tidak error
-        posts = []
-    
-    # Tulis ke JSON
-    try:
-        with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
-            json.dump(posts, f, indent=2, ensure_ascii=False)
-        
-        print(f"[Success] Berhasil generate {OUTPUT_FILE} dengan {len(posts)} postingan.")
-        
-    except Exception as e:
-        print(f"[Error] Gagal menulis file {OUTPUT_FILE}: {e}")
-        raise
+    print("=" * 50)
+    print("Selesai!")
+    print("=" * 50)
 
 if __name__ == "__main__":
     main()
