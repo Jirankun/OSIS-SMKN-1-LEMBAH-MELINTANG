@@ -9,7 +9,7 @@ backend:
 # KONFIGURASI MEDIA & GAMBAR
 # ============================================
 media_folder: "img"
-public_folder: "/img"
+public_folder: "/img"  local_backend: false
 
 # ============================================
 # KOLEKSI POSTS (Berita, Pengumuman, Agenda)

@@ -1,7 +1,7 @@
 // ================================================
-// BERITA PAGE - FULL WORKING SCRIPT (FIXED YOUTUBE)
+// AGENDA PAGE SCRIPT
 // ================================================
-console.log('✅ Berita script loaded');
+console.log('✅ Agenda script loaded');
 
 const SITE_CONFIG = {
   school: {
@@ -12,16 +12,16 @@ const SITE_CONFIG = {
   },
   nav: [
     { label: "Beranda", href: "../../index.html", icon: "fa-solid fa-house" },
-    { label: "Berita", href: "index.html", icon: "fa-solid fa-newspaper" },
+    { label: "Berita", href: "../berita/index.html", icon: "fa-solid fa-newspaper" },
     { label: "Pengumuman", href: "../pengumuman/index.html", icon: "fa-solid fa-bullhorn" },
-    { label: "Agenda", href: "../agenda/index.html", icon: "fa-solid fa-calendar-days" },
+    { label: "Agenda", href: "index.html", icon: "fa-solid fa-calendar-days" },
     { label: "Galeri", href: "../galeri/index.html", icon: "fa-solid fa-images" },
     { label: "Anggota dan Divisi", href: "../profil_osis/index.html", icon: "fa-solid fa-users" },
     { label: "Kontak", href: "../../index.html#kontak", icon: "fa-solid fa-envelope" },
   ]
 };
 
-let allBerita = [];
+let allAgenda = [];
 
 // Helper: Format tanggal Indonesia
 function formatDateID(dateStr) {
@@ -32,20 +32,6 @@ function formatDateID(dateStr) {
   });
 }
 
-/**
- * Fetch JSON dengan error handling silent
- */
-async function fetchJsonSilent(url, description = 'data') {
-  try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return await res.json();
-  } catch (err) {
-    console.error(`[Fetch] Gagal mengambil ${description} dari ${url}:`, err.message);
-    return null;
-  }
-}
-
 // Init
 document.addEventListener('DOMContentLoaded', async () => {
   console.log('✅ DOMContentLoaded');
@@ -54,14 +40,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   
   initNavbar();
   renderStaticSections();
-  await loadBeritaIndex();
+  await loadAgendaIndex();
   initSearchFilter();
   
-  // Handle URL ?file=xxx.md
+  // Handle deep link: ?file=xxx.md
   const params = new URLSearchParams(window.location.search);
   const fileParam = params.get('file');
   if (fileParam) {
-    console.log('📄 Loading from URL:', fileParam);
+    console.log('📅 Loading from URL:', fileParam);
     await loadMarkdownContent(fileParam);
   }
 });
@@ -98,10 +84,7 @@ function initNavbar() {
     }).join('');
   }
   
-  if (nav) {
-    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 50));
-  }
-  
+  if (nav) window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 50));
   if (ham && mobile) {
     ham.addEventListener('click', () => {
       const isOpen = ham.classList.toggle('open');
@@ -109,10 +92,7 @@ function initNavbar() {
       ham.setAttribute('aria-expanded', isOpen);
     });
     mobile.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        ham.classList.remove('open');
-        mobile.classList.remove('open');
-      });
+      link.addEventListener('click', () => { ham.classList.remove('open'); mobile.classList.remove('open'); });
     });
   }
 }
@@ -122,7 +102,6 @@ function renderStaticSections() {
   const footerBrand = document.getElementById('footerBrand');
   const footerDesc = document.getElementById('footerDesc');
   const footerLinks = document.getElementById('footerLinks');
-  
   if (footerBrand) footerBrand.textContent = SITE_CONFIG.school.osis;
   if (footerDesc) footerDesc.textContent = SITE_CONFIG.school.tagline;
   if (footerLinks) {
@@ -132,78 +111,62 @@ function renderStaticSections() {
   }
 }
 
-// Load Berita Index
-async function loadBeritaIndex() {
-  console.log('🔧 Loading berita index...');
-  const list = document.getElementById('beritaList');
+// Load Agenda Index
+async function loadAgendaIndex() {
+  console.log('🔧 Loading agenda index...');
+  const list = document.getElementById('agendaList');
   if (!list) return;
   
   list.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--gray-400)">Loading...</div>';
   
   try {
-    const rawData = await fetchJsonSilent('../../content/posts-index.json', 'index berita');
+    const res = await fetch('../../content/posts-index.json');
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     
-    if (!rawData) {
-      list.style.display = 'none';
-      console.log('[Berita] Tidak ada data berita.');
-      return;
-    }
-    
+    const rawData = await res.json();
     let posts = Array.isArray(rawData) ? rawData : [rawData];
     
-    allBerita = posts
-      .filter(p => p.type?.toLowerCase() === 'berita' && p.filename && p.date)
+    // ✅ Filter hanya type agenda
+    allAgenda = posts
+      .filter(p => p.type?.toLowerCase() === 'agenda' && p.filename && p.date)
       .sort((a, b) => new Date(b.date) - new Date(a.date));
     
-    if (!allBerita.length) {
-      list.style.display = 'none';
-      console.log('[Berita] Tidak ada berita untuk ditampilkan.');
+    if (!allAgenda.length) {
+      list.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--gray-400)">Belum ada agenda yang dijadwalkan.</div>';
       return;
     }
     
-    renderBeritaList(allBerita);
+    renderAgendaList(allAgenda);
     
   } catch (err) {
-    console.error('[Berita] Error:', err);
-    list.style.display = 'none';
+    console.error('❌ Error:', err);
+    list.innerHTML = `<div style="text-align:center;padding:2rem;color:var(--danger)">Gagal memuat data agenda.</div>`;
   }
 }
 
 // Render List
-function renderBeritaList(items) {
-  const list = document.getElementById('beritaList');
+function renderAgendaList(items) {
+  const list = document.getElementById('agendaList');
   if (!list) return;
   
-  list.innerHTML = items.map((item, i) => {
-    const imgUrl = item.image;
-    const thumbHTML = imgUrl 
-      ? `<img src="../../${imgUrl}" alt="${item.title}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">`
-      : '';
-    const placeholderHTML = `<div style="width:100%;height:100%;display:${imgUrl ? 'none' : 'flex'};align-items:center;justify-content:center;background:var(--gray-100);color:var(--gray-400)"><i class="fa-solid fa-file-lines"></i></div>`;
-    
-    return `
-      <div class="berita-item" data-filename="${item.filename}" style="animation-delay:${i * 30}ms;cursor:pointer;background:var(--white);border-radius:var(--radius);padding:1rem;border:2px solid transparent;transition:var(--transition);display:flex;gap:0.75rem;align-items:flex-start">
-        <div style="flex-shrink:0;width:60px;height:60px;border-radius:var(--radius);overflow:hidden;background:var(--gray-100)">
-          ${thumbHTML}
-          ${placeholderHTML}
-        </div>
-        <div style="flex:1;min-width:0">
-          <div style="font-size:0.9rem;font-weight:700;color:var(--gray-800);margin-bottom:0.25rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.4">${item.title || 'Tanpa Judul'}</div>
-          <div style="font-size:0.72rem;color:var(--gray-400);display:flex;align-items:center;gap:0.5rem">
-            <span><i class="fa-regular fa-calendar"></i> ${formatDateID(item.date)}</span>
-            <span>•</span>
-            <span>${item.author || 'Admin'}</span>
-          </div>
+  list.innerHTML = items.map((item, i) => `
+    <div class="agenda-item" data-filename="${item.filename}" style="animation-delay:${i * 30}ms">
+      <div class="agenda-item__content">
+        <div class="agenda-item__title">${item.title || 'Tanpa Judul'}</div>
+        <div class="agenda-item__meta">
+          <span><i class="fa-regular fa-calendar"></i> ${formatDateID(item.date)}</span>
+          <span>•</span>
+          <span>${item.author || 'Admin'}</span>
         </div>
       </div>
-    `;
-  }).join('');
+    </div>
+  `).join('');
   
-  list.querySelectorAll('.berita-item').forEach(el => {
+  list.querySelectorAll('.agenda-item').forEach(el => {
     el.addEventListener('click', async () => {
       const filename = el.dataset.filename;
-      list.querySelectorAll('.berita-item').forEach(i => i.style.borderColor = 'transparent');
-      el.style.borderColor = 'var(--primary)';
+      list.querySelectorAll('.agenda-item').forEach(i => i.classList.remove('active'));
+      el.classList.add('active');
       
       await loadMarkdownContent(filename);
       const newUrl = `?file=${encodeURIComponent(filename)}`;
@@ -212,34 +175,27 @@ function renderBeritaList(items) {
   });
 }
 
-// Load & Render Markdown dengan Marked.js + YouTube Embed + Image Centering
+// Load & Render Markdown (No Video, Table Optimized)
 async function loadMarkdownContent(filename) {
   console.log('🔧 Loading markdown:', filename);
-  const contentEl = document.getElementById('beritaContent');
+  const contentEl = document.getElementById('agendaContent');
   if (!contentEl) return;
   
   contentEl.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--gray-400)">Loading content...</div>';
   
   try {
-    let mdText = await (await fetch(`../../post/${filename}`)).text();
+    const res = await fetch(`../../post/${filename}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     
+    const mdText = await res.text();
     if (typeof marked === 'undefined') throw new Error('marked.js not loaded');
     
-    // ✅ FIX 1: Replace YouTube URLs di RAW markdown SEBELUM marked.parse()
-    // Pattern: YouTube URL yang berdiri sendiri (diapit newline/spasi)
-    const ytRegex = /(^|\n|\s)(https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})(?:[^\s]*)?)(\n|\s|$)/g;
-    mdText = mdText.replace(ytRegex, (match, before, url, videoId, after) => {
-      // Ganti URL jadi iframe, pertahankan spacing sekitar
-      return `${before}<div class="video-wrapper"><iframe src="https://www.youtube.com/embed/${videoId}" title="YouTube video" allowfullscreen loading="lazy"></iframe></div>${after}`;
-    });
-    
     // Parse frontmatter
-    const fmMatch = mdText.match(/^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/m);
+    const match = mdText.match(/^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/m);
     let frontmatter = {};
     let body = mdText;
-    
-    if (fmMatch) {
-      const [, yaml, content] = fmMatch;
+    if (match) {
+      const [, yaml, content] = match;
       body = content;
       yaml.split('\n').forEach(line => {
         const kv = line.match(/^(\w+):\s*(.*)/);
@@ -247,14 +203,13 @@ async function loadMarkdownContent(filename) {
       });
     }
     
-    // ✅ FIX 2: Render markdown dengan opsi yang aman
-    let htmlContent = marked.parse(body, {
-      breaks: true,
-      gfm: true,
-      smartypants: false
-    });
+    // Render markdown
+    let htmlContent = marked.parse(body, { breaks: true, gfm: true });
     
-    // ✅ FIX 3: Wrap images & fix paths (setelah marked)
+    // ✅ Auto-wrap tables for mobile scroll
+    htmlContent = htmlContent.replace(/<table\b[^>]*>/gi, '<div class="table-wrapper"><table>').replace(/<\/table>/gi, '</table></div>');
+    
+    // ✅ Fix image paths
     const imgRegex = /<img\s+([^>]*?)src=["']([^"']+)["']([^>]*?)>/gi;
     htmlContent = htmlContent.replace(imgRegex, (match, before, src, after) => {
       let fixedSrc = src;
@@ -262,10 +217,7 @@ async function loadMarkdownContent(filename) {
       return `<div class="img-wrapper"><img ${before}src="${fixedSrc}"${after}></div>`;
     });
     
-    // ✅ FIX 4: Hapus sisa link YouTube yang mungkin masih nempel (fallback)
-    htmlContent = htmlContent.replace(/<a[^>]*?href=["']https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)[a-zA-Z0-9_-]{11}[^"']*["'][^>]*?>[^<]*?<\/a>/gi, '');
-    
-    // Render layout: Frontmatter DI LUAR, Content DI DALAM
+    // Render layout
     contentEl.innerHTML = `
       <div style="border-bottom:2px solid var(--gray-100);padding-bottom:1.5rem;margin-bottom:2rem">
         <h1 style="font-family:var(--font-display);font-size:1.8rem;color:var(--gray-900);margin-bottom:0.75rem;line-height:1.3">${frontmatter.title || 'Tanpa Judul'}</h1>
@@ -273,34 +225,46 @@ async function loadMarkdownContent(filename) {
           <span style="display:flex;align-items:center;gap:0.4rem"><i class="fa-regular fa-calendar" style="color:var(--primary)"></i>${formatDateID(frontmatter.date)}</span>
           <span style="display:flex;align-items:center;gap:0.4rem"><i class="fa-solid fa-user" style="color:var(--primary)"></i>${frontmatter.author || 'Admin'}</span>
         </div>
-        ${frontmatter.image ? `<img src="../../${frontmatter.image}" alt="${frontmatter.title}" style="width:100%;max-height:400px;object-fit:cover;border-radius:var(--radius);margin-top:1rem;box-shadow:var(--shadow)" onerror="this.style.display='none'">` : ''}
       </div>
-      <div class="markdown-body">${htmlContent}</div>
+      <div class="agenda-body">${htmlContent}</div>
     `;
     
     console.log('✅ Content rendered successfully');
     
   } catch (err) {
-    console.error('[Berita] Error loading markdown:', err);
-    contentEl.innerHTML = `<div style="text-align:center;padding:3rem;color:var(--gray-400)">
-      <i class="fa-solid fa-file-circle-xmark" style="font-size:2rem;margin-bottom:0.5rem;display:block"></i>
-      <p>Konten tidak ditemukan atau telah dihapus.</p>
+    console.error('❌ Error loading markdown:', err);
+    contentEl.innerHTML = `<div style="text-align:center;padding:3rem;color:var(--danger)">
+      <i class="fa-solid fa-triangle-exclamation" style="font-size:2rem;margin-bottom:0.5rem;display:block"></i>
+      <p>Gagal memuat konten: ${err.message}</p>
     </div>`;
   }
 }
 
 // Search
 function initSearchFilter() {
-  const searchInput = document.getElementById('newsSearch');
+  const searchInput = document.getElementById('agendaSearch');
   if (!searchInput) return;
   searchInput.addEventListener('input', (e) => {
     const term = e.target.value.toLowerCase().trim();
-    const filtered = allBerita.filter(item => 
+    const filtered = allAgenda.filter(item => 
       (item.title?.toLowerCase() || '').includes(term) ||
       (item.author?.toLowerCase() || '').includes(term)
     );
-    renderBeritaList(filtered);
+    renderAgendaList(filtered);
   });
 }
 
-console.log('✅ Script ready');
+// Back to Top
+function initBackToTop() {
+  const btn = document.getElementById('backToTop');
+  if (!btn) return;
+  window.addEventListener('scroll', () => {
+    btn.style.display = window.scrollY > 400 ? 'flex' : 'none';
+  });
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
+
+console.log('✅ Agenda script ready');
