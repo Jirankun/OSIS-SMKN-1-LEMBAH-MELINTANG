@@ -1,7 +1,7 @@
 ---
-title: Makan dan minum bareng
-type: pengumuman
-date: 2026-05-22
+title: Senang
+type: berita
+date: 2026-05-04
 author: Saya sendiri
 ---
-Sekedar contoh
+Sekedar contoh,namun saya tidak merasa *suka*
