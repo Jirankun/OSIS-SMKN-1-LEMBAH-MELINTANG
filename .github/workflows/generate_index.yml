@@ -1,0 +1,31 @@
+name: Generate Posts Index
+
+on:
+  push:
+    paths:
+      - 'post/*.md'
+      - 'post/**/*.md'
+  workflow_dispatch: # Bisa dijalankan manual
+
+jobs:
+  generate-index:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+          
+      - name: Run generate script
+        run: python3 .github/workflows/generate_index.py
+        
+      - name: Commit and push if changed
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add content/posts-index.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update: Regenerate posts-index.json" && git push)
