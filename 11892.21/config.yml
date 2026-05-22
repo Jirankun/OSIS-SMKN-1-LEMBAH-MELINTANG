@@ -1,6 +1,6 @@
 backend:
   name: github
-  repo: jirankun/OSIS-SMKN-1-LEMBAH-MELINTANG
+  repo: Jirankun/OSIS-SMKN-1-LEMBAH-MELINTANG
   branch: main
 
 media_folder: "img"
@@ -30,8 +30,7 @@ collections:
       - label: "Tanggal"
         name: "date"
         widget: "datetime"
-        type: "date"
-        format: "YYYY-MM-DD"
+        time_format: false
       - label: "Penulis"
         name: "author"
         widget: "string"
@@ -63,8 +62,7 @@ collections:
               - label: "Tanggal"
                 name: "date"
                 widget: "datetime"
-                type: "date"
-                format: "YYYY-MM-DD"
+                time_format: false
               - label: "Keterangan"
                 name: "description"
                 widget: "string"
