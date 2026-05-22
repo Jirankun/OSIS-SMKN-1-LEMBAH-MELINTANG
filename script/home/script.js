@@ -147,9 +147,34 @@ function renderStaticSections() {
 // ================================================
 // FETCH CONTENT - Home (posts-index.json), Gallery & Team Inti
 // ================================================
+
+/**
+ * Filter postingan berdasarkan tanggal (maksimal 2 bulan dari hari ini)
+ * @param {Array} posts - Array postingan
+ * @returns {Array} - Postingan yang masih dalam rentang 2 bulan
+ */
+function filterRecentPosts(posts) {
+  const now = new Date();
+  const twoMonthsAgo = new Date();
+  twoMonthsAgo.setMonth(now.getMonth() - 2);
+  
+  return posts.filter(post => {
+    if (!post.date) return false;
+    const postDate = new Date(post.date);
+    return !isNaN(postDate.getTime()) && postDate >= twoMonthsAgo;
+  });
+}
+
 async function loadHomeContent() {
   const grid = document.getElementById('newsGrid');
-  grid.innerHTML = '<div class="empty-state"><i class="fa-solid fa-circle-notch fa-spin" style="font-size:2rem;margin-bottom:1rem"></i><p>Memuat konten terbaru...</p></div>';
+  // Tampilkan loading state yang lebih informatif
+  grid.innerHTML = `
+    <div class="empty-state empty-state--loading">
+      <i class="fa-solid fa-circle-notch fa-spin"></i>
+      <p>Memuat berita terbaru...</p>
+    </div>
+  `;
+  
   try {
     const res = await fetch('content/posts-index.json');
     if (!res.ok) throw new Error('Index file not found');
@@ -162,19 +187,42 @@ async function loadHomeContent() {
     posts = posts.filter(p => p.filename && p.date);
 
     if (posts.length === 0) {
-      grid.innerHTML = '<div class="empty-state"><p>Belum ada postingan terbaru</p></div>';
+      grid.innerHTML = `
+        <div class="empty-state empty-state--empty">
+          <i class="fa-regular fa-folder-open"></i>
+          <p>Belum ada postingan tersedia.<br>Silakan tambahkan konten melalui CMS.</p>
+        </div>
+      `;
+      return;
+    }
+
+    // 🔥 FILTER: Hanya tampilkan berita maksimal 2 bulan terakhir
+    const recentPosts = filterRecentPosts(posts);
+    
+    if (recentPosts.length === 0) {
+      grid.innerHTML = `
+        <div class="empty-state empty-state--empty">
+          <i class="fa-regular fa-calendar-xmark"></i>
+          <p>Tidak ada berita dalam 2 bulan terakhir.<br>Berita lama telah diarsipkan.</p>
+        </div>
+      `;
       return;
     }
 
     // Urutkan tanggal terbaru -> ambil 6
-    posts.sort((a, b) => new Date(b.date) - new Date(a.date));
-    const latest = posts.slice(0, 6);
+    recentPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
+    const latest = recentPosts.slice(0, 6);
 
     renderNewsCards(latest);
     initNewsFilter();
   } catch (err) {
     console.error('Gagal load content:', err);
-    grid.innerHTML = '<div class="empty-state"><i class="fa-solid fa-triangle-exclamation" style="font-size:2rem;margin-bottom:1rem;color:var(--danger)"></i><p>Belum ada postingan terbaru</p></div>';
+    grid.innerHTML = `
+      <div class="empty-state empty-state--error">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <p>Gagal memuat berita.<br>Pastikan file <code>content/posts-index.json</code> tersedia.</p>
+      </div>
+    `;
   }
 }
 
@@ -220,7 +268,12 @@ function renderNewsCards(items) {
 
 async function loadGallery() {
   const grid = document.getElementById('galeriGrid');
-  grid.innerHTML = '<div class="empty-state"><i class="fa-solid fa-circle-notch fa-spin" style="font-size:2rem;margin-bottom:1rem"></i><p>Memuat galeri...</p></div>';
+  grid.innerHTML = `
+    <div class="empty-state empty-state--loading">
+      <i class="fa-solid fa-circle-notch fa-spin"></i>
+      <p>Memuat galeri...</p>
+    </div>
+  `;
   try {
     const res = await fetch('content/galeri.json');
     if (!res.ok) throw new Error('Network error');
@@ -228,7 +281,12 @@ async function loadGallery() {
     let items = data.galeri || (Array.isArray(data) ? data : []);
 
     if (!items.length) {
-      grid.innerHTML = '<div class="empty-state"><i class="fa-solid fa-image-slash" style="font-size:2.5rem;margin-bottom:1rem;color:var(--gray-300)"></i><p class="empty-state__text">Belum ada konten galeri</p></div>';
+      grid.innerHTML = `
+        <div class="empty-state empty-state--empty">
+          <i class="fa-solid fa-image-slash"></i>
+          <p class="empty-state__text">Belum ada konten galeri<br>Tambahkan foto melalui CMS.</p>
+        </div>
+      `;
       return;
     }
 
@@ -246,13 +304,23 @@ async function loadGallery() {
     `).join('');
   } catch (err) {
     console.error('Gagal load galeri:', err);
-    grid.innerHTML = `<div class="empty-state"><i class="fa-solid fa-triangle-exclamation" style="font-size:2rem;margin-bottom:1rem;color:var(--danger)"></i><p>Gagal memuat galeri. Pastikan <code>content/galeri.json</code> tersedia.</p></div>`;
+    grid.innerHTML = `
+      <div class="empty-state empty-state--error">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <p>Gagal memuat galeri.<br>Pastikan <code>content/galeri.json</code> tersedia.</p>
+      </div>
+    `;
   }
 }
 
 async function loadTeamInti() {
   const grid = document.getElementById('pengurusGrid');
-  grid.innerHTML = '<div class="empty-state"><i class="fa-solid fa-circle-notch fa-spin" style="font-size:2rem;margin-bottom:1rem"></i><p>Memuat pengurus inti...</p></div>';
+  grid.innerHTML = `
+    <div class="empty-state empty-state--loading">
+      <i class="fa-solid fa-circle-notch fa-spin"></i>
+      <p>Memuat pengurus inti...</p>
+    </div>
+  `;
   try {
     const res = await fetch('content/team_1.json');
     if (!res.ok) throw new Error('Network error');
@@ -260,7 +328,12 @@ async function loadTeamInti() {
     const members = data.team || (Array.isArray(data) ? data : []);
 
     if (!members.length) {
-      grid.innerHTML = '<div class="empty-state"><i class="fa-solid fa-users-slash" style="font-size:2.5rem;margin-bottom:1rem;color:var(--gray-300)"></i><p class="empty-state__text">Belum ada data pengurus inti</p></div>';
+      grid.innerHTML = `
+        <div class="empty-state empty-state--empty">
+          <i class="fa-solid fa-users-slash"></i>
+          <p class="empty-state__text">Belum ada data pengurus inti<br>Tambahkan melalui CMS.</p>
+        </div>
+      `;
       return;
     }
 
@@ -273,7 +346,12 @@ async function loadTeamInti() {
     `).join('');
   } catch (err) {
     console.error('Gagal load team_1.json:', err);
-    grid.innerHTML = `<div class="empty-state"><i class="fa-solid fa-triangle-exclamation" style="font-size:2rem;margin-bottom:1rem;color:var(--danger)"></i><p>Gagal memuat data. Pastikan <code>content/team_1.json</code> tersedia.</p></div>`;
+    grid.innerHTML = `
+      <div class="empty-state empty-state--error">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <p>Gagal memuat data.<br>Pastikan <code>content/team_1.json</code> tersedia.</p>
+      </div>
+    `;
   }
 }
 
