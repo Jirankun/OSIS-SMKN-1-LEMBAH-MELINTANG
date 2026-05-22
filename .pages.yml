@@ -11,9 +11,10 @@ content:
         label: Tipe
         type: select
         options:
-          - berita
-          - pengumuman
-          - agenda
+          values:
+            - berita
+            - pengumuman
+            - agenda
       - { name: date, label: Tanggal, type: date }
       - { name: author, label: Penulis, type: string }
       - { name: image, label: Thumbnail, type: image, required: false }
@@ -23,46 +24,34 @@ content:
     label: Galeri Kegiatan
     type: file
     path: content/galeri.json
+    list: true
     fields:
-      - name: galeri
-        label: Daftar Foto
-        type: object
-        list: true
-        fields:
-          - { name: title, label: Judul, type: string }
-          - { name: date, label: Tanggal, type: date }
-          - { name: description, label: Keterangan, type: string }
-          - { name: image, label: Foto, type: image }
+      - { name: title, label: Judul, type: string }
+      - { name: date, label: Tanggal, type: date }
+      - { name: description, label: Keterangan, type: string }
+      - { name: image, label: Foto, type: image }
 
   - name: pengurus_inti
     label: Pengurus Inti
     type: file
     path: content/team_1.json
+    list: true
     fields:
-      - name: team
-        label: Anggota Inti
-        type: object
-        list: true
-        fields:
-          - { name: name, label: Nama, type: string }
-          - { name: role, label: Jabatan, type: string }
-          - { name: image, label: Foto, type: image }
+      - { name: name, label: Nama, type: string }
+      - { name: role, label: Jabatan, type: string }
+      - { name: image, label: Foto, type: image }
 
   - name: pengurus_divisi
     label: Divisi OSIS
     type: file
     path: content/team_2.json
+    list: true
     fields:
-      - name: divisions
-        label: Struktur Divisi
+      - { name: division, label: Nama Divisi, type: string }
+      - name: members
+        label: Anggota
         type: object
         list: true
         fields:
-          - { name: division, label: Nama Divisi, type: string }
-          - name: members
-            label: Anggota
-            type: object
-            list: true
-            fields:
-              - { name: name, label: Nama, type: string }
-              - { name: image, label: Foto, type: image }
+          - { name: name, label: Nama, type: string }
+          - { name: image, label: Foto, type: image }
