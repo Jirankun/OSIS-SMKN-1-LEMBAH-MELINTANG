@@ -1,7 +1,6 @@
 media:
   input: img
   output: img
-
 content:
   # ============================================
   # KOLEKSI POSTS
@@ -12,7 +11,12 @@ content:
     path: post
     filename: "{year}-{month}-{day}-{fields.title}-{fields.type}-{fields.author}.md"
     fields:
-      - { name: title, label: "Judul", type: string, required: true }
+      - name: title
+        label: "Judul"
+        type: string
+        required: true
+        pattern: "^.{1,10}$"
+        description: "Maksimal 10 karakter (digunakan sebagai nama file)"
       - name: type
         label: "Tipe Konten"
         type: select
@@ -29,7 +33,6 @@ content:
           input: img/post
           output: img/post
       - { name: body, label: "Isi Konten", type: rich-text, required: true }
-
   # ============================================
   # GALERI KEGIATAN
   # ============================================
@@ -49,7 +52,6 @@ content:
         options:
           input: img/galeri
           output: img/galeri
-
   # ============================================
   # PENGURUS INTI OSIS
   # ============================================
@@ -68,7 +70,6 @@ content:
         options:
           input: img/pengurus/inti
           output: img/pengurus/inti
-
   # ============================================
   # STRUKTUR DIVISI OSIS
   # ============================================
