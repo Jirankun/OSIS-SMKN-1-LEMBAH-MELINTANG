@@ -19,6 +19,7 @@ content:
         description: "Maksimal 10 karakter (digunakan sebagai nama file)"
       - name: type
         label: "Tipe Konten"
+        required: true
         type: select
         options:
           values: [berita, pengumuman, agenda]
