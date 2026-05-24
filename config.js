@@ -9,7 +9,7 @@ const SITE_CONFIG = {
     name: "SMKN 1 LEMBAH MELINTANG",
     short: "SMKN 1 LM",
     osis: "OSIS SMKN 1 LEMBAH MELINTANG",
-    tagline: "",
+    tagline: "Bisa dan siap Kerja..!!",
     address: "Jl.Flores No.172 Ujung Gading, Lembah Melintang, Pasaman Barat, Sumatera Barat",
     phone: "+62-812-7511-7151",
     email: "smknsatulembahmelintang@gmail.com",
