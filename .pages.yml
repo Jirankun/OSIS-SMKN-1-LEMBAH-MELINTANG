@@ -95,7 +95,7 @@ content:
               input: img/pengurus/divisi
               output: img/pengurus/divisi
 # ============================================
-  # NOTIFIKASI POPUP 🔔
+  # NOTIFIKASI POPUP
   # ============================================
   - name: notifications
     label: "Notifikasi Popup"
@@ -128,7 +128,7 @@ content:
         label: "Aktif"
         type: boolean
         default: false
-        description: "⚠️ HANYA AKTIFKAN 1 NOTIFIKASI! Matikan yang lain jika ingin ganti."
+        description: "HANYA AKTIFKAN 1 NOTIFIKASI! Matikan yang lain jika ingin ganti."
       
       - name: show_from
         label: "Tampilkan Mulai"
@@ -142,15 +142,21 @@ content:
         required: true
         description: "Batas waktu notifikasi berakhir"
       
+      - name: has_action
+        label: "Tampilkan Tombol Aksi"
+        type: boolean
+        default: false
+        description: "Aktifkan jika popup butuh tombol aksi (selain tombol tutup). Jika diaktifkan, isi Link dan Teks Tombol di bawah."
+      
       - name: link
         label: "Link Tujuan"
         type: string
         required: false
-        description: "URL ketika popup diklik (opsional)"
+        description: "🔗 Hanya diisi jika 'Tampilkan Tombol Aksi' = ON. URL tujuan ketika tombol aksi diklik."
       
       - name: link_text
-        label: "Teks Tombol"
+        label: "Teks Tombol Aksi"
         type: string
         required: false
         default: "Lihat Detail"
-        description: "Label tombol di popup"
+        description: "Hanya diisi jika 'Tampilkan Tombol Aksi' = ON. Label tombol aksi."
