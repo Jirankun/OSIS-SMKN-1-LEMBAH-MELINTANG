@@ -1,7 +1,7 @@
 ---
-title: TELAH DIBUKA PENDAFTARAN SMKN 1 LEMBAH MELINTANG
+title: PPDB
 type: pengumuman
-date: 2026-05-22
+date: 2026-05-21
 author: Zhyllan Fyllah
 image: img/IMG-20260522-WA0006.jpg
 ---
