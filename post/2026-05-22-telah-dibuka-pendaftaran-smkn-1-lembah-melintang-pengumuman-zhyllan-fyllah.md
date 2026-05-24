@@ -1,5 +1,5 @@
 ---
-title: PPDB TAHUN AJARAN 2026/202Ú
+title: PPDB TAHUN AJARAN 2026/2027
 type: pengumuman
 date: 2026-05-21
 author: Zhyllan Fyllah
