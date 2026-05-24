@@ -2,6 +2,12 @@
    GALERI FULL PAGE - Page Specific Styles
    Hanya override yang beda dari global
    ============================================ */
+* {
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none;    /* Firefox */
+  -ms-user-select: none;     /* Internet Explorer/Edge */
+  user-select: none;         /* Standar modern */
+}
 
 /* Grid galeri full page */
 .galeri-full-grid {
@@ -96,12 +102,7 @@
   font-size: 2rem;
 }
 
-/* ✅ Fix: Pastikan page-header gak nutupin content */
-.page-header {
-  padding-top: 80px; /* ✅ Kompensasi navbar fixed 64px + spacing */
-}
-
 /* ✅ Fix: Pastikan section punya spacing bener */
 .section {
-  padding: 2rem 0 4rem; /* ✅ Atas 2rem, bawah 4rem */
+  padding: 2rem 0 4rem;
 }

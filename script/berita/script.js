@@ -3,47 +3,15 @@
 // ================================================
 console.log('✅ Berita script loaded');
 
-const SITE_CONFIG = {
-  school: {
-    name: "SMKN 1 LEMBAH MELINTANG",
-    osis: "OSIS SMKN 1 LEMBAH MELINTANG",
-    tagline: "Unggul dalam Prestasi, Berkarakter Mulia",
-    logo: "../../img/asset/logo.webp",
-  },
-  nav: [
-    { label: "Beranda", href: "../../index.html", icon: "fa-solid fa-house" },
-    { label: "Berita", href: "index.html", icon: "fa-solid fa-newspaper" },
-    { label: "Pengumuman", href: "../pengumuman/index.html", icon: "fa-solid fa-bullhorn" },
-    { label: "Agenda", href: "../agenda/index.html", icon: "fa-solid fa-calendar-days" },
-    { label: "Galeri", href: "../galeri/index.html", icon: "fa-solid fa-images" },
-    { label: "Anggota dan Divisi", href: "../profil_osis/index.html", icon: "fa-solid fa-users" },
-    { label: "Kontak", href: "../../index.html#kontak", icon: "fa-solid fa-envelope" },
-  ]
-};
-
 let allBerita = [];
 
-// Helper: Format tanggal Indonesia
-function formatDateID(dateStr) {
-  if (!dateStr) return '';
-  const d = new Date(dateStr);
-  return isNaN(d.getTime()) ? dateStr : d.toLocaleDateString('id-ID', { 
-    day: 'numeric', month: 'long', year: 'numeric' 
-  });
-}
-
-/**
- * Fetch JSON dengan error handling silent
- */
-async function fetchJsonSilent(url, description = 'data') {
-  try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return await res.json();
-  } catch (err) {
-    console.error(`[Fetch] Gagal mengambil ${description} dari ${url}:`, err.message);
-    return null;
+// Helper: Resolve image path from page/berita/ depth
+function resolvePageImage(path) {
+  if (!path) return null;
+  if (path.startsWith('http') || path.startsWith('//') || path.startsWith('/') || path.startsWith('.')) {
+    return path;
   }
+  return `../../${path}`;
 }
 
 // Init
@@ -52,10 +20,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   
   document.getElementById('year').textContent = new Date().getFullYear();
   
-  initNavbar();
-  renderStaticSections();
+  renderNavbar();
+  renderFooter(3);
   await loadBeritaIndex();
   initSearchFilter();
+  initScrollObserver();
   
   // Handle URL ?file=xxx.md
   const params = new URLSearchParams(window.location.search);
@@ -65,72 +34,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadMarkdownContent(fileParam);
   }
 });
-
-// Navbar
-function initNavbar() {
-  const linksContainer = document.getElementById('navLinks');
-  const mobile = document.getElementById('mobileMenu');
-  const ham = document.getElementById('hamburger');
-  const nav = document.getElementById('navbar');
-  
-  const currentPath = window.location.pathname.replace(/\/+/g, '/').toLowerCase();
-  const isRoot = !currentPath.includes('/page/');
-  
-  const isLinkActive = (href) => {
-    if (href.includes('#')) return isRoot && window.location.hash === href;
-    if (href === '#' || (href.includes('index.html') && !href.includes('/page/'))) return isRoot;
-    const match = href.match(/\/([^\/]+)\/index\.html$/);
-    if (match) return currentPath.includes(`/${match[1].toLowerCase()}/`);
-    return false;
-  };
-  
-  if (linksContainer) {
-    linksContainer.innerHTML = SITE_CONFIG.nav.map(l => {
-      const activeClass = isLinkActive(l.href) ? ' active' : '';
-      return `<a href="${l.href}" class="navbar__link${activeClass}"><i class="${l.icon}"></i> ${l.label}</a>`;
-    }).join('');
-  }
-  
-  if (mobile) {
-    mobile.innerHTML = SITE_CONFIG.nav.map(l => {
-      const activeClass = isLinkActive(l.href) ? ' active' : '';
-      return `<a href="${l.href}" class="navbar__mobile-link${activeClass}"><i class="${l.icon}"></i> ${l.label}</a>`;
-    }).join('');
-  }
-  
-  if (nav) {
-    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 50));
-  }
-  
-  if (ham && mobile) {
-    ham.addEventListener('click', () => {
-      const isOpen = ham.classList.toggle('open');
-      mobile.classList.toggle('open');
-      ham.setAttribute('aria-expanded', isOpen);
-    });
-    mobile.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        ham.classList.remove('open');
-        mobile.classList.remove('open');
-      });
-    });
-  }
-}
-
-// Footer
-function renderStaticSections() {
-  const footerBrand = document.getElementById('footerBrand');
-  const footerDesc = document.getElementById('footerDesc');
-  const footerLinks = document.getElementById('footerLinks');
-  
-  if (footerBrand) footerBrand.textContent = SITE_CONFIG.school.osis;
-  if (footerDesc) footerDesc.textContent = SITE_CONFIG.school.tagline;
-  if (footerLinks) {
-    footerLinks.innerHTML = SITE_CONFIG.nav.slice(0, 3).map(n => 
-      `<li><a href="${n.href}" class="footer__link">${n.label}</a></li>`
-    ).join('');
-  }
-}
 
 // Load Berita Index
 async function loadBeritaIndex() {
@@ -144,8 +47,7 @@ async function loadBeritaIndex() {
     const rawData = await fetchJsonSilent('../../content/posts-index.json', 'index berita');
     
     if (!rawData) {
-      list.style.display = 'none';
-      console.log('[Berita] Tidak ada data berita.');
+      list.innerHTML = emptyStateHTML('news', 'Belum ada berita. Tim jurnalistik akan segera mengisi konten terbaru!');
       return;
     }
     
@@ -156,8 +58,7 @@ async function loadBeritaIndex() {
       .sort((a, b) => new Date(b.date) - new Date(a.date));
     
     if (!allBerita.length) {
-      list.style.display = 'none';
-      console.log('[Berita] Tidak ada berita untuk ditampilkan.');
+      list.innerHTML = emptyStateHTML('news', 'Belum ada berita yang dipublikasikan. Pantau terus website ini!');
       return;
     }
     
@@ -165,7 +66,7 @@ async function loadBeritaIndex() {
     
   } catch (err) {
     console.error('[Berita] Error:', err);
-    list.style.display = 'none';
+    list.innerHTML = emptyStateHTML('error', 'Gagal memuat daftar berita.');
   }
 }
 
@@ -175,14 +76,14 @@ function renderBeritaList(items) {
   if (!list) return;
   
   list.innerHTML = items.map((item, i) => {
-    const imgUrl = item.image;
+    const imgUrl = resolvePageImage(item.image);
     const thumbHTML = imgUrl 
-      ? `<img src="../../${imgUrl}" alt="${item.title}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">`
+      ? `<img src="${imgUrl}" alt="${item.title}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">`
       : '';
     const placeholderHTML = `<div style="width:100%;height:100%;display:${imgUrl ? 'none' : 'flex'};align-items:center;justify-content:center;background:var(--gray-100);color:var(--gray-400)"><i class="fa-solid fa-file-lines"></i></div>`;
     
     return `
-      <div class="berita-item" data-filename="${item.filename}" style="animation-delay:${i * 30}ms;cursor:pointer;background:var(--white);border-radius:var(--radius);padding:1rem;border:2px solid transparent;transition:var(--transition);display:flex;gap:0.75rem;align-items:flex-start">
+      <div class="berita-item anim-stagger" data-filename="${item.filename}" style="animation-delay:${i * 50}ms;cursor:pointer;background:var(--white);border-radius:var(--radius);padding:1rem;border:2px solid transparent;transition:var(--transition);display:flex;gap:0.75rem;align-items:flex-start">
         <div style="flex-shrink:0;width:60px;height:60px;border-radius:var(--radius);overflow:hidden;background:var(--gray-100)">
           ${thumbHTML}
           ${placeholderHTML}
@@ -225,11 +126,9 @@ async function loadMarkdownContent(filename) {
     
     if (typeof marked === 'undefined') throw new Error('marked.js not loaded');
     
-    // ✅ FIX 1: Replace YouTube URLs di RAW markdown SEBELUM marked.parse()
-    // Pattern: YouTube URL yang berdiri sendiri (diapit newline/spasi)
+    // Replace YouTube URLs di RAW markdown SEBELUM marked.parse()
     const ytRegex = /(^|\n|\s)(https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})(?:[^\s]*)?)(\n|\s|$)/g;
     mdText = mdText.replace(ytRegex, (match, before, url, videoId, after) => {
-      // Ganti URL jadi iframe, pertahankan spacing sekitar
       return `${before}<div class="video-wrapper"><iframe src="https://www.youtube.com/embed/${videoId}" title="YouTube video" allowfullscreen loading="lazy"></iframe></div>${after}`;
     });
     
@@ -247,14 +146,14 @@ async function loadMarkdownContent(filename) {
       });
     }
     
-    // ✅ FIX 2: Render markdown dengan opsi yang aman
+    // Render markdown
     let htmlContent = marked.parse(body, {
       breaks: true,
       gfm: true,
       smartypants: false
     });
     
-    // ✅ FIX 3: Wrap images & fix paths (setelah marked)
+    // Wrap images & fix paths
     const imgRegex = /<img\s+([^>]*?)src=["']([^"']+)["']([^>]*?)>/gi;
     htmlContent = htmlContent.replace(imgRegex, (match, before, src, after) => {
       let fixedSrc = src;
@@ -262,10 +161,10 @@ async function loadMarkdownContent(filename) {
       return `<div class="img-wrapper"><img ${before}src="${fixedSrc}"${after}></div>`;
     });
     
-    // ✅ FIX 4: Hapus sisa link YouTube yang mungkin masih nempel (fallback)
+    // Hapus sisa link YouTube yang mungkin masih nempel
     htmlContent = htmlContent.replace(/<a[^>]*?href=["']https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)[a-zA-Z0-9_-]{11}[^"']*["'][^>]*?>[^<]*?<\/a>/gi, '');
     
-    // Render layout: Frontmatter DI LUAR, Content DI DALAM
+    // Render layout
     contentEl.innerHTML = `
       <div style="border-bottom:2px solid var(--gray-100);padding-bottom:1.5rem;margin-bottom:2rem">
         <h1 style="font-family:var(--font-display);font-size:1.8rem;color:var(--gray-900);margin-bottom:0.75rem;line-height:1.3">${frontmatter.title || 'Tanpa Judul'}</h1>
@@ -273,7 +172,7 @@ async function loadMarkdownContent(filename) {
           <span style="display:flex;align-items:center;gap:0.4rem"><i class="fa-regular fa-calendar" style="color:var(--primary)"></i>${formatDateID(frontmatter.date)}</span>
           <span style="display:flex;align-items:center;gap:0.4rem"><i class="fa-solid fa-user" style="color:var(--primary)"></i>${frontmatter.author || 'Admin'}</span>
         </div>
-        ${frontmatter.image ? `<img src="../../${frontmatter.image}" alt="${frontmatter.title}" style="width:100%;max-height:400px;object-fit:cover;border-radius:var(--radius);margin-top:1rem;box-shadow:var(--shadow)" onerror="this.style.display='none'">` : ''}
+        ${frontmatter.image ? `<img src="${resolvePageImage(frontmatter.image)}" alt="${frontmatter.title}" style="width:100%;max-height:400px;object-fit:cover;border-radius:var(--radius);margin-top:1rem;box-shadow:var(--shadow)" onerror="this.style.display='none'">` : ''}
       </div>
       <div class="markdown-body">${htmlContent}</div>
     `;
@@ -300,6 +199,10 @@ function initSearchFilter() {
       (item.author?.toLowerCase() || '').includes(term)
     );
     renderBeritaList(filtered);
+    const list = document.getElementById('beritaList');
+    if (filtered.length === 0 && term && list) {
+      list.innerHTML = emptyStateHTML('search', 'Pencarian "' + e.target.value + '" tidak ditemukan. Coba kata kunci lain.');
+    }
   });
 }
 

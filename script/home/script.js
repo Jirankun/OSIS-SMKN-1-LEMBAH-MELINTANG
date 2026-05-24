@@ -1,75 +1,18 @@
 // ================================================
-// KONFIGURASI SITE
+// HOME PAGE - Beranda
 // ================================================
-const SITE_CONFIG = {
-  school: {
-    name: "SMKN 1 LEMBAH MELINTANG",
-    short: "SMKN 1 LM",
-    osis: "OSIS SMKN 1 LEMBAH MELINTANG",
-    tagline: "Unggul dalam Prestasi, Berkarakter Mulia",
-    address: "Jl. Pendidikan No. 1, Lembah Melintang, Pasaman Barat, Sumatera Barat",
-    phone: "+62-XXX-XXXX-XXXX",
-    email: "info@smkn1lm.sch.id",
-    website: "osis",
-    logo: "img/asset/logo.webp",
-    heroBg: "img/hero-bg.jpg",
-  },
-  social: {
-    instagram: "https://www.instagram.com/osis_smkn1lembahmelintang/",
-    youtube: "", tiktok: "", facebook: "",
-  },
-  site: { url: "https://your-username.github.io/osis-smkn1lm", adminPath: "/11892.21/admin", postsPerPage: 6 },
-  nav: [
-    { label: "Beranda", href: "#", icon: "fa-solid fa-house" },
-    { label: "Berita", href: "page/berita/index.html", icon: "fa-solid fa-newspaper" },
-    { label: "Pengumuman", href: "page/pengumuman/index.html", icon: "fa-solid fa-bullhorn" },
-    { label: "Agenda", href: "page/agenda/index.html", icon: "fa-solid fa-calendar-days" },
-    { label: "Galeri", href: "page/galeri/index.html", icon: "fa-solid fa-images" },
-    { label: "Profil OSIS", href: "page/profil_osis/index.html", icon: "fa-solid fa-users" },
-    { label: "Kontak", href: "#kontak", icon: "fa-solid fa-envelope" },
-  ]
-};
-
-// ================================================
-// HELPER - Silent Error Handling (No UI Errors)
-// ================================================
-function resolveImage(path) {
-  if (!path) return null;
-  return (path.startsWith('http') || path.startsWith('//') || path.startsWith('/') || path.startsWith('.')) ? path : `/${path}`;
-}
-
-function formatDateID(dateStr) {
-  if (!dateStr) return '';
-  const d = new Date(dateStr);
-  return isNaN(d.getTime()) ? dateStr : d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
-}
-
-/**
- * Fetch JSON dengan error handling silent (hanya log di console)
- */
-async function fetchJsonSilent(url, description = 'data') {
-  try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return await res.json();
-  } catch (err) {
-    console.error(`[Fetch] Gagal mengambil ${description} dari ${url}:`, err.message);
-    return null;
-  }
-}
 
 // ================================================
 // CORE INIT
 // ================================================
 document.addEventListener('DOMContentLoaded', () => {
+  renderNavbar();
   initConfig();
-  initNavbar(); // 🔥 Navbar fix disini
-  renderStaticSections();
+  renderFooter(4);
   loadHomeContent();
   loadGallery();
   loadTeamInti();
-  initForm();
-  initScrollObserver();
+  initScrollObserverCustom();
   initBackToTop();
   initLightbox();
 });
@@ -82,92 +25,11 @@ function initConfig() {
   if (SITE_CONFIG.school.heroBg) heroBg.style.backgroundImage = `url('${SITE_CONFIG.school.heroBg}')`;
 }
 
-// ================================================
-// 🔥 NAVBAR - Active State Logic SIMPEL
-// ================================================
-function initNavbar() {
-  const nav = document.getElementById('navbar');
-  const ham = document.getElementById('hamburger');
-  const mobile = document.getElementById('mobileMenu');
-  const linksContainer = document.getElementById('navLinks');
-
-  const currentPath = window.location.pathname.replace(/\/+/g, '/').toLowerCase();
-  const currentHash = window.location.hash.toLowerCase();
-  const isRoot = !currentPath.includes('/page/');
-
-  // 🔥 Trik simpel: cek berdasarkan path & hash
-  const isLinkActive = (href) => {
-    if (href.includes('#')) return isRoot && currentHash === href;
-    if (href === '#' || href === 'index.html') return isRoot;
-    const match = href.match(/page\/([^\/]+)\/index\.html$/);
-    if (match) return currentPath.includes(`/page/${match[1].toLowerCase()}/`);
-    return false;
-  };
-
-  if (linksContainer) {
-    linksContainer.innerHTML = SITE_CONFIG.nav.map(l => 
-      `<a href="${l.href}" class="navbar__link${isLinkActive(l.href) ? ' active' : ''}"><i class="${l.icon}"></i> ${l.label}</a>`
-    ).join('');
-  }
-  if (mobile) {
-    mobile.innerHTML = SITE_CONFIG.nav.map(l => 
-      `<a href="${l.href}" class="navbar__mobile-link${isLinkActive(l.href) ? ' active' : ''}"><i class="${l.icon}"></i> ${l.label}</a>`
-    ).join('');
-  }
-
-  if (nav) window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 50));
-  if (ham && mobile) {
-    ham.addEventListener('click', () => {
-      const isOpen = ham.classList.toggle('open');
-      mobile.classList.toggle('open');
-      ham.setAttribute('aria-expanded', isOpen);
-    });
-    mobile.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
-      ham.classList.remove('open'); mobile.classList.remove('open');
-    }));
-  }
-  window.addEventListener('hashchange', () => {
-    if (linksContainer) linksContainer.innerHTML = SITE_CONFIG.nav.map(l => 
-      `<a href="${l.href}" class="navbar__link${isLinkActive(l.href) ? ' active' : ''}"><i class="${l.icon}"></i> ${l.label}</a>`
-    ).join('');
-    if (mobile) mobile.innerHTML = SITE_CONFIG.nav.map(l => 
-      `<a href="${l.href}" class="navbar__mobile-link${isLinkActive(l.href) ? ' active' : ''}"><i class="${l.icon}"></i> ${l.label}</a>`
-    ).join('');
-  });
-}
-
-// ================================================
-// STATIC SECTIONS & CONTENT LOADERS
-// (renderStaticSections, loadHomeContent, renderNewsCards, loadGallery, loadTeamInti, dll)
-// ... [kode sama kayak sebelumnya, gw singkat biar gak kepanjangan] ...
-// ================================================
-function renderStaticSections() {
-  const sc = SITE_CONFIG.school;
-  document.getElementById('kontakInfo').innerHTML = `
-    <div class="kontak-info__item"><div class="kontak-info__icon"><i class="fa-solid fa-location-dot"></i></div><div><div class="kontak-info__label">Alamat</div><div class="kontak-info__value">${sc.address}</div></div></div>
-    <div class="kontak-info__item"><div class="kontak-info__icon"><i class="fa-solid fa-phone"></i></div><div><div class="kontak-info__label">Telepon</div><div class="kontak-info__value">${sc.phone}</div></div></div>
-    <div class="kontak-info__item"><div class="kontak-info__icon"><i class="fa-solid fa-envelope"></i></div><div><div class="kontak-info__label">Email</div><div class="kontak-info__value">${sc.email}</div></div></div>
-  `;
-  document.getElementById('footerBrand').textContent = SITE_CONFIG.school.osis;
-  document.getElementById('footerDesc').textContent = SITE_CONFIG.school.tagline;
-  document.getElementById('footerLinks').innerHTML = SITE_CONFIG.nav.slice(0, 4).map(n => `<li><a href="${n.href}" class="footer__link">${n.label}</a></li>`).join('');
-  let socialHTML = '';
-  if(SITE_CONFIG.social.instagram) socialHTML += `<a href="${SITE_CONFIG.social.instagram}" class="footer__social-link" target="_blank" rel="noopener"><i class="fa-brands fa-instagram"></i></a>`;
-  document.getElementById('socials').innerHTML = socialHTML;
-}
-
-// ... [loadHomeContent, renderNewsCards, loadGallery, loadTeamInti, initNewsFilter, initLightbox, initForm, showToast, initScrollObserver, initBackToTop] ...
-// (kode lengkapnya sama kayak yang gw kasih sebelumnya, tinggal copy-paste aja bre)
 
 // ================================================
 // FETCH CONTENT - Home (posts-index.json), Gallery & Team Inti
 // ================================================
 
-/**
- * Filter postingan berdasarkan tanggal (maksimal 2 bulan dari hari ini)
- * @param {Array} posts - Array postingan
- * @returns {Array} - Postingan yang masih dalam rentang 2 bulan
- */
 function filterRecentPosts(posts) {
   const now = new Date();
   const twoMonthsAgo = new Date();
@@ -182,7 +44,6 @@ function filterRecentPosts(posts) {
 
 async function loadHomeContent() {
   const grid = document.getElementById('newsGrid');
-  // Tampilkan loading state yang lebih informatif
   grid.innerHTML = `
     <div class="empty-state empty-state--loading">
       <i class="fa-solid fa-circle-notch fa-spin"></i>
@@ -194,40 +55,33 @@ async function loadHomeContent() {
     const rawData = await fetchJsonSilent('content/posts-index.json', 'index berita');
     
     if (!rawData) {
-      grid.style.display = 'none'; // Sembunyikan grid jika gagal fetch, tidak tampilkan error ke user
+      grid.innerHTML = emptyStateHTML('news', 'Belum ada berita terbaru. Pantau terus website ini untuk informasi terbaru dari OSIS!');
       return;
     }
 
-    // Handle format: array langsung, atau dibungkus key, atau single object
     let posts = Array.isArray(rawData) ? rawData : (rawData.posts || rawData.data || [rawData]);
-    
-    // Filter data yang valid (punya filename & date)
     posts = posts.filter(p => p.filename && p.date);
 
     if (posts.length === 0) {
-      grid.style.display = 'none'; // Sembunyikan jika kosong
-      console.log('[Home] Tidak ada postingan tersedia.');
+      grid.innerHTML = emptyStateHTML('news', 'Belum ada berita yang dipublikasikan. Tim jurnalistik akan segera mengisi konten terbaru!');
       return;
     }
 
-    // 🔥 FILTER: Hanya tampilkan berita maksimal 2 bulan terakhir
     const recentPosts = filterRecentPosts(posts);
     
     if (recentPosts.length === 0) {
-      grid.style.display = 'none'; // Sembunyikan jika tidak ada berita baru
-      console.log('[Home] Tidak ada berita dalam 2 bulan terakhir.');
+      grid.innerHTML = emptyStateHTML('news', 'Belum ada berita dalam 2 bulan terakhir. Kunjungi halaman Berita untuk melihat semua artikel.');
       return;
     }
 
-    // Urutkan tanggal terbaru -> ambil 6
     recentPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
     const latest = recentPosts.slice(0, 6);
 
     renderNewsCards(latest);
     initNewsFilter();
   } catch (err) {
-    console.error('[Home] Error tak terduga:', err);
-    grid.style.display = 'none'; // Sembunyikan grid, jangan tampilkan error ke user
+    console.error('[Home] Error:', err);
+    grid.innerHTML = emptyStateHTML('error', 'Gagal memuat berita. Silakan refresh halaman.');
   }
 }
 
@@ -235,24 +89,22 @@ function renderNewsCards(items) {
   const grid = document.getElementById('newsGrid');
   if (!grid) return;
 
-  grid.innerHTML = items.map(item => {
+  grid.innerHTML = items.map((item, i) => {
     const type = (item.type || 'berita').toLowerCase();
     const validType = ['berita', 'pengumuman', 'agenda'].includes(type) ? type : 'berita';
     const typeLabel = validType.charAt(0).toUpperCase() + validType.slice(1);
     const dateFormatted = formatDateID(item.date);
     const imgUrl = resolveImage(item.image);
 
-    // Image + Fallback Placeholder
     const imgHTML = imgUrl 
       ? `<img src="${imgUrl}" alt="${item.title}" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">`
       : '';
     const placeholderHTML = `<div style="display:${imgUrl ? 'none' : 'flex'};align-items:center;justify-content:center;height:100%;background:#f3f4f6;"><i class="fa-solid fa-file-lines" style="font-size:2.5rem;color:var(--gray-400)"></i></div>`;
     
-    // Routing dinamis ke halaman spesifik + query file
     const postLink = `page/${validType}/index.html?file=${encodeURIComponent(item.filename || '')}`;
 
     return `
-      <article class="card" data-category="${validType}">
+      <article class="card anim-stagger" data-category="${validType}" style="animation-delay:${i * 50}ms">
         <div style="position:relative;width:100%;height:180px;overflow:hidden;background:#f3f4f6;">
           ${imgHTML}
           ${placeholderHTML}
@@ -283,23 +135,22 @@ async function loadGallery() {
     const data = await fetchJsonSilent('content/galeri.json', 'galeri');
     
     if (!data) {
-      grid.style.display = 'none';
+      grid.innerHTML = emptyStateHTML('gallery', 'Belum ada foto galeri. Dokumentasi kegiatan akan segera ditambahkan!');
       return;
     }
     
     let items = data.galeri || (Array.isArray(data) ? data : []);
 
     if (!items.length) {
-      grid.style.display = 'none';
-      console.log('[Home] Tidak ada konten galeri.');
+      grid.innerHTML = emptyStateHTML('gallery', 'Belum ada foto yang diunggah.');
       return;
     }
 
     if (items[0]?.date) items.sort((a, b) => new Date(b.date) - new Date(a.date));
     const limited = items.slice(0, 3);
 
-    grid.innerHTML = limited.map(item => `
-      <div class="galeri-item">
+    grid.innerHTML = limited.map((item, i) => `
+      <div class="galeri-item" style="animation: fadeUp 0.5s ${i * 0.1}s ease both">
         <img src="${resolveImage(item.image)}" alt="${item.title || 'Foto Kegiatan'}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
         <div style="display:none;align-items:center;justify-content:center;height:100%;background:#f3f4f6;"><i class="fa-solid fa-image" style="font-size:2rem;color:var(--gray-400)"></i></div>
         <div class="galeri-item__overlay">
@@ -309,7 +160,7 @@ async function loadGallery() {
     `).join('');
   } catch (err) {
     console.error('[Home] Error galeri:', err);
-    grid.style.display = 'none';
+    grid.innerHTML = emptyStateHTML('error', 'Gagal memuat galeri.');
   }
 }
 
@@ -325,15 +176,14 @@ async function loadTeamInti() {
     const data = await fetchJsonSilent('content/team_1.json', 'pengurus inti');
     
     if (!data) {
-      grid.style.display = 'none';
+      grid.innerHTML = emptyStateHTML('users', 'Data pengurus inti belum tersedia.');
       return;
     }
     
     const members = data.team || (Array.isArray(data) ? data : []);
 
     if (!members.length) {
-      grid.style.display = 'none';
-      console.log('[Home] Tidak ada data pengurus inti.');
+      grid.innerHTML = emptyStateHTML('users', 'Belum ada data pengurus inti.');
       return;
     }
 
@@ -346,12 +196,12 @@ async function loadTeamInti() {
     `).join('');
   } catch (err) {
     console.error('[Home] Error pengurus inti:', err);
-    grid.style.display = 'none';
+    grid.innerHTML = emptyStateHTML('error', 'Gagal memuat pengurus inti.');
   }
 }
 
 // ================================================
-// SEARCH & FILTER - Event Delegation
+// SEARCH & FILTER
 // ================================================
 function initNewsFilter() {
   const searchInput = document.getElementById('newsSearch');
@@ -366,14 +216,32 @@ function initNewsFilter() {
     const activeTabEl = container.querySelector('.filter-tab.active');
     const activeTab = activeTabEl ? activeTabEl.dataset.filter : 'all';
     
-    container.querySelectorAll('#newsGrid .card').forEach(card => {
+    const cards = container.querySelectorAll('#newsGrid .card');
+    let visibleCount = 0;
+    cards.forEach(card => {
       const titleEl = card.querySelector('.card__title');
       const title = titleEl ? titleEl.textContent.toLowerCase() : '';
       const cat = card.dataset.category;
       const matchTerm = title.includes(term);
       const matchCat = activeTab === 'all' || activeTab === cat;
-      card.style.display = (matchTerm && matchCat) ? '' : 'none';
+      const show = matchTerm && matchCat;
+      card.style.display = show ? '' : 'none';
+      if (show) visibleCount++;
     });
+
+    // Show/hide search not found
+    const grid = document.getElementById('newsGrid');
+    let notFound = grid.parentElement.querySelector('.empty-state--search');
+    if (visibleCount === 0 && cards.length > 0) {
+      if (!notFound) {
+        notFound = document.createElement('div');
+        notFound.innerHTML = emptyStateHTML('search', 'Pencarian tidak ditemukan. Coba kata kunci lain.');
+        grid.parentElement.insertBefore(notFound, grid.nextElementSibling);
+      }
+      notFound.style.display = '';
+    } else if (notFound) {
+      notFound.style.display = 'none';
+    }
   };
 
   newInput.addEventListener('input', applyFilter);
@@ -387,7 +255,7 @@ function initNewsFilter() {
 }
 
 // ================================================
-// LIGHTBOX - Event Delegation
+// LIGHTBOX
 // ================================================
 function initLightbox() {
   const lb = document.getElementById('lightbox');
@@ -411,25 +279,11 @@ function initLightbox() {
   document.addEventListener('keydown', e => { if(e.key === 'Escape') close(); });
 }
 
-function initForm() {
-  const form = document.getElementById('contactForm');
-  if (!form) return;
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-    showToast('<i class="fa-solid fa-check-circle"></i> Pesan berhasil dikirim! Kami akan segera merespons.', 'success');
-    e.target.reset();
-  });
-}
-
-function showToast(msg, type = 'success') {
-  const t = document.getElementById('toast');
-  if (!t) return;
-  t.innerHTML = msg;
-  t.className = `toast toast--${type} show`;
-  setTimeout(() => t.classList.remove('show'), 3500);
-}
-
-function initScrollObserver() {
+// ================================================
+// SCROLL OBSERVER (Kustom untuk Home)
+// ================================================
+function initScrollObserverCustom() {
+  if (!('IntersectionObserver' in window)) return;
   const obs = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if(e.isIntersecting) {
@@ -438,14 +292,5 @@ function initScrollObserver() {
       }
     });
   }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
-  document.querySelectorAll('.card, .pengurus-card, .kontak-info__item').forEach(el => obs.observe(el));
-}
-
-function initBackToTop() {
-  const btn = document.getElementById('backToTop');
-  if (!btn) return;
-  window.addEventListener('scroll', () => {
-    btn.style.display = window.scrollY > 400 ? 'flex' : 'none';
-  });
-  btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  document.querySelectorAll('.card, .pengurus-card').forEach(el => obs.observe(el));
 }

@@ -3,34 +3,7 @@
 // ================================================
 console.log('✅ Agenda script loaded');
 
-const SITE_CONFIG = {
-  school: {
-    name: "SMKN 1 LEMBAH MELINTANG",
-    osis: "OSIS SMKN 1 LEMBAH MELINTANG",
-    tagline: "Unggul dalam Prestasi, Berkarakter Mulia",
-    logo: "../../img/asset/logo.webp",
-  },
-  nav: [
-    { label: "Beranda", href: "../../index.html", icon: "fa-solid fa-house" },
-    { label: "Berita", href: "../berita/index.html", icon: "fa-solid fa-newspaper" },
-    { label: "Pengumuman", href: "../pengumuman/index.html", icon: "fa-solid fa-bullhorn" },
-    { label: "Agenda", href: "index.html", icon: "fa-solid fa-calendar-days" },
-    { label: "Galeri", href: "../galeri/index.html", icon: "fa-solid fa-images" },
-    { label: "Anggota dan Divisi", href: "../profil_osis/index.html", icon: "fa-solid fa-users" },
-    { label: "Kontak", href: "../../index.html#kontak", icon: "fa-solid fa-envelope" },
-  ]
-};
-
 let allAgenda = [];
-
-// Helper: Format tanggal Indonesia
-function formatDateID(dateStr) {
-  if (!dateStr) return '';
-  const d = new Date(dateStr);
-  return isNaN(d.getTime()) ? dateStr : d.toLocaleDateString('id-ID', { 
-    day: 'numeric', month: 'long', year: 'numeric' 
-  });
-}
 
 // Init
 document.addEventListener('DOMContentLoaded', async () => {
@@ -38,10 +11,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   
   document.getElementById('year').textContent = new Date().getFullYear();
   
-  initNavbar();
-  renderStaticSections();
+  renderNavbar();
+  renderFooter(3);
   await loadAgendaIndex();
   initSearchFilter();
+  initBackToTop();
+  initScrollObserver();
   
   // Handle deep link: ?file=xxx.md
   const params = new URLSearchParams(window.location.search);
@@ -51,65 +26,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadMarkdownContent(fileParam);
   }
 });
-
-// Navbar
-function initNavbar() {
-  const linksContainer = document.getElementById('navLinks');
-  const mobile = document.getElementById('mobileMenu');
-  const ham = document.getElementById('hamburger');
-  const nav = document.getElementById('navbar');
-  
-  const currentPath = window.location.pathname.replace(/\/+/g, '/').toLowerCase();
-  const isRoot = !currentPath.includes('/page/');
-  
-  const isLinkActive = (href) => {
-    if (href.includes('#')) return isRoot && window.location.hash === href;
-    if (href === '#' || (href.includes('index.html') && !href.includes('/page/'))) return isRoot;
-    const match = href.match(/\/([^\/]+)\/index\.html$/);
-    if (match) return currentPath.includes(`/${match[1].toLowerCase()}/`);
-    return false;
-  };
-  
-  if (linksContainer) {
-    linksContainer.innerHTML = SITE_CONFIG.nav.map(l => {
-      const activeClass = isLinkActive(l.href) ? ' active' : '';
-      return `<a href="${l.href}" class="navbar__link${activeClass}"><i class="${l.icon}"></i> ${l.label}</a>`;
-    }).join('');
-  }
-  
-  if (mobile) {
-    mobile.innerHTML = SITE_CONFIG.nav.map(l => {
-      const activeClass = isLinkActive(l.href) ? ' active' : '';
-      return `<a href="${l.href}" class="navbar__mobile-link${activeClass}"><i class="${l.icon}"></i> ${l.label}</a>`;
-    }).join('');
-  }
-  
-  if (nav) window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 50));
-  if (ham && mobile) {
-    ham.addEventListener('click', () => {
-      const isOpen = ham.classList.toggle('open');
-      mobile.classList.toggle('open');
-      ham.setAttribute('aria-expanded', isOpen);
-    });
-    mobile.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => { ham.classList.remove('open'); mobile.classList.remove('open'); });
-    });
-  }
-}
-
-// Footer
-function renderStaticSections() {
-  const footerBrand = document.getElementById('footerBrand');
-  const footerDesc = document.getElementById('footerDesc');
-  const footerLinks = document.getElementById('footerLinks');
-  if (footerBrand) footerBrand.textContent = SITE_CONFIG.school.osis;
-  if (footerDesc) footerDesc.textContent = SITE_CONFIG.school.tagline;
-  if (footerLinks) {
-    footerLinks.innerHTML = SITE_CONFIG.nav.slice(0, 3).map(n => 
-      `<li><a href="${n.href}" class="footer__link">${n.label}</a></li>`
-    ).join('');
-  }
-}
 
 // Load Agenda Index
 async function loadAgendaIndex() {
@@ -126,13 +42,12 @@ async function loadAgendaIndex() {
     const rawData = await res.json();
     let posts = Array.isArray(rawData) ? rawData : [rawData];
     
-    // ✅ Filter hanya type agenda
     allAgenda = posts
       .filter(p => p.type?.toLowerCase() === 'agenda' && p.filename && p.date)
       .sort((a, b) => new Date(b.date) - new Date(a.date));
     
     if (!allAgenda.length) {
-      list.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--gray-400)">Belum ada agenda yang dijadwalkan.</div>';
+      list.innerHTML = emptyStateHTML('calendar', 'Belum ada agenda yang dijadwalkan.');
       return;
     }
     
@@ -140,7 +55,7 @@ async function loadAgendaIndex() {
     
   } catch (err) {
     console.error('❌ Error:', err);
-    list.innerHTML = `<div style="text-align:center;padding:2rem;color:var(--danger)">Gagal memuat data agenda.</div>`;
+    list.innerHTML = emptyStateHTML('error', 'Gagal memuat data agenda.');
   }
 }
 
@@ -150,7 +65,7 @@ function renderAgendaList(items) {
   if (!list) return;
   
   list.innerHTML = items.map((item, i) => `
-    <div class="agenda-item" data-filename="${item.filename}" style="animation-delay:${i * 30}ms">
+    <div class="agenda-item anim-stagger" data-filename="${item.filename}" style="animation-delay:${i * 50}ms">
       <div class="agenda-item__content">
         <div class="agenda-item__title">${item.title || 'Tanpa Judul'}</div>
         <div class="agenda-item__meta">
@@ -175,7 +90,7 @@ function renderAgendaList(items) {
   });
 }
 
-// Load & Render Markdown (No Video, Table Optimized)
+// Load & Render Markdown
 async function loadMarkdownContent(filename) {
   console.log('🔧 Loading markdown:', filename);
   const contentEl = document.getElementById('agendaContent');
@@ -206,10 +121,10 @@ async function loadMarkdownContent(filename) {
     // Render markdown
     let htmlContent = marked.parse(body, { breaks: true, gfm: true });
     
-    // ✅ Auto-wrap tables for mobile scroll
+    // Auto-wrap tables for mobile scroll
     htmlContent = htmlContent.replace(/<table\b[^>]*>/gi, '<div class="table-wrapper"><table>').replace(/<\/table>/gi, '</table></div>');
     
-    // ✅ Fix image paths
+    // Fix image paths
     const imgRegex = /<img\s+([^>]*?)src=["']([^"']+)["']([^>]*?)>/gi;
     htmlContent = htmlContent.replace(imgRegex, (match, before, src, after) => {
       let fixedSrc = src;
@@ -251,19 +166,10 @@ function initSearchFilter() {
       (item.author?.toLowerCase() || '').includes(term)
     );
     renderAgendaList(filtered);
-  });
-}
-
-// Back to Top
-function initBackToTop() {
-  const btn = document.getElementById('backToTop');
-  if (!btn) return;
-  window.addEventListener('scroll', () => {
-    btn.style.display = window.scrollY > 400 ? 'flex' : 'none';
-  });
-  btn.addEventListener('click', (e) => {
-    e.preventDefault();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const list = document.getElementById('agendaList');
+    if (filtered.length === 0 && term && list) {
+      list.innerHTML = emptyStateHTML('search', `Pencarian "${e.target.value}" tidak ditemukan. Coba kata kunci lain.`);
+    }
   });
 }
 

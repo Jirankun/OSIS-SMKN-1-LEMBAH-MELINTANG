@@ -1,58 +1,6 @@
 // ================================================
-// KONFIGURASI SITE
+// PROFIL OSIS PAGE SCRIPT
 // ================================================
-const SITE_CONFIG = {
-  school: {
-    name: "SMKN 1 LEMBAH MELINTANG",
-    short: "SMKN 1 LM",
-    osis: "OSIS SMKN 1 LEMBAH MELINTANG",
-    tagline: "Unggul dalam Prestasi, Berkarakter Mulia",
-    address: "Jl. Pendidikan No. 1, Lembah Melintang, Pasaman Barat, Sumatera Barat",
-    phone: "+62-XXX-XXXX-XXXX",
-    email: "info@smkn1lm.sch.id",
-    website: "https://smkn1lm.sch.id",
-    logo: "../../img/asset/logo.webp",
-  },
-  social: {
-    instagram: "https://instagram.com/osis_smkn1lembahmelintang",
-    youtube: "", tiktok: "", facebook: "",
-  },
-  site: { url: "https://your-username.github.io/osis-smkn1lm", adminPath: "/11892.21/admin" },
-  nav: [
-    { label: "Beranda", href: "../../index.html", icon: "fa-solid fa-house" },
-    { label: "Berita", href: "../berita/index.html", icon: "fa-solid fa-newspaper" },
-    { label: "Pengumuman", href: "../pengumuman/index.html", icon: "fa-solid fa-bullhorn" },
-    { label: "Agenda", href: "../agenda/index.html", icon: "fa-solid fa-calendar-days" },
-    { label: "Galeri", href: "../galeri/index.html", icon: "fa-solid fa-images" },
-    { label: "Anggota dan Divisi", href: "index.html", icon: "fa-solid fa-users" },
-    { label: "Kontak", href: "../../index.html#kontak", icon: "fa-solid fa-envelope" },
-  ]
-};
-
-// ================================================
-// HELPER
-// ================================================
-function resolveImage(path) {
-  if (!path) return null;
-  if (path.startsWith('http') || path.startsWith('//') || path.startsWith('/') || path.startsWith('.')) {
-    return path;
-  }
-  return `/${path}`;
-}
-
-function formatDateID(dateStr) {
-  if (!dateStr) return '';
-  const d = new Date(dateStr);
-  return isNaN(d.getTime()) ? dateStr : d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
-}
-
-function showToast(msg, type = 'success') {
-  const t = document.getElementById('toast');
-  if (!t) return;
-  t.innerHTML = msg;
-  t.className = `toast toast--${type} show`;
-  setTimeout(() => t.classList.remove('show'), 3500);
-}
 
 // ================================================
 // CORE INIT
@@ -60,75 +8,16 @@ function showToast(msg, type = 'success') {
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('year').textContent = new Date().getFullYear();
   document.title = `Profil OSIS - ${SITE_CONFIG.school.osis}`;
-  initNavbar();
-  renderStaticSections();
+  renderNavbar();
+  renderFooter(3);
   loadTeamInti();
   loadTeamDivisi();
-  initScrollObserver();
+  initScrollObserver('.inti-card, .division-card');
   initBackToTop();
 });
 
 // ================================================
-// 🔥 NAVBAR - Active State Logic
-// ================================================
-function initNavbar() {
-  const nav = document.getElementById('navbar');
-  const ham = document.getElementById('hamburger');
-  const mobile = document.getElementById('mobileMenu');
-  const linksContainer = document.getElementById('navLinks');
-
-  const currentPath = window.location.pathname.replace(/\/+/g, '/').toLowerCase();
-  const currentHash = window.location.hash.toLowerCase();
-  const isRoot = !currentPath.includes('/page/');
-
-  const isLinkActive = (href) => {
-    if (href.includes('#')) return isRoot && currentHash === href;
-    if (href === '#' || (href.includes('index.html') && !href.includes('/page/'))) return isRoot;
-    const match = href.match(/\/([^\/]+)\/index\.html$/);
-    if (match) return currentPath.includes(`/${match[1].toLowerCase()}/`);
-    return false;
-  };
-
-  if (linksContainer) {
-    linksContainer.innerHTML = SITE_CONFIG.nav.map(l => 
-      `<a href="${l.href}" class="navbar__link${isLinkActive(l.href) ? ' active' : ''}"><i class="${l.icon}"></i> ${l.label}</a>`
-    ).join('');
-  }
-  if (mobile) {
-    mobile.innerHTML = SITE_CONFIG.nav.map(l => 
-      `<a href="${l.href}" class="navbar__mobile-link${isLinkActive(l.href) ? ' active' : ''}"><i class="${l.icon}"></i> ${l.label}</a>`
-    ).join('');
-  }
-
-  if (nav) window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 50));
-  if (ham && mobile) {
-    ham.addEventListener('click', () => {
-      const isOpen = ham.classList.toggle('open');
-      mobile.classList.toggle('open');
-      ham.setAttribute('aria-expanded', isOpen);
-    });
-    mobile.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
-      ham.classList.remove('open'); mobile.classList.remove('open');
-    }));
-  }
-}
-
-// ================================================
-// RENDER STATIC SECTIONS
-// ================================================
-function renderStaticSections() {
-  const sc = SITE_CONFIG.school;
-  document.getElementById('footerBrand').textContent = SITE_CONFIG.school.osis;
-  document.getElementById('footerDesc').textContent = SITE_CONFIG.school.tagline;
-  document.getElementById('footerLinks').innerHTML = SITE_CONFIG.nav.slice(0, 3).map(n => 
-    `<li><a href="${n.href}" class="footer__link">${n.label}</a></li>`
-  ).join('');
-}
-
-// ================================================
-// 🔥 LOAD PENGURUS INTI - Card Rapi & Konsisten
-// ================================================
-// 🔥 LOAD PENGURUS INTI - Card Rapi & Konsisten (Silent Error)
+// LOAD PENGURUS INTI
 // ================================================
 async function loadTeamInti() {
   const grid = document.getElementById('gridInti');
@@ -140,15 +29,14 @@ async function loadTeamInti() {
     const rawData = await fetchJsonSilent('../../content/team_1.json', 'pengurus inti');
     
     if (!rawData) {
-      grid.style.display = 'none';
+      grid.innerHTML = emptyStateHTML('users', 'Data pengurus inti belum tersedia.');
       return;
     }
     
     const members = Array.isArray(rawData) ? rawData : (rawData.team || rawData.data || []);
 
     if (!members.length) {
-      grid.style.display = 'none';
-      console.log('[Profil OSIS] Belum ada data pengurus inti.');
+      grid.innerHTML = emptyStateHTML('users', 'Belum ada data pengurus inti.');
       return;
     }
 
@@ -171,30 +59,12 @@ async function loadTeamInti() {
     }).join('');
   } catch (e) {
     console.error('[Profil OSIS] Error:', e);
-    grid.style.display = 'none';
+    grid.innerHTML = emptyStateHTML('error', 'Gagal memuat pengurus inti.');
   }
 }
-
-/**
- * Fetch JSON dengan error handling silent (hanya log di console)
- */
-async function fetchJsonSilent(url, description = 'data') {
-  try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return await res.json();
-  } catch (err) {
-    console.error(`[Fetch] Gagal mengambil ${description} dari ${url}:`, err.message);
-    return null;
-  }
-}
-
-/**
- * Fetch JSON dengan error handling silent (hanya log di console)
- */
 
 // ================================================
-// 🔥 LOAD TIM DIVISI - Card Rapi & Konsisten (Silent Error)
+// LOAD TIM DIVISI
 // ================================================
 async function loadTeamDivisi() {
   const container = document.getElementById('gridDivisi');
@@ -206,15 +76,14 @@ async function loadTeamDivisi() {
     const rawData = await fetchJsonSilent('../../content/team_2.json', 'data divisi');
     
     if (!rawData) {
-      container.style.display = 'none';
+      container.innerHTML = emptyStateHTML('users', 'Data divisi belum tersedia.');
       return;
     }
     
     const divisions = Array.isArray(rawData) ? rawData : (rawData.divisions || rawData.data || []);
 
     if (!divisions.length) {
-      container.style.display = 'none';
-      console.log('[Profil OSIS] Belum ada data divisi.');
+      container.innerHTML = emptyStateHTML('users', 'Belum ada data divisi.');
       return;
     }
 
@@ -241,37 +110,6 @@ async function loadTeamDivisi() {
     `).join('');
   } catch (e) {
     console.error('[Profil OSIS] Error divisi:', e);
-    container.style.display = 'none';
+    container.innerHTML = emptyStateHTML('error', 'Gagal memuat data divisi.');
   }
-}
-
-// ================================================
-// SCROLL OBSERVER - Animasi Fade Up
-// ================================================
-function initScrollObserver() {
-  if (!('IntersectionObserver' in window)) return;
-  const obs = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('is-visible');
-        obs.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
-  document.querySelectorAll('.inti-card, .division-card').forEach(el => obs.observe(el));
-}
-
-// ================================================
-// BACK TO TOP
-// ================================================
-function initBackToTop() {
-  const btn = document.getElementById('backToTop');
-  if (!btn) return;
-  window.addEventListener('scroll', () => {
-    btn.style.display = window.scrollY > 400 ? 'flex' : 'none';
-  });
-  btn.addEventListener('click', (e) => {
-    e.preventDefault();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
 }

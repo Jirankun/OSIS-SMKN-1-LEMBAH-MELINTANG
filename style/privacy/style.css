@@ -1,180 +1,115 @@
-        :root {
-            --bg-primary: #0f0f0f;
-            --bg-secondary: #1a1a1a;
-            --text-primary: #ffffff;
-            --text-secondary: #b3b3b3;
-            --accent: #00d4aa;
-            --accent-hover: #00b894;
-            --border: #333;
-            --shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-        }
+/* ============================================
+   PRIVACY PAGE - Content Styling
+   Menggunakan design system utama (blue/white)
+   ============================================ */
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+/* ---- Content Wrapper ---- */
+.privacy-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            padding: 20px;
-            max-width: 900px;
-            margin: 0 auto;
-        }
+/* ---- Section Cards ---- */
+.privacy-section {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--gray-100);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+.privacy-section:hover {
+  box-shadow: var(--shadow);
+  border-color: var(--gray-200);
+}
 
-        .back-btn {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: var(--accent);
-            color: #000;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-            z-index: 1000;
-            box-shadow: var(--shadow);
-        }
+.privacy-section h2 {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--primary-light);
+  line-height: 1.3;
+}
 
-        .back-btn:hover {
-            background: var(--accent-hover);
-            transform: translateX(-3px);
-        }
+.privacy-section h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--gray-800);
+  margin: 1.5rem 0 0.75rem;
+  line-height: 1.3;
+}
 
-        .back-btn:active {
-            transform: translateX(0);
-        }
+.privacy-section p {
+  color: var(--gray-600);
+  line-height: 1.8;
+  margin-bottom: 1rem;
+  font-size: 0.93rem;
+}
 
-        .back-btn svg {
-            width: 18px;
-            height: 18px;
-        }
+.privacy-section ul {
+  margin: 0.75rem 0 1.25rem;
+  padding-left: 1.5rem;
+  color: var(--gray-600);
+  font-size: 0.93rem;
+}
 
-        header {
-            text-align: center;
-            padding: 60px 20px 40px;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 30px;
-        }
+.privacy-section li {
+  margin-bottom: 0.5rem;
+  line-height: 1.7;
+}
 
-        header h1 {
-            font-size: 2rem;
-            margin-bottom: 10px;
-            color: var(--accent);
-        }
+.privacy-section strong {
+  color: var(--gray-800);
+}
 
-        header p {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-        }
+.privacy-section a {
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: none;
+  transition: var(--transition);
+}
+.privacy-section a:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
+}
 
-        .last-updated {
-            background: var(--bg-secondary);
-            padding: 8px 16px;
-            border-radius: 6px;
-            display: inline-block;
-            margin-top: 15px;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
+/* ---- Contact Box ---- */
+.contact-box {
+  background: var(--primary-light);
+  border-left: 4px solid var(--primary);
+  padding: 1.25rem 1.5rem;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  margin: 1.25rem 0;
+  color: var(--gray-700);
+  line-height: 1.8;
+  font-size: 0.93rem;
+}
+.contact-box a {
+  color: var(--primary-dark);
+  font-weight: 600;
+}
+.contact-box strong {
+  color: var(--gray-800);
+  font-size: 1rem;
+}
 
-        section {
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 25px;
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow);
-        }
+/* ---- Mobile ---- */
+@media (max-width: 640px) {
+  .privacy-section {
+    padding: 1.25rem;
+  }
+  .privacy-section h2 {
+    font-size: 1.2rem;
+  }
+}
 
-        section h2 {
-            color: var(--accent);
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--border);
-            font-size: 1.4rem;
-        }
-
-        section h3 {
-            color: var(--text-primary);
-            margin: 20px 0 10px;
-            font-size: 1.1rem;
-        }
-
-        p {
-            margin-bottom: 15px;
-            color: var(--text-secondary);
-        }
-
-        ul {
-            margin: 15px 0 15px 25px;
-            color: var(--text-secondary);
-        }
-
-        li {
-            margin-bottom: 8px;
-        }
-
-        strong {
-            color: var(--text-primary);
-        }
-
-        .contact-info {
-            background: rgba(0, 212, 170, 0.1);
-            border-left: 4px solid var(--accent);
-            padding: 15px 20px;
-            border-radius: 0 8px 8px 0;
-            margin: 20px 0;
-        }
-
-        .contact-info a {
-            color: var(--accent);
-            text-decoration: none;
-        }
-
-        .contact-info a:hover {
-            text-decoration: underline;
-        }
-
-        footer {
-            text-align: center;
-            padding: 30px 20px;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            border-top: 1px solid var(--border);
-            margin-top: 40px;
-        }
-
-        @media (max-width: 768px) {
-            body {
-                padding: 15px;
-            }
-            
-            .back-btn {
-                padding: 8px 16px;
-                font-size: 0.9rem;
-            }
-            
-            header h1 {
-                font-size: 1.6rem;
-            }
-            
-            section {
-                padding: 20px;
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            * {
-                transition: none !important;
-                animation: none !important;
-            }
-        }
+/* ---- Reduced Motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  .privacy-section {
+    transition: none;
+  }
+}

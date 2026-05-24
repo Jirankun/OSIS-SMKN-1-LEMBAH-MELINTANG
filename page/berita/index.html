@@ -14,6 +14,8 @@
   
   <!-- ✅ Marked.js for Markdown Rendering -->
   <script src="https://cdn.jsdelivr.net/npm/marked@18.0.4/lib/marked.umd.min.js" defer></script>
+  <script src="../../config.js" defer></script>
+  <script src="../../script/berita/script.js" defer></script>
 </head>
 <body>
 
@@ -95,8 +97,30 @@
     <i class="fa-solid fa-arrow-up"></i>
   </button>
 
-  <!-- TOAST -->
-  <div class="toast" id="toast"></div>
+
+
+      <!-- Embed Script Darkmode.js dari jsDelivr -->
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+
+<script>
+  function addDarkmodeWidget() {
+    new Darkmode({
+      bottom: '77px',          // Posisi dari bawah layar
+      right: '25px',           // Posisi dari kanan layar
+      time: '0.9s',            // Durasi animasi transisi warna
+      mixColor: '#FFFFFF',        // Warna dasar efek inversi
+      backgroundColor: '#FFFFFF', // Warna background asli website Anda
+      buttonColorDark: '#000000', // Warna tombol saat mode gelap
+      buttonColorLight: '#727272',   // Warna tombol saat mode terang
+      saveInCookies: true,     // Mengingat pilihan user saat ganti halaman
+      label: '🌓',             // Ikon di dalam tombol widget
+      autoMatchOsTheme: true   // Otomatis aktif jika OS user memakai dark mode
+    }).showWidget();
+  }
+  
+  // Jalankan fungsi setelah seluruh halaman selesai dimuat
+  window.addEventListener('load', addDarkmodeWidget);
+</script>
 
   <!-- ✅ JS -->
   <script src="../../script/berita/script.js" defer></script>

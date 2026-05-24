@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hubungi Kami - OSIS SMKN 1 LEMBAH MELINTANG</title>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- CSS: Global dulu, baru page-specific -->
+  <link rel="stylesheet" href="../../style/global/style.css">
+  <link rel="stylesheet" href="../../style/kontak/style.css">
+</head>
+<body>
+
+  <!-- NAVBAR (di-generate JS) -->
+  <nav class="navbar" id="navbar">
+    <div class="container navbar__inner">
+      <a href="../../index.html" class="navbar__brand">
+        <img src="../../img/asset/logo.webp" alt="Logo OSIS" class="navbar__logo">
+        <div class="navbar__title">
+          <span class="navbar__title-main">OSIS SMKN 1</span>
+          <span class="navbar__title-sub">Lembah Melintang</span>
+        </div>
+      </a>
+      <div class="navbar__links" id="navLinks"></div>
+      <button class="navbar__hamburger" id="hamburger" aria-label="Toggle Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="navbar__mobile" id="mobileMenu"></div>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <header class="page-header">
+    <div class="container">
+      <h1 class="page-header__title">Hubungi Kami</h1>
+      <p class="page-header__subtitle">Berikut adalah kontak sekolah kami.</p>
+    </div>
+  </header>
+
+  <!-- KONTAK SECTION -->
+  <section class="section pt-0">
+    <div class="container">
+      <div class="kontak-split">
+
+        <!-- LEFT: Contact Info -->
+        <div class="kontak-info-panel animate-on-scroll">
+          <h2 class="kontak-panel__title">Informasi Kontak</h2>
+          <p class="kontak-panel__desc">Hubungi kami melalui salah satu saluran di bawah ini.</p>
+
+          <div class="kontak-card-list" id="kontakCardList">
+            <!-- Alamat -->
+            <div class="kontak-card animate-on-scroll">
+              <div class="kontak-card__icon">
+                <i class="fa-solid fa-location-dot"></i>
+              </div>
+              <div>
+                <div class="kontak-card__label">Alamat</div>
+                <div class="kontak-card__value" id="kontakAlamat"></div>
+              </div>
+            </div>
+            <!-- Telepon -->
+            <div class="kontak-card animate-on-scroll">
+              <div class="kontak-card__icon">
+                <i class="fa-solid fa-phone"></i>
+              </div>
+              <div>
+                <div class="kontak-card__label">Telepon</div>
+                <div class="kontak-card__value" id="kontakTelepon"></div>
+              </div>
+            </div>
+            <!-- Email -->
+            <div class="kontak-card animate-on-scroll">
+              <div class="kontak-card__icon">
+                <i class="fa-solid fa-envelope"></i>
+              </div>
+              <div>
+                <div class="kontak-card__label">Email</div>
+                <div class="kontak-card__value" id="kontakEmail"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Social Media -->
+          <div class="kontak-social">
+            <h3 class="kontak-social__title">Ikuti Kami</h3>
+            <div class="kontak-social__links" id="kontakSocialLinks"></div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Contact Form -->
+        <div class="kontak-form-panel animate-on-scroll">
+          <h2 class="kontak-panel__title">Kirim Pesan</h2>
+          <p class="kontak-panel__desc">Isi formulir di bawah ini, kami akan merespons secepatnya.</p>
+
+          <form id="kontakForm" class="kontak-form">
+            <div class="form-group">
+              <label class="form-label" for="nama">Nama Lengkap</label>
+              <input type="text" id="nama" class="form-input" placeholder="Nama kamu" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="email">Email / No. HP</label>
+              <input type="text" id="email" class="form-input" placeholder="Kontak aktif" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="subjek">Subjek</label>
+              <input type="text" id="subjek" class="form-input" placeholder="Subjek pesan">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="pesan">Pesan</label>
+              <textarea id="pesan" class="form-textarea" placeholder="Tulis pesan atau saran..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:100%">
+              <i class="fa-solid fa-paper-plane"></i> Kirim Pesan
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER (di-generate JS) -->
+  <footer class="footer">
+    <div class="container footer__grid">
+      <div>
+        <img src="../../img/asset/logo.webp" alt="Logo OSIS" class="footer__brand-logo">
+        <h3 class="footer__brand-name" id="footerBrand"></h3>
+        <p class="footer__brand-desc" id="footerDesc"></p>
+      </div>
+      <div>
+        <h4 class="footer__heading">Navigasi Cepat</h4>
+        <ul class="footer__links" id="footerLinks"></ul>
+      </div>
+      <div>
+        <h4 class="footer__heading">Media Sosial</h4>
+        <div class="footer__socials" id="socials"></div>
+      </div>
+    </div>
+    <div class="container footer__bottom">
+      <span>&copy; <span id="year"></span> OSIS SMKN 1 LM. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <!-- BACK TO TOP -->
+  <button id="backToTop" class="btn btn-primary" style="position:fixed;bottom:1.5rem;right:1.5rem;width:48px;height:48px;border-radius:50%;display:none;align-items:center;justify-content:center;padding:0;z-index:999;box-shadow:var(--shadow-lg)">
+    <i class="fa-solid fa-arrow-up"></i>
+  </button>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <!-- JS -->
+  <script src="../../config.js" defer></script>
+  <script src="../../script/kontak/script.js" defer></script>
+</body>
+</html>

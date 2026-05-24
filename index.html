@@ -42,11 +42,9 @@
       <h2 class="hero__title"><span>OSIS</span> SMKN 1</h2>
       <h2 class="hero__title">LEMBAH MELINTANG</h2>
       <p class="hero__subtitle" id="heroSubtitle"></p>
-      <!--
       <div class="hero__actions">
         <a href="page/berita/index.html" class="btn btn-primary"><i class="fa-solid fa-book-open"></i> Jelajahi Berita</a>
-        <a href="#kontak" class="btn btn-outline"><i class="fa-solid fa-envelope"></i> Hubungi Kami</a>
-      -->
+        <a href="/page/pengumuman" class="btn btn-outline"><i class="fa-solid fa-bullhorn"></i> Lihat Pengumuman</a>
       </div>
     </div>
     <div class="hero__scroll">
@@ -113,33 +111,7 @@
     </div>
   </section>
 
-  <!-- KONTAK -->
-  <section class="section" id="kontak">
-    <div class="container">
-      <div class="section__header">
-        <span class="section__badge"><i class="fa-solid fa-paper-plane"></i> Sapa Kami</span>
-        <h2 class="section__title">Hubungi OSIS</h2>
-      </div>
-      <div class="kontak-grid">
-        <div class="kontak-info" id="kontakInfo"></div>
-        <form id="contactForm" class="card" style="padding:1.5rem">
-          <div class="form-group">
-            <label class="form-label">Nama Lengkap</label>
-            <input type="text" class="form-input" placeholder="Nama kamu" required>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Email / No. HP</label>
-            <input type="text" class="form-input" placeholder="Kontak aktif" required>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Pesan</label>
-            <textarea class="form-textarea" placeholder="Tulis pesan atau saran..." required></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary" style="width:100%"><i class="fa-solid fa-paper-plane"></i> Kirim Pesan</button>
-        </form>
-      </div>
-    </div>
-  </section>
+
 
   <!-- FOOTER -->
   <footer class="footer" id="footer">
@@ -176,14 +148,15 @@
     <button class="lightbox__close" id="lightboxClose"><i class="fa-solid fa-xmark"></i></button>
   </div>
 
-  <!-- TOAST -->
-  <div class="toast" id="toast"></div>
 
+  
 <!-- ✅ GANTI JADI INI -->
 <button id="backToTop" class="btn btn-primary" style="position:fixed;bottom:1.5rem;right:1.5rem;width:48px;height:48px;border-radius:50%;display:none;align-items:center;justify-content:center;padding:0;z-index:999;box-shadow:var(--shadow-lg)">
   <i class="fa-solid fa-arrow-up"></i>
 </button>
 
+  <script src="config.js" defer></script>
   <script src="script/home/script.js" defer></script>
+
 </body>
 </html>

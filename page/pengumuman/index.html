@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pengumuman Resmi - OSIS SMKN 1 LEMBAH MELINTANG</title>
+  <title>Pengumuman - OSIS SMKN 1 LEMBAH MELINTANG</title>
   
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -14,6 +14,7 @@
   
   <!-- ✅ Marked.js (load sebelum script pengumuman) -->
   <script src="https://cdn.jsdelivr.net/npm/marked@18.0.4/lib/marked.umd.min.js" defer></script>
+  <script src="../../config.js" defer></script>
   <script src="../../script/pengumuman/script.js" defer></script>
 </head>
 <body>
@@ -39,7 +40,7 @@
   <!-- PAGE HEADER -->
   <header class="page-header">
     <div class="container">
-      <h1 class="page-header__title">Pengumuman Resmi</h1>
+      <h1 class="page-header__title">Pengumuman</h1>
       <p class="page-header__subtitle">Informasi penting dan pengumuman dari OSIS SMKN 1 Lembah Melintang</p>
     </div>
   </header>
@@ -53,7 +54,7 @@
         <div class="pengumuman-content" id="pengumumanContent">
           <div class="content-placeholder">
             <i class="fa-solid fa-bullhorn" style="font-size:3rem;color:var(--gray-300);margin-bottom:1rem"></i>
-            <p style="color:var(--gray-500)">Pilih pengumuman dari daftar di sebelah kanan untuk membaca detail.</p>
+            <p style="color:var(--gray-500)">Pilih pengumuman untuk membaca...</p>
           </div>
         </div>
 
@@ -93,8 +94,30 @@
     <i class="fa-solid fa-arrow-up"></i>
   </button>
 
-  <!-- TOAST -->
-  <div class="toast" id="toast"></div>
+      <!-- Embed Script Darkmode.js dari jsDelivr -->
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+
+<script>
+  function addDarkmodeWidget() {
+    new Darkmode({
+      bottom: '77px',          // Posisi dari bawah layar
+      right: '25px',           // Posisi dari kanan layar
+      time: '0.9s',            // Durasi animasi transisi warna
+      mixColor: '#FFFFFF',        // Warna dasar efek inversi
+      backgroundColor: '#FFFFFF', // Warna background asli website Anda
+      buttonColorDark: '#000000', // Warna tombol saat mode gelap
+      buttonColorLight: '#727272',   // Warna tombol saat mode terang
+      saveInCookies: true,     // Mengingat pilihan user saat ganti halaman
+      label: '🌓',             // Ikon di dalam tombol widget
+      autoMatchOsTheme: true   // Otomatis aktif jika OS user memakai dark mode
+    }).showWidget();
+  }
+  
+  // Jalankan fungsi setelah seluruh halaman selesai dimuat
+  window.addEventListener('load', addDarkmodeWidget);
+</script>
+
+
 
 </body>
 </html>

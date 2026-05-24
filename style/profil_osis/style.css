@@ -3,11 +3,6 @@
    Hanya override yang beda dari global/style.css
    ============================================ */
 
-/* ---- Page Header Spacing Fix ---- */
-.page-header {
-  padding-top: 80px; /* ✅ Kompensasi navbar fixed 64px + spacing */
-}
-
 /* ---- Pengurus Inti Card ---- */
 .inti-card {
   text-align: center;

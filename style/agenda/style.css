@@ -1,8 +1,6 @@
 /* ============================================
    AGENDA PAGE - Table Optimized & Split View
    ============================================ */
-.page-header { padding-top: 80px; }
-
 .agenda-split {
   display: grid;
   grid-template-columns: 1fr;

@@ -70,6 +70,41 @@ NAVBAR (GLOBAL)
 .navbar__mobile-link:hover, .navbar__mobile-link.active { color: var(--white); background: rgba(14,165,233,0.18); }
 
 /* ============================================
+PAGE HEADER (GLOBAL)
+============================================ */
+.page-header {
+  padding-top: 80px;
+  padding-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+  animation: fadeUp 0.6s ease both;
+}
+.page-header__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  font-weight: 700;
+  color: var(--gray-900);
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+.page-header__subtitle {
+  color: var(--gray-500);
+  font-size: 0.95rem;
+  max-width: 560px;
+  line-height: 1.6;
+}
+.last-updated {
+  display: inline-block;
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  padding: 0.3rem 0.9rem;
+  border-radius: 100px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin-top: 0.75rem;
+}
+
+/* ============================================
 BUTTONS (GLOBAL)
 ============================================ */
 .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.7rem 1.5rem; border-radius: 10px; font-family: var(--font-body); font-size: 0.88rem; font-weight: 700; transition: var(--transition); white-space: nowrap; }
@@ -108,6 +143,9 @@ GRID LAYOUTS (GLOBAL)
 @media (min-width: 900px) { .grid-3 { grid-template-columns: repeat(3, 1fr); } }
 .grid-2 { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
 @media (min-width: 640px) { .grid-2 { grid-template-columns: repeat(2, 1fr); } }
+.grid-4 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+@media (min-width: 640px) { .grid-4 { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 900px) { .grid-4 { grid-template-columns: repeat(4, 1fr); } }
 
 /* ============================================
 GALERI & LIGHTBOX (GLOBAL)
@@ -142,16 +180,8 @@ PENGURUS CARDS (GLOBAL)
 @media (min-width: 640px) { .pengurus-card--ketua { grid-column: span 1; } }
 
 /* ============================================
-KONTAK & FORM (GLOBAL)
+FORM (GLOBAL)
 ============================================ */
-.kontak-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; }
-@media (min-width: 768px) { .kontak-grid { grid-template-columns: 1fr 1fr; } }
-.kontak-info__item { display: flex; align-items: flex-start; gap: 1rem; padding: 1.25rem; background: var(--white); border-radius: var(--radius); border: 1px solid var(--gray-100); margin-bottom: 1rem; transition: var(--transition); }
-.kontak-info__item:hover { box-shadow: var(--shadow); }
-.kontak-info__icon { width: 44px; height: 44px; border-radius: 10px; background: var(--primary-light); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
-.kontak-info__label { font-size: 0.75rem; color: var(--gray-400); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.2rem; }
-.kontak-info__value { font-size: 0.9rem; color: var(--gray-700); font-weight: 500; }
-
 .form-group { margin-bottom: 1.25rem; }
 .form-label { display: block; font-size: 0.83rem; font-weight: 700; color: var(--gray-700); margin-bottom: 0.4rem; }
 .form-input, .form-textarea { width: 100%; padding: 0.75rem 1rem; border: 1.5px solid var(--gray-200); border-radius: 10px; font-family: var(--font-body); font-size: 0.9rem; color: var(--gray-800); background: var(--white); transition: var(--transition); outline: none; }
@@ -190,22 +220,132 @@ SEARCH & FILTER (GLOBAL)
 .filter-tab.active, .filter-tab:hover { color: var(--primary); background: var(--primary-light); border-color: var(--primary); }
 
 /* ============================================
-UTILITIES & ANIMATIONS (GLOBAL)
+ANIMATION SYSTEM (GLOBAL)
 ============================================ */
+
+/* ---- Utility Classes ---- */
 .text-center { text-align: center; }
+.pt-0 { padding-top: 0 !important; }
 .mt-1 { margin-top: 0.5rem; } .mt-2 { margin-top: 1rem; } .mt-3 { margin-top: 1.5rem; }
 .mb-2 { margin-bottom: 1rem; } .mb-3 { margin-bottom: 1.5rem; }
-.empty-state { text-align: center; padding: 4rem 2rem; color: var(--gray-400); }
-.empty-state__icon { font-size: 3rem; margin-bottom: 1rem; }
-.empty-state__text { font-size: 0.93rem; }
+.empty-state { text-align: center; padding: 4rem 2rem; color: var(--gray-400); display: flex; flex-direction: column; align-items: center; gap: 1rem; grid-column: 1 / -1; }
+.empty-state i { font-size: 3rem; display: block; }
+.empty-state__text { font-size: 0.93rem; max-width: 360px; line-height: 1.6; }
+.empty-state--loading i { color: var(--primary); }
+.empty-state--empty i { color: var(--gray-300); }
+.empty-state--error i { color: var(--danger); }
+.empty-state--search i { color: var(--gray-400); }
+.empty-state--news i, .empty-state--gallery i, .empty-state--calendar i, .empty-state--users i { color: var(--gray-300); }
+.empty-state--file i { color: var(--danger); }
+.empty-state--image i { color: var(--gray-300); }
 
+/* ---- Keyframes ---- */
 @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
-.fade-up { animation: fadeUp 0.5s ease both; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideInLeft { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes slideInRight { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes scaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+@keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+@keyframes float { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(20px, -20px) scale(1.05); } }
+@keyframes bounce { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(8px); } }
 
-.toast { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--gray-900); color: var(--white); padding: 0.85rem 1.25rem; border-radius: 12px; font-size: 0.85rem; font-weight: 600; box-shadow: var(--shadow-lg); transform: translateY(120%); transition: transform 0.3s ease; z-index: 9000; display: flex; align-items: center; gap: 0.6rem; max-width: calc(100vw - 3rem); }
+/* ---- Entrance Animation Classes ---- */
+.fade-up { animation: fadeUp 0.5s ease both; }
+.fade-in { animation: fadeIn 0.5s ease both; }
+.slide-in-left { animation: slideInLeft 0.5s ease both; }
+.slide-in-right { animation: slideInRight 0.5s ease both; }
+.scale-in { animation: scaleIn 0.4s ease both; }
+
+/* ---- Staggered Delay Helpers ---- */
+.delay-1 { animation-delay: 0.1s; } .delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; } .delay-4 { animation-delay: 0.4s; }
+.delay-5 { animation-delay: 0.5s; } .delay-6 { animation-delay: 0.6s; }
+
+/* ---- Scroll-Triggered Animation System ---- */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.animate-on-scroll.animate-left {
+  transform: translateX(-30px);
+}
+.animate-on-scroll.animate-right {
+  transform: translateX(30px);
+}
+.animate-on-scroll.animate-scale {
+  transform: scale(0.92);
+}
+
+.animate-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0) translateX(0) scale(1);
+}
+
+/* ---- Section header animation (scroll-triggered) ---- */
+.section__header .section__badge {
+  animation: fadeUp 0.5s ease both;
+}
+.section__header .section__title {
+  animation: fadeUp 0.5s 0.1s ease both;
+}
+.section__header .section__desc {
+  animation: fadeUp 0.5s 0.2s ease both;
+}
+
+/* ---- Dynamic grid item animation (applied by JS after render) ---- */
+.anim-stagger {
+  animation: fadeUp 0.5s ease both;
+}
+
+/* ---- Card hover enhancements ---- */
+.card {
+  will-change: transform;
+}
+
+/* ---- Button pulse on hover ---- */
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+}
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+.btn-primary:hover::after {
+  transform: translateX(100%);
+}
+
+/* ---- Skeleton Loading Animation ---- */
+.skeleton {
+  background: linear-gradient(90deg, var(--gray-100) 25%, var(--gray-200) 50%, var(--gray-100) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+
+/* ---- Split view content entrance (applied inline via HTML/JS) ---- */
+
+/* ---- Toast (unchanged) ---- */
+.toast { position: fixed; bottom: 0.3rem; right: 1.5rem; background: var(--gray-900); color: var(--white); padding: 0.85rem 1.25rem; border-radius: 12px; font-size: 0.85rem; font-weight: 600; box-shadow: var(--shadow-lg); transform: translateY(120%); transition: transform 0.3s ease; z-index: 9000; display: flex; align-items: center; gap: 0.6rem; max-width: calc(100vw - 3rem); }
 .toast.show { transform: translateY(0); }
 .toast--success { border-left: 4px solid var(--success); }
 .toast--error { border-left: 4px solid var(--danger); }
 
 /* Back to Top */
 #backToTop { position: fixed; bottom: 1.5rem; right: 1.5rem; width: 48px; height: 48px; border-radius: 50%; display: none; align-items: center; justify-content: center; padding: 0; z-index: 999; box-shadow: var(--shadow-lg); }
+
+/* ---- Reduced Motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

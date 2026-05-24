@@ -1,8 +1,6 @@
 /* ============================================
    PENGUMUMAN PAGE - Accent Theme & Split View
    ============================================ */
-.page-header { padding-top: 80px; }
-
 .pengumuman-split {
   display: grid;
   grid-template-columns: 1fr;
