@@ -94,7 +94,7 @@ content:
             options:
               input: img/pengurus/divisi
               output: img/pengurus/divisi
-  # ============================================
+# ============================================
   # NOTIFIKASI POPUP 🔔
   # ============================================
   - name: notifications
@@ -108,41 +108,49 @@ content:
         type: string
         required: true
         description: "Judul singkat yang muncul di popup"
+      
       - name: message
         label: "Pesan"
         type: text
         required: true
         description: "Isi pesan notifikasi"
+      
       - name: type
         label: "Tipe Notifikasi"
         type: select
         required: true
         options:
-          values: [info, success, warning, danger]
+          values: [info, warning]
         default: info
-        description: "Menentukan warna/icon popup"
+        description: "Info = informasi biasa | Warning = peringatan penting"
+      
       - name: active
         label: "Aktif"
         type: boolean
-        default: true
-        description: "Hanya notifikasi aktif yang ditampilkan"
+        default: false
+        description: "⚠️ HANYA AKTIFKAN 1 NOTIFIKASI! Matikan yang lain jika ingin ganti."
+      
       - name: show_from
         label: "Tampilkan Mulai"
         type: date
         required: true
         description: "Notifikasi mulai muncul sejak tanggal ini"
+      
       - name: show_until
         label: "Tampilkan Sampai"
         type: date
-        required: false
-        description: "Opsional: batas waktu notifikasi (kosongkan jika unlimited)"
+        required: true
+        description: "Batas waktu notifikasi berakhir"
+      
       - name: link
         label: "Link Tujuan"
         type: string
         required: false
         description: "URL ketika popup diklik (opsional)"
+      
       - name: link_text
         label: "Teks Tombol"
         type: string
         required: false
-        description: "Label tombol di popup (default: 'Lihat Detail')"
+        default: "Lihat Detail"
+        description: "Label tombol di popup"
