@@ -1,1 +1,12 @@
-[]
+[
+  {
+    "title": "Info",
+    "message": "Waktunya bersiap...",
+    "type": "info",
+    "active": true,
+    "show_from": "2026-05-24",
+    "show_until": "2026-05-24",
+    "has_action": true,
+    "link_text": "Lihat Detail"
+  }
+]
