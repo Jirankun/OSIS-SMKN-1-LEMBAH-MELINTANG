@@ -1,7 +1,6 @@
 media:
   input: img
   output: img
-
 content:
   # ============================================
   # KOLEKSI POSTS
@@ -11,8 +10,6 @@ content:
     type: collection
     path: post
     filename: "{year}-{month}-{day}-{fields.title}-{fields.type}-{fields.author}.md"
-    view:
-      fields: [title, type, date, author]
     fields:
       - name: title
         label: "Judul"
@@ -37,16 +34,14 @@ content:
           input: img/post
           output: img/post
       - { name: body, label: "Isi Konten", type: rich-text, required: true }
-
   # ============================================
   # GALERI KEGIATAN
   # ============================================
   - name: galeri
     label: "Galeri Kegiatan"
-    type: collection
-    path: content/galeri
-    view:
-      fields: [title, date]
+    type: file
+    path: content/galeri.json
+    list: true
     fields:
       - { name: title, label: "Judul Foto", type: string, required: true }
       - { name: date, label: "Tanggal Kegiatan", type: date, required: true }
@@ -58,16 +53,14 @@ content:
         options:
           input: img/galeri
           output: img/galeri
-
   # ============================================
   # PENGURUS INTI OSIS
   # ============================================
   - name: pengurus_inti
     label: "Pengurus Inti OSIS"
-    type: collection
-    path: content/pengurus/inti
-    view:
-      fields: [name, role]
+    type: file
+    path: content/team_1.json
+    list: true
     fields:
       - { name: name, label: "Nama Lengkap", type: string, required: true }
       - { name: role, label: "Jabatan", type: string, required: true }
@@ -78,16 +71,14 @@ content:
         options:
           input: img/pengurus/inti
           output: img/pengurus/inti
-
   # ============================================
   # STRUKTUR DIVISI OSIS
   # ============================================
   - name: pengurus_divisi
     label: "Struktur Divisi OSIS"
-    type: collection
-    path: content/pengurus/divisi
-    view:
-      fields: [division]
+    type: file
+    path: content/team_2.json
+    list: true
     fields:
       - { name: division, label: "Nama Divisi", type: string, required: true }
       - name: members
@@ -103,7 +94,6 @@ content:
             options:
               input: img/pengurus/divisi
               output: img/pengurus/divisi
-
   # ============================================
   # NOTIFIKASI POPUP 🔔
   # ============================================
@@ -118,13 +108,11 @@ content:
         type: string
         required: true
         description: "Judul singkat yang muncul di popup"
-      
       - name: message
         label: "Pesan"
         type: text
         required: true
         description: "Isi pesan notifikasi"
-      
       - name: type
         label: "Tipe Notifikasi"
         type: select
@@ -133,31 +121,26 @@ content:
           values: [info, success, warning, danger]
         default: info
         description: "Menentukan warna/icon popup"
-      
       - name: active
         label: "Aktif"
         type: boolean
         default: true
         description: "Hanya notifikasi aktif yang ditampilkan"
-      
       - name: show_from
         label: "Tampilkan Mulai"
         type: date
         required: true
         description: "Notifikasi mulai muncul sejak tanggal ini"
-      
       - name: show_until
         label: "Tampilkan Sampai"
         type: date
         required: false
         description: "Opsional: batas waktu notifikasi (kosongkan jika unlimited)"
-      
       - name: link
         label: "Link Tujuan"
         type: string
         required: false
         description: "URL ketika popup diklik (opsional)"
-      
       - name: link_text
         label: "Teks Tombol"
         type: string
