@@ -21,10 +21,40 @@ function initConfig() {
   document.getElementById('heroSubtitle').textContent = SITE_CONFIG.school.tagline;
   document.getElementById('year').textContent = new Date().getFullYear();
   document.title = SITE_CONFIG.school.osis;
+  
   const heroBg = document.getElementById('heroBg');
-  if (SITE_CONFIG.school.heroBg) heroBg.style.backgroundImage = `url('${SITE_CONFIG.school.heroBg}')`;
+  const heroVideo = document.getElementById('heroVideo');
+  const heroSource = heroVideo?.querySelector('source');
+  
+  // Reset dulu, bre
+  heroBg.classList.remove('video-active');
+  
+  // Cek tipe media, bre
+  if (SITE_CONFIG.school.heroType === 'video' && SITE_CONFIG.school.heroBg) {
+    // MODE VIDEO, JING! 🎬
+    if (heroSource) {
+      heroSource.src = SITE_CONFIG.school.heroBg;
+      heroVideo.load();
+      heroVideo.play().catch(err => {
+        console.warn('Video autoplay gagal, bre:', err);
+        // Fallback ke image kalo autoplay diblokir browser
+        heroBg.style.backgroundImage = `url('${SITE_CONFIG.school.heroBg.replace('.mp4', '.jpeg')}')`;
+      });
+    }
+    heroBg.classList.add('video-active');
+  } else {
+    heroBg.classList.remove('video-active'); // ← WAJIB, bre!
+    // MODE IMAGE DEFAULT, BRE! 🖼️
+    if (SITE_CONFIG.school.heroBg) {
+      heroBg.style.backgroundImage = `url('${SITE_CONFIG.school.heroBg}')`;
+    }
+    // Pause video kalo ada, biar gak makan resource
+    if (heroVideo) {
+      heroVideo.pause();
+      heroVideo.removeAttribute('src');
+    }
+  }
 }
-
 
 // ================================================
 // FETCH CONTENT - Home (posts-index.json), Gallery & Team Inti

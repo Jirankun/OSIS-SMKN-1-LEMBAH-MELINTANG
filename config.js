@@ -9,13 +9,16 @@ const SITE_CONFIG = {
     name: "SMKN 1 LEMBAH MELINTANG",
     short: "SMKN 1 LM",
     osis: "OSIS SMKN 1 LEMBAH MELINTANG",
-    tagline: "Bisa dan siap Kerja..!!",
+    tagline: "Bisa ,dan siap kerja..!!",
     address: "Jl.Flores No.172 Ujung Gading, Lembah Melintang, Pasaman Barat, Sumatera Barat",
     phone: "+62-812-7511-7151",
     email: "smknsatulembahmelintang@gmail.com",
     website: "osis",
     logo: "img/asset/logo.webp",
-    heroBg: "img/asset/super.jpeg",
+    // Ganti jadi video kalo mau, bre: "img/asset/hero-bg.mp4"
+    heroBg: "img/asset/video.mp4",
+    // Tambahin ini: 'image' atau 'video'
+    heroType: "video", 
   },
   social: {
     instagram: "https://www.instagram.com/osis_smkn1lembahmelintang/",
