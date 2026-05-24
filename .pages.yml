@@ -15,8 +15,8 @@ content:
         label: "Judul"
         type: string
         required: true
-        pattern: "^.{1,10}$"
-        description: "Maksimal 10 karakter (digunakan sebagai nama file)"
+        pattern: "^.{1,30}$"
+        description: "Maksimal 30 karakter (digunakan sebagai nama file)"
       - name: type
         label: "Tipe Konten"
         required: true
