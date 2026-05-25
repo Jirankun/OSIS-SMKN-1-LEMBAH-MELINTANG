@@ -93,7 +93,10 @@
         <!-- RIGHT: Contact Form -->
         <div class="kontak-form-panel animate-on-scroll">
           <h2 class="kontak-panel__title">Lapor Bug</h2>
-          <p class="kontak-panel__desc">Isi formulir dibawah ini untuk melaporkan bug yang anda alami dalam layann website OSIS kami,pesan anda akan di teruskan via WhatsApp.</p>
+<p class="kontak-panel__desc">
+  Isi formulir di bawah ini untuk melaporkan kendala yang Anda alami pada layanan website OSIS kami. Pesan Anda akan diteruskan melalui WhatsApp.
+  <strong>Data Anda akan kami jaga kerahasiaannya sesuai dengan <a href="../page/privacy/index.html">kebijakan privasi</a> kami.</strong>
+</p>
 
 <form id="contactForm" class="card" style="padding:1.5rem" onsubmit="sendToWA(event)">
   <div class="form-group">
@@ -112,7 +115,6 @@
     <i class="fa-brands fa-whatsapp"></i> Kirim via WhatsApp
   </button>
 </form>
-<p class="kontak-panel__desc">Data anda akan kami jaga kerahasiaannya,sesuai dengan kebijakan privasi kami</p>
 <script>
 function sendToWA(e) {
   e.preventDefault();
