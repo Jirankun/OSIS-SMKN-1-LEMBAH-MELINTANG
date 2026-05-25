@@ -74,6 +74,7 @@ async function initNotificationPopup() {
 }
 
 // ================================================
-// PANGGIL DI DOMContentLoaded (tambahin baris ini)
+// PANGGIL DI SCRIPT HOME (JANGAN DIPANGGIL DISINI)
 // ================================================
-// initNotificationPopup();
+// Fungsi initNotificationPopup() sudah dipanggil dari script/home/script.js
+// Tidak perlu menambahkan event listener disini untuk menghindari double execution
