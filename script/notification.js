@@ -25,7 +25,9 @@ async function initNotificationPopup() {
     if (localStorage.getItem(dismissedKey)) return;
     
     // Render popup
-    const hasAction = activeNotif.has_action && activeNotif.link;
+    const hasAction = activeNotif.has_action && activeNotif.link_url;
+    const linkUrl = activeNotif.link_url || '#';
+    const linkText = activeNotif.link_text || 'Lihat Detail';
     popupContainer.innerHTML = `
       <div class="notification-popup__overlay" id="notif-overlay"></div>
       <div class="notification-popup notification-popup--${activeNotif.type}">
@@ -37,7 +39,7 @@ async function initNotificationPopup() {
           <p>${activeNotif.message}</p>
         </div>
         <div class="notification-popup__footer">
-          ${hasAction ? `<a href="${activeNotif.link}" class="btn-popup btn-popup--primary">${activeNotif.link_text || 'Lihat Detail'}</a>` : ''}
+          ${hasAction ? `<a href="${linkUrl}" class="btn-popup btn-popup--primary">${linkText}</a>` : ''}
           <button class="btn-popup btn-popup--ghost">Tutup</button>
         </div>
       </div>
