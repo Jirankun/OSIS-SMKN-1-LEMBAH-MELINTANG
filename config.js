@@ -175,6 +175,15 @@ function renderFooter(customNavCount = 4) {
     if (SITE_CONFIG.social.instagram) {
       html += `<a href="${SITE_CONFIG.social.instagram}" class="footer__social-link" target="_blank" rel="noopener"><i class="fa-brands fa-instagram"></i></a>`;
     }
+    if (SITE_CONFIG.social.youtube) {
+      html += `<a href="${SITE_CONFIG.social.youtube}" class="footer__social-link" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>`;
+    }
+    if (SITE_CONFIG.social.tiktok) {
+      html += `<a href="${SITE_CONFIG.social.tiktok}" class="footer__social-link" target="_blank" rel="noopener"><i class="fa-brands fa-tiktok"></i></a>`;
+    }
+    if (SITE_CONFIG.social.facebook) {
+      html += `<a href="${SITE_CONFIG.social.facebook}" class="footer__social-link" target="_blank" rel="noopener"><i class="fa-brands fa-facebook"></i></a>`;
+    }
     els.socials.innerHTML = html;
   }
 }
