@@ -4,18 +4,8 @@
     "message": "Waktunya bersiap...",
     "type": "info",
     "active": true,
-    "show_from": "2026-05-24",
-    "show_until": "2026-05-24",
-    "has_action": true,
-    "link_text": "Lihat Detail"
-  },
-  {
-    "title": "Peringatan",
-    "message": "Waktunya tidur",
-    "type": "warning",
-    "active": true,
-    "show_from": "2026-05-24",
-    "show_until": "2026-05-24",
+    "show_from": "2026-05-25",
+    "show_until": "2026-05-27",
     "has_action": false,
     "link_text": "Lihat Detail"
   }
