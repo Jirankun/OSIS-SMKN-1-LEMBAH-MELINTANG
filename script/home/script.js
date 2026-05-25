@@ -6,6 +6,7 @@
 // CORE INIT
 // ================================================
 document.addEventListener('DOMContentLoaded', () => {
+  initNotificationPopup();
   renderNavbar();
   initConfig();
   renderFooter(4);
