@@ -119,10 +119,49 @@ async function loadMarkdownContent(filename) {
   const contentEl = document.getElementById('beritaContent');
   if (!contentEl) return;
   
+  // Validasi ekstensi file - HARUS .md
+  if (!filename || !filename.toLowerCase().endsWith('.md')) {
+    console.error('[Berita] Invalid file extension:', filename);
+    contentEl.innerHTML = `<div style="text-align:center;padding:3rem;color:var(--danger)">
+      <i class="fa-solid fa-file-circle-xmark" style="font-size:2rem;margin-bottom:0.5rem;display:block"></i>
+      <p>File tidak valid. Hanya file (.md) yang diperbolehkan.</p>
+    </div>`;
+    return;
+  }
+  
+  // Sanitasi filename untuk mencegah path traversal
+  const sanitizedFilename = filename.replace(/[^a-zA-Z0-9._-]/g, '');
+  if (sanitizedFilename !== filename) {
+    console.warn('[Berita] Filename contained invalid characters, sanitized:', filename, '->', sanitizedFilename);
+  }
+  
   contentEl.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--gray-400)">Loading content...</div>';
   
   try {
-    let mdText = await (await fetch(`../../post/${filename}`)).text();
+    const filePath = `../../post/${sanitizedFilename}`;
+    console.log('[Berita] Fetching:', filePath);
+    
+    const res = await fetch(filePath);
+    
+    // Cek apakah file ditemukan
+    if (!res.ok) {
+      if (res.status === 404) {
+        throw new Error('File tidak ditemukan (404). Pastikan nama file benar dan file ada di folder /post/');
+      } else if (res.status >= 500) {
+        throw new Error(`Server error (${res.status}). Coba lagi nanti.`);
+      } else {
+        throw new Error(`HTTP ${res.status}: Gagal mengambil file.`);
+      }
+    }
+    
+    const mdText = await res.text();
+    
+    // Validasi konten - pastikan ini adalah file markdown, bukan HTML
+    const trimmedContent = mdText.trim().toLowerCase();
+    if (trimmedContent.startsWith('<!doctype') || trimmedContent.startsWith('<html')) {
+      console.error('[Berita] File is HTML, not markdown:', sanitizedFilename);
+      throw new Error('File yang diambil adalah HTML, bukan Markdown. Hanya file .md yang didukung.');
+    }
     
     if (typeof marked === 'undefined') throw new Error('marked.js not loaded');
     
@@ -183,7 +222,14 @@ async function loadMarkdownContent(filename) {
     console.error('[Berita] Error loading markdown:', err);
     contentEl.innerHTML = `<div style="text-align:center;padding:3rem;color:var(--gray-400)">
       <i class="fa-solid fa-file-circle-xmark" style="font-size:2rem;margin-bottom:0.5rem;display:block"></i>
-      <p>Konten tidak ditemukan atau telah dihapus.</p>
+      <p><strong>Gagal memuat konten:</strong></p>
+      <p style="color:var(--danger);font-size:0.9rem;margin-top:0.5rem">${err.message}</p>
+      <p style="margin-top:1rem;font-size:0.85rem">Pastikan:</p>
+      <ul style="text-align:left;display:inline-block;font-size:0.85rem;color:var(--gray-500)">
+        <li>File berekstensi .md</li>
+        <li>File ada di folder <code>/post/</code></li>
+        <li>Nama file sesuai dengan yang terdaftar di index</li>
+      </ul>
     </div>`;
   }
 }
