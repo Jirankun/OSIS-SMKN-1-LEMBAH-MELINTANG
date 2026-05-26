@@ -232,13 +232,20 @@ body.dynamic-page .container.main-content {
   padding: 20px;
 }
 
-/* Footer mengikuti lebar konten */
+/* Footer mengikuti lebar konten - FULL WIDTH tanpa batasan container */
 body.dynamic-page .footer {
   position: relative;
   width: 100%;
   left: 0;
   bottom: auto;
   margin-top: auto;
+}
+
+body.dynamic-page .footer .container {
+  max-width: 100% !important;
+  width: 100%;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 /* Tabel dan video bisa melebarkan container */
@@ -253,7 +260,7 @@ body.dynamic-page .video-wrapper iframe {
   min-width: 300px;
 }
 
-/* Pada desktop, batasi lebar maksimal agar rapi */
+/* Pada desktop, footer tetap full width mengikuti konten */
 @media (min-width: 768px) {
   body.dynamic-page table {
     display: table;
@@ -265,8 +272,11 @@ body.dynamic-page .video-wrapper iframe {
   }
   
   body.dynamic-page .footer .container {
-    max-width: 100%;
+    max-width: 100% !important;
+    width: 100%;
     margin: 0;
+    padding-left: 40px;
+    padding-right: 40px;
   }
 }
 
