@@ -111,3 +111,44 @@
   .pengumuman-content { order: 2; }
   .pengumuman-sidebar { order: 1; }
 }
+
+/* ============================================
+   TABLE STYLING
+   ============================================ */
+.pengumuman-body table,
+.markdown-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.9rem;
+  min-width: 300px;
+}
+.pengumuman-body thead,
+.markdown-body thead {
+  background-color: #f2f2f2;
+}
+.pengumuman-body th,
+.pengumuman-body td,
+.markdown-body th,
+.markdown-body td {
+  border: 1px solid #ddd;
+  padding: 0.75rem 1rem;
+  text-align: left;
+}
+.pengumuman-body th,
+.markdown-body th {
+  font-weight: 700;
+  color: var(--gray-900);
+  background-color: #f2f2f2;
+}
+.pengumuman-body tr:nth-child(even),
+.markdown-body tr:nth-child(even) {
+  background-color: #fafafa;
+}
+.pengumuman-body tr:hover,
+.markdown-body tr:hover {
+  background-color: #f5f5f5;
+}
+.video-wrapper {
+  min-width: 300px;
+}
