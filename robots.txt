@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://smkn1-osis.pages.dev/sitemap.xml

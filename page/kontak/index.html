@@ -47,8 +47,8 @@
 
         <!-- LEFT: Contact Info -->
         <div class="kontak-info-panel animate-on-scroll">
-          <h2 class="kontak-panel__title">Informasi Kontak</h2>
-          <p class="kontak-panel__desc">Hubungi kami melalui salah satu saluran di bawah ini.</p>
+          <h2 class="kontak-panel__title">Kontak Sekolah</h2>
+          <p class="kontak-panel__desc">Hubungi sekolah kami, melalui salah satu saluran di bawah ini.</p>
 
           <div class="kontak-card-list" id="kontakCardList">
             <!-- Alamat -->
@@ -92,32 +92,47 @@
 
         <!-- RIGHT: Contact Form -->
         <div class="kontak-form-panel animate-on-scroll">
-          <h2 class="kontak-panel__title">Kirim Pesan</h2>
-          <p class="kontak-panel__desc">Isi formulir di bawah ini, kami akan merespons secepatnya.</p>
+          <h2 class="kontak-panel__title">Lapor Bug</h2>
+<p class="kontak-panel__desc">
+  Isi formulir di bawah ini untuk melaporkan kendala yang Anda alami pada layanan website OSIS kami. Pesan Anda akan diteruskan melalui WhatsApp.
+  <strong>Data Anda akan kami jaga kerahasiaannya sesuai dengan <a href="../page/privacy/index.html">kebijakan privasi</a> kami.</strong>
+</p>
 
-          <form id="kontakForm" class="kontak-form">
-            <div class="form-group">
-              <label class="form-label" for="nama">Nama Lengkap</label>
-              <input type="text" id="nama" class="form-input" placeholder="Nama kamu" required>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="email">Email / No. HP</label>
-              <input type="text" id="email" class="form-input" placeholder="Kontak aktif" required>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="subjek">Subjek</label>
-              <input type="text" id="subjek" class="form-input" placeholder="Subjek pesan">
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="pesan">Pesan</label>
-              <textarea id="pesan" class="form-textarea" placeholder="Tulis pesan atau saran..." required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary" style="width:100%">
-              <i class="fa-solid fa-paper-plane"></i> Kirim Pesan
-            </button>
-          </form>
+<form id="contactForm" class="card" style="padding:1.5rem" onsubmit="sendToWA(event)">
+  <div class="form-group">
+    <label class="form-label">Nama Lengkap</label>
+    <input type="text" id="nama" class="form-input" placeholder="Nama kamu" required>
+  </div>
+  <div class="form-group">
+    <label class="form-label">Email / No. HP</label>
+    <input type="text" id="kontak" class="form-input" placeholder="Kontak aktif" required>
+  </div>
+  <div class="form-group">
+    <label class="form-label">Pesan</label>
+    <textarea id="pesan" class="form-textarea" placeholder="Tulis pesan/saran/bug yang anda alami..." required></textarea>
+  </div>
+  <button type="submit" class="btn btn-primary" style="width:100%">
+    <i class="fa-brands fa-whatsapp"></i> Kirim via WhatsApp
+  </button>
+</form>
+<script>
+function sendToWA(e) {
+  e.preventDefault();
+  const nama = document.getElementById('nama').value;
+  const kontak = document.getElementById('kontak').value;
+  const pesan = document.getElementById('pesan').value;
+  
+  const text = `*Pesan Baru dari Website OSIS*%0A%0A*Nama:* ${nama}%0A*Kontak:* ${kontak}%0A*Pesan:* ${pesan}`;
+  const waNumber = '6285165721384'; // Ganti dengan nomor WA OSIS
+  
+  window.open(`https://wa.me/${waNumber}?text=${text}`, '_blank');
+  
+  if (typeof showToast === 'function') {
+    showToast('<i class="fa-solid fa-check-circle"></i> Membuka WhatsApp...', 'success');
+  }
+}
+</script>
         </div>
-
       </div>
     </div>
   </section>

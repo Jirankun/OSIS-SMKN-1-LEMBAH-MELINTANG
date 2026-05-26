@@ -16,9 +16,9 @@ const SITE_CONFIG = {
     website: "osis",
     logo: "img/asset/logo.webp",
     // Ganti jadi video kalo mau, bre: "img/asset/hero-bg.mp4"
-    heroBg: "img/asset/super.jpeg",
+    heroBg: "img/asset/video.mp4",
     // Tambahin ini: 'image' atau 'video'
-    heroType: "image", 
+    heroType: "video", 
   },
   social: {
     instagram: "https://www.instagram.com/osis_smkn1lembahmelintang/",
@@ -174,6 +174,15 @@ function renderFooter(customNavCount = 4) {
     let html = "";
     if (SITE_CONFIG.social.instagram) {
       html += `<a href="${SITE_CONFIG.social.instagram}" class="footer__social-link" target="_blank" rel="noopener"><i class="fa-brands fa-instagram"></i></a>`;
+    }
+    if (SITE_CONFIG.social.youtube) {
+      html += `<a href="${SITE_CONFIG.social.youtube}" class="footer__social-link" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>`;
+    }
+    if (SITE_CONFIG.social.tiktok) {
+      html += `<a href="${SITE_CONFIG.social.tiktok}" class="footer__social-link" target="_blank" rel="noopener"><i class="fa-brands fa-tiktok"></i></a>`;
+    }
+    if (SITE_CONFIG.social.facebook) {
+      html += `<a href="${SITE_CONFIG.social.facebook}" class="footer__social-link" target="_blank" rel="noopener"><i class="fa-brands fa-facebook"></i></a>`;
     }
     els.socials.innerHTML = html;
   }
