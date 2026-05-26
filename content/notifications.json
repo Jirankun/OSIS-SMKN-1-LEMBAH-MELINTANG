@@ -4,10 +4,9 @@
     "message": "Waktunya bersiap...",
     "type": "info",
     "active": true,
-    "show_from": "2026-05-26",
-    "show_until": "2026-05-31",
-    "has_action": true,
-    "link": "https://tkj1.pages.dev",
-    "link_text": "Buka halaman"
+    "show_from": "2025-01-01",
+    "show_until": "2030-12-31",
+    "has_action": false,
+    "link_text": "Lihat Detail"
   }
 ]
