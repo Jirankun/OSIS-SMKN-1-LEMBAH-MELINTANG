@@ -142,20 +142,27 @@ async function loadMarkdownContent(filename) {
     
     if (typeof marked === 'undefined') throw new Error('marked.js not loaded');
     
-    // Parse frontmatter
+    // Parse frontmatter DULUAN
     const match = mdText.match(/^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/m);
     let frontmatter = {};
     let body = mdText;
+    
     if (match) {
       const [, yaml, content] = match;
-      body = content;
+      body = content; // body sekarang hanya isi konten tanpa frontmatter
       yaml.split('\n').forEach(line => {
         const kv = line.match(/^(\w+):\s*(.*)/);
         if (kv) frontmatter[kv[1].toLowerCase()] = kv[2].trim().replace(/^["']|["']$/g, '');
       });
     }
     
-    // Render markdown
+    // Replace YouTube URLs di BODY (konten saja) SEBELUM marked.parse()
+    const ytRegex = /(^|\n|\s)(https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})(?:[^\s]*)?)(\n|\s|$)/g;
+    body = body.replace(ytRegex, (match, before, url, videoId, after) => {
+      return `${before}<div class="video-wrapper"><iframe src="https://www.youtube.com/embed/${videoId}" title="YouTube video" allowfullscreen loading="lazy"></iframe></div>${after}`;
+    });
+    
+    // Render markdown dari body yang sudah diproses
     let htmlContent = marked.parse(body, { breaks: true, gfm: true });
     
     // Fix image paths & wrap for styling
@@ -165,6 +172,9 @@ async function loadMarkdownContent(filename) {
       if (!src.startsWith('http') && !src.startsWith('/')) fixedSrc = `../../${src}`;
       return `<div class="img-wrapper"><img ${before}src="${fixedSrc}"${after}></div>`;
     });
+    
+    // Hapus sisa link YouTube yang mungkin masih nempel
+    htmlContent = htmlContent.replace(/<a[^>]*?href=["']https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)[a-zA-Z0-9_-]{11}[^"']*["'][^>]*?>[^<]*?<\/a>/gi, '');
     
     // Render layout
     contentEl.innerHTML = `
