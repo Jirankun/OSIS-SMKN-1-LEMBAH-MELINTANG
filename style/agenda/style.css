@@ -54,15 +54,49 @@
   text-align: left;
 }
 .agenda-content th {
-  background: var(--gray-50);
+  background: #f2f2f2;
   font-weight: 700;
   color: var(--gray-700);
   text-transform: uppercase;
   font-size: 0.8rem;
   letter-spacing: 0.04em;
 }
-.agenda-content tr:nth-child(even) { background: var(--gray-50); }
-.agenda-content tr:hover { background: var(--primary-light); transition: background 0.2s; }
+.agenda-content tr:nth-child(even) { background: #fafafa; }
+.agenda-content tr:hover { background: #f5f5f5; transition: background 0.2s; }
+
+/* ✅ Video Wrapper for YouTube */
+.video-wrapper {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+  height: 0;
+  margin: 1.5rem 0;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.video-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* ✅ Image Wrapper with click effect */
+.img-wrapper {
+  margin: 1.5rem 0;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.img-wrapper:hover {
+  transform: scale(1.02);
+}
+.img-wrapper img {
+  max-width: 100%;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
 
 .content-placeholder { text-align: center; padding: 3rem 1rem; color: var(--gray-400); }
 

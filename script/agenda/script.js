@@ -158,15 +158,26 @@ async function loadMarkdownContent(filename) {
     // Render markdown
     let htmlContent = marked.parse(body, { breaks: true, gfm: true });
     
+    // ✅ YouTube Embed - Convert links to iframes
+    const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/g;
+    htmlContent = htmlContent.replace(youtubeRegex, (match, videoId) => {
+      return `<div class="video-wrapper"><iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe></div>`;
+    });
+    
+    // Remove any remaining YouTube links that were converted
+    htmlContent = htmlContent.replace(/<p>.*?(https?:\/\/(?:www\.)?(?:youtube\.com|youtu\.be)[^\s<]*).*?<\/p>/g, (match) => {
+      return match.replace(/https?:\/\/(?:www\.)?(?:youtube\.com|youtu\.be)[^\s<]*/g, '');
+    });
+    
     // Auto-wrap tables for mobile scroll
     htmlContent = htmlContent.replace(/<table\b[^>]*>/gi, '<div class="table-wrapper"><table>').replace(/<\/table>/gi, '</table></div>');
     
-    // Fix image paths
+    // Fix image paths and add click-to-zoom
     const imgRegex = /<img\s+([^>]*?)src=["']([^"']+)["']([^>]*?)>/gi;
     htmlContent = htmlContent.replace(imgRegex, (match, before, src, after) => {
       let fixedSrc = src;
       if (!src.startsWith('http') && !src.startsWith('/')) fixedSrc = `../../${src}`;
-      return `<div class="img-wrapper"><img ${before}src="${fixedSrc}"${after}></div>`;
+      return `<div class="img-wrapper" onclick="openLightbox('${fixedSrc}')"><img ${before}src="${fixedSrc}"${after}></div>`;
     });
     
     // Render layout
@@ -215,6 +226,27 @@ function initSearchFilter() {
       list.innerHTML = emptyStateHTML('search', `Pencarian "${e.target.value}" tidak ditemukan. Coba kata kunci lain.`);
     }
   });
+}
+
+// ✅ Lightbox for images
+function openLightbox(src) {
+  const lightbox = document.createElement('div');
+  lightbox.id = 'lightbox';
+  lightbox.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);display:flex;justify-content:center;align-items:center;z-index:9999;opacity:0;transition:opacity 0.3s;';
+  lightbox.innerHTML = `
+    <span onclick="closeLightbox()" style="position:absolute;top:20px;right:30px;color:white;font-size:2.5rem;cursor:pointer;">&times;</span>
+    <img src="${src}" style="max-width:90%;max-height:90%;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.5);">
+  `;
+  document.body.appendChild(lightbox);
+  setTimeout(() => lightbox.style.opacity = '1', 10);
+}
+
+function closeLightbox() {
+  const lightbox = document.getElementById('lightbox');
+  if (lightbox) {
+    lightbox.style.opacity = '0';
+    setTimeout(() => lightbox.remove(), 300);
+  }
 }
 
 console.log('✅ Agenda script ready');
