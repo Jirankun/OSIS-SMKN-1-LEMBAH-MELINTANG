@@ -151,7 +151,8 @@ GRID LAYOUTS (GLOBAL)
 GALERI & LIGHTBOX (GLOBAL)
 ============================================ */
 .galeri-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
-@media (min-width: 640px) { .galeri-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 480px) { .galeri-grid { grid-template-columns: repeat(4, 1fr); } }
+@media (min-width: 640px) { .galeri-grid { grid-template-columns: repeat(4, 1fr); } }
 @media (min-width: 900px) { .galeri-grid { grid-template-columns: repeat(4, 1fr); } }
 .galeri-item { position: relative; border-radius: var(--radius); overflow: hidden; aspect-ratio: 1; cursor: pointer; background: var(--gray-100); }
 .galeri-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
