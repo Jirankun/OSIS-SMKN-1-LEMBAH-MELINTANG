@@ -338,6 +338,9 @@ ANIMATION SYSTEM (GLOBAL)
 .toast.show { transform: translateY(0); }
 .toast--success { border-left: 4px solid var(--success); }
 .toast--error { border-left: 4px solid var(--danger); }
+.toast--cookie { border-left: 4px solid var(--accent); padding-right: 0.5rem; }
+.toast__close { background: var(--accent); color: var(--white); padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; gap: 0.3rem; transition: var(--transition); margin-left: auto; }
+.toast__close:hover { background: var(--accent-dark); transform: scale(1.05); }
 
 /* Back to Top */
 #backToTop { position: fixed; bottom: 1.5rem; right: 1.5rem; width: 48px; height: 48px; border-radius: 50%; display: none; align-items: center; justify-content: center; padding: 0; z-index: 999; box-shadow: var(--shadow-lg); }
