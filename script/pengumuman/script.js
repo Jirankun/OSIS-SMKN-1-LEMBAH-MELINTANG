@@ -156,14 +156,16 @@ async function loadMarkdownContent(filename) {
       });
     }
     
-    // Replace YouTube URLs di BODY (konten saja) SEBELUM marked.parse()
-    const ytRegex = /(^|\n|\s)(https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})(?:[^\s]*)?)(\n|\s|$)/g;
-    body = body.replace(ytRegex, (match, before, url, videoId, after) => {
-      return `${before}<div class="video-wrapper"><iframe src="https://www.youtube.com/embed/${videoId}" title="YouTube video" allowfullscreen loading="lazy"></iframe></div>${after}`;
-    });
-    
-    // Render markdown dari body yang sudah diproses
+    // Render markdown DULU
     let htmlContent = marked.parse(body, { breaks: true, gfm: true });
+    
+    // Replace YouTube LINK (<a> tag) SETELAH marked.parse()
+    // marked.js mengubah URL YouTube menjadi <a href="...">...</a>
+    const ytLinkRegex = /<a\s+(?:[^>]*?\s+)?href=["']https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})[^"']*["'][^>]*>(.*?)<\/a>/gi;
+    htmlContent = htmlContent.replace(ytLinkRegex, (match, videoId, linkText) => {
+      console.log('🎬 Found YouTube link:', linkText, '-> Video ID:', videoId);
+      return `<div class="video-wrapper"><iframe src="https://www.youtube.com/embed/${videoId}" title="YouTube video" allowfullscreen loading="lazy"></iframe></div>`;
+    });
     
     // Fix image paths & wrap for styling
     const imgRegex = /<img\s+([^>]*?)src=["']([^"']+)["']([^>]*?)>/gi;
@@ -173,7 +175,7 @@ async function loadMarkdownContent(filename) {
       return `<div class="img-wrapper"><img ${before}src="${fixedSrc}"${after}></div>`;
     });
     
-    // Hapus sisa link YouTube yang mungkin masih nempel
+    // Hapus sisa link YouTube yang mungkin masih nempel (fallback jika regex utama gagal)
     htmlContent = htmlContent.replace(/<a[^>]*?href=["']https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)[a-zA-Z0-9_-]{11}[^"']*["'][^>]*?>[^<]*?<\/a>/gi, '');
     
     // Render layout
