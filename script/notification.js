@@ -4,10 +4,11 @@
 async function initNotificationPopup() {
   const popupContainer = document.getElementById('notification-popup');
   if (!popupContainer) return;
-
+  
   try {
-    const res = await fetch('content/notifications.json');
-    if (!res.ok) return;
+    // Fix path: gunakan absolute path dari root
+    const res = await fetch('/content/notifications.json');
+    if (!res.ok) throw new Error('File not found');
     const notifications = await res.json();
     
     const today = new Date();
@@ -76,7 +77,10 @@ async function initNotificationPopup() {
 }
 
 // ================================================
-// PANGGIL DI SCRIPT HOME (JANGAN DIPANGGIL DISINI)
+// AUTO INIT - Jalankan saat DOM ready
 // ================================================
-// Fungsi initNotificationPopup() sudah dipanggil dari script/home/script.js
-// Tidak perlu menambahkan event listener disini untuk menghindari double execution
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initNotificationPopup);
+} else {
+  initNotificationPopup();
+}
