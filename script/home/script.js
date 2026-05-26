@@ -3,9 +3,28 @@
 // ================================================
 
 // ================================================
+// SPLASH SCREEN HANDLER
+// ================================================
+function initSplashScreen() {
+  const splash = document.getElementById('splashScreen');
+  if (!splash) return;
+  
+  // Splash akan otomatis hilang setelah animasi CSS selesai (4s delay + 1s fade out)
+  // Kita tambahkan cleanup untuk memastikan elemen dihapus dari DOM
+  setTimeout(() => {
+    if (splash) {
+      splash.style.display = 'none';
+      // Optional: hapus dari DOM setelah animasi selesai
+      // splash.remove();
+    }
+  }, 5200); // Total durasi: 4s delay + 1s fade + buffer 0.2s
+}
+
+// ================================================
 // CORE INIT
 // ================================================
 document.addEventListener('DOMContentLoaded', () => {
+  initSplashScreen();
   initNotificationPopup();
   renderNavbar();
   initConfig();
