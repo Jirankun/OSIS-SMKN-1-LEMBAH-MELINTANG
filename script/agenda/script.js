@@ -24,6 +24,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (fileParam) {
     console.log('📅 Loading from URL:', fileParam);
     await loadMarkdownContent(fileParam);
+    // Tandai item yang aktif berdasarkan filename dari URL
+    setTimeout(() => {
+      const activeItem = document.querySelector(`.agenda-item[data-filename="${fileParam}"]`);
+      if (activeItem) {
+        document.querySelectorAll('.agenda-item').forEach(i => i.classList.remove('active'));
+        activeItem.classList.add('active');
+      }
+    }, 100);
   }
 });
 

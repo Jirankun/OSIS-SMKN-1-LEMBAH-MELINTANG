@@ -32,6 +32,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (fileParam) {
     console.log('📄 Loading from URL:', fileParam);
     await loadMarkdownContent(fileParam);
+    // Tandai item yang aktif berdasarkan filename dari URL
+    setTimeout(() => {
+      const activeItem = document.querySelector(`.berita-item[data-filename="${fileParam}"]`);
+      if (activeItem) {
+        document.querySelectorAll('.berita-item').forEach(i => i.classList.remove('active'));
+        activeItem.classList.add('active');
+      }
+    }, 100);
   }
 });
 
@@ -103,8 +111,9 @@ function renderBeritaList(items) {
   list.querySelectorAll('.berita-item').forEach(el => {
     el.addEventListener('click', async () => {
       const filename = el.dataset.filename;
-      list.querySelectorAll('.berita-item').forEach(i => i.style.borderColor = 'transparent');
-      el.style.borderColor = 'var(--primary)';
+      // Hapus active dari semua item, lalu tambahkan ke yang diklik
+      list.querySelectorAll('.berita-item').forEach(i => i.classList.remove('active'));
+      el.classList.add('active');
       
       await loadMarkdownContent(filename);
       const newUrl = `?file=${encodeURIComponent(filename)}`;

@@ -47,6 +47,9 @@
   border-collapse: collapse;
   font-size: 0.9rem;
   min-width: 600px; /* Force scroll on small screens */
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* Efek bayangan tabel */
+  border-radius: 8px 8px 0 0; /* Sudut atas melengkung */
+  overflow: hidden; /* Agar border radius terlihat */
 }
 .agenda-content th, .agenda-content td {
   padding: 0.85rem 1rem;
@@ -71,8 +74,10 @@
   padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
   height: 0;
   margin: 1.5rem 0;
-  border-radius: var(--radius);
+  border-radius: 12px; /* Sudut melengkung */
   overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Efek bayangan timbul */
+  background-color: #000; /* Background hitam jika video loading */
 }
 .video-wrapper iframe {
   position: absolute;
@@ -81,6 +86,7 @@
   width: 100%;
   height: 100%;
   border: none;
+  border-radius: 12px; /* Ikuti radius parent */
 }
 
 /* ✅ Image Wrapper with click effect */
