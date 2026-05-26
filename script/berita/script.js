@@ -218,6 +218,9 @@ async function loadMarkdownContent(filename) {
       <div class="markdown-body">${htmlContent}</div>
     `;
     
+    // Init lightbox untuk gambar di konten
+    initContentLightbox();
+    
     console.log('✅ Content rendered successfully');
     
   } catch (err) {
@@ -252,6 +255,38 @@ function initSearchFilter() {
       list.innerHTML = emptyStateHTML('search', 'Pencarian "' + e.target.value + '" tidak ditemukan. Coba kata kunci lain.');
     }
   });
+}
+
+// Lightbox untuk gambar di konten Berita
+function initContentLightbox() {
+  const lb = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lightboxImg');
+  const contentEl = document.getElementById('beritaContent');
+  if (!lb || !lbImg || !contentEl) return;
+
+  // Delegate click pada img-wrapper di dalam markdown-body
+  const markdownBody = contentEl.querySelector('.markdown-body');
+  if (!markdownBody) return;
+
+  markdownBody.addEventListener('click', (e) => {
+    const imgWrapper = e.target.closest('.img-wrapper');
+    if (!imgWrapper) return;
+    const img = imgWrapper.querySelector('img');
+    if (img && img.src) {
+      lbImg.src = img.src;
+      lb.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+  });
+
+  const close = () => { 
+    lb.classList.remove('open'); 
+    document.body.style.overflow = '';
+  };
+  
+  document.getElementById('lightboxClose')?.addEventListener('click', close);
+  lb.addEventListener('click', e => { if(e.target === lb) close(); });
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') close(); });
 }
 
 console.log('✅ Script ready');
