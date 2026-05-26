@@ -1,4 +1,117 @@
-User-agent: *
+# =====================================================
+# ROBOTS.TXT - OSIS SMKN 1 LEMBAH MELINTANG
+# Domain: https://smkn1-osis.pages.dev
+# Updated: 2026-05-27
+# Strategy: MAXIMUM AI & SEARCH VISIBILITY
+# =====================================================
+
+# --- TRADITIONAL SEARCH ENGINES (WAJIB ALLOW) ---
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 2
+
+# --- AI RETRIEVAL CRAWLERS (BIAR KONTEN MUNCUL DI CHAT AI) ---
+# Bot-bot ini fetch content real-time buat jawab pertanyaan user
+User-agent: ChatGPT-User
+Allow: /
+Allow: /img/
+Allow: /content/
+Allow: /post/
+Allow: /page/
+
+User-agent: Claude-Web
+Allow: /
+Allow: /img/
+Allow: /content/
+Allow: /post/
+Allow: /page/
+
+User-agent: PerplexityBot
+Allow: /
+Allow: /img/
+Allow: /content/
+Allow: /post/
+Allow: /page/
+
+User-agent: Amazonbot
 Allow: /
 
+User-agent: YouBot
+Allow: /
+
+User-agent: Cohere-ai
+Allow: /
+
+# --- AI TRAINING CRAWLERS (OPTIONAL: ALLOW BIAR CONTENT LU DIPAKE TRAINING) ---
+# Kalau lu mau konten OSIS lu jadi bahan belajar AI, biarin aja. # Kalau gak mau, ganti "Allow: /" jadi "Disallow: /" di blok-blok bawah ini.
+User-agent: GPTBot
+Allow: /
+Allow: /img/
+Allow: /content/
+Allow: /post/
+Allow: /page/
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: FacebookBot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+# --- IMAGE & MEDIA FOLDERS (BIAR FOTO IKUT KE-INDEX) ---
+# Explicit allow buat folder gambar & media, biar AI parser bego pun gak skip
+User-agent: *
+Allow: /
+Allow: /img/
+Allow: /img/*
+Allow: /content/
+Allow: /content/*
+Allow: /post/
+Allow: /post/*
+Allow: /page/
+Allow: /page/*
+Allow: /*.jpg
+Allow: /*.jpeg
+Allow: /*.png
+Allow: /*.webp
+Allow: /*.gif
+Allow: /*.svg
+Allow: /*.mp4
+Allow: /*.pdf
+
+# --- PROTECTED PATHS (JANGAN DI-CRAWL) ---
+Disallow: /.git/
+Disallow: /.github/Disallow: /node_modules/
+Disallow: /vendor/
+Disallow: /*.log
+Disallow: /*.tmp
+Disallow: /admin/
+Disallow: /api/private/
+
+# --- CRAWL DELAY DEFAULT (BIAR SERVER GAK NGOS-NGOSAN) ---
+User-agent: *
+Crawl-delay: 5
+
+# --- SITEMAP REFERENCE (WAJIB ADA) ---
 Sitemap: https://smkn1-osis.pages.dev/sitemap.xml
+
+# --- AI.TXT / LLMS.TXT HINTS (FUTURE-PROOF) ---
+# Referensi buat AI crawler yang support protokol baru
+# (Opsional, tapi bagus buat ditambahin)
+# LLMs-Text: https://smkn1-osis.pages.dev/llms.txt
+# AI-Content-Policy: training=allow, retrieval=allow
