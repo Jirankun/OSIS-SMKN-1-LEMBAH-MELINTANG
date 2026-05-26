@@ -12,7 +12,19 @@ document.addEventListener('DOMContentLoaded', () => {
   renderFooter(3);
   initBackToTop();
   initScrollObserver();
+  initSplashScreen();
 });
+
+// Splash Screen Handler - sama seperti di home
+function initSplashScreen() {
+  const splash = document.getElementById('splashScreen');
+  if (splash) {
+    // Hapus splash setelah animasi selesai (5s delay + 1s fade out)
+    setTimeout(() => {
+      splash.style.display = 'none';
+    }, 6000);
+  }
+}
 
     // ==========================================
     // JAVASCRIPT: CLOSE TAB + FALLBACK HISTORY

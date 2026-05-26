@@ -408,8 +408,13 @@ SPLASH SCREEN ANIMATION
   color: var(--primary);
   margin-top: 2rem;
   opacity: 0;
-  animation: splashTitleEnter 0.8s ease forwards, spinnerRotate 1.5s linear infinite;
+  animation: splashTitleEnter 0.8s ease forwards;
   animation-delay: 0.7s;
+}
+
+/* Override fa-spin untuk splash loader agar lebih smooth */
+.splash__loader.fa-spin {
+  animation: spinnerRotate 1.5s linear infinite;
 }
 
 /* ---- Reduced Motion ---- */
