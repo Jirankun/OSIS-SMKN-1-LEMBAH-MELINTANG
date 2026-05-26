@@ -408,7 +408,7 @@ SPLASH SCREEN ANIMATION
   color: var(--primary);
   margin-top: 2rem;
   opacity: 0;
-  animation: splashTitleEnter 0.8s ease forwards;
+  animation: splashTitleEnter 0.8s ease forwards, spinnerRotate 1.5s linear infinite;
   animation-delay: 0.7s;
 }
 
