@@ -13,33 +13,49 @@ Allow: /*.gif$
 Allow: /*.webp$
 Allow: /*.svg$
 Allow: /*.css$
-Allow: /api/content  # Jika ada API publik untuk konten
+Allow: /page/
+Allow: /post/
+Allow: /content/posts-index.json
 
-# Blokir file yang tidak perlu diindeks (Asset mentah, Code, Log, MD)
+# Blokir file yang tidak perlu diindeks (Asset mentah, Code, Log, MD files langsung)
 Disallow: /*.md$
 Disallow: /*.txt$
 Disallow: /*.log$
-Disallow: /*.json$
 Disallow: /assets/src/
 Disallow: /node_modules/
 Disallow: /.git/
 Disallow: /vendor/
+Disallow: /11892.21/
 Disallow: /*?*sort=
 Disallow: /*?*filter=
+
+# Izinkan parameter ?file= untuk dynamic content (penting untuk Open Graph)
+Allow: /page/pengumuman/?file=
+Allow: /page/berita/?file=
+Allow: /page/agenda/?file=
 
 # Aturan Khusus untuk AI Crawlers (ChatGPT, Google, Bing)
 User-agent: GPTBot
 Allow: /
+Allow: /page/
+Allow: /content/posts-index.json
 Disallow: /*.md$
 Disallow: /assets/src/
+Disallow: /11892.21/
 
 User-agent: Googlebot
 Allow: /
+Allow: /page/
+Allow: /content/posts-index.json
 Disallow: /*.md$
+Disallow: /11892.21/
 
 User-agent: Bingbot
 Allow: /
+Allow: /page/
+Allow: /content/posts-index.json
 Disallow: /*.md$
+Disallow: /11892.21/
 
 # Lokasi Sitemap (Wajib agar AI menemukan semua halaman)
-Sitemap: https://yourdomain.com/sitemap.xml
+Sitemap: https://smkn1-osis.pages.dev/sitemap.xml

@@ -227,6 +227,13 @@ async function loadMarkdownContent(filename) {
       <div class="markdown-body">${htmlContent}</div>
     `;
     
+    // ✅ Update Open Graph tags dynamically dengan judul dan deskripsi dari MD
+    // Image null = ambil dari config.js (SITE_CONFIG.school.heroBg)
+    const ogDescription = frontmatter.description || body.substring(0, 160).replace(/[#*`]/g, '').trim();
+    if (typeof updateOpenGraphTags === 'function') {
+      updateOpenGraphTags(frontmatter.title, ogDescription, null);
+    }
+    
     // Init lightbox untuk gambar di konten
     initContentLightbox();
     

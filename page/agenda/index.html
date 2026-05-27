@@ -6,31 +6,121 @@
   <meta name="description" content="Agenda kegiatan OSIS SMKN 1 LEMBAH MELINTANG - Jadwal acara dan program kerja">
   <title>Agenda Kegiatan - OSIS SMKN 1 LEMBAH MELINTANG</title>
   
-  <!-- Open Graph / Facebook / WhatsApp Preview -->
+  <!-- ✅ Open Graph / Facebook / WhatsApp Preview (Default) -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://smkn1-osis.pages.dev/page/agenda/">
   <meta property="og:title" content="Agenda Kegiatan - OSIS SMKN 1 LEMBAH MELINTANG">
   <meta property="og:description" content="Agenda kegiatan OSIS SMKN 1 LEMBAH MELINTANG - Jadwal acara dan program kerja">
-  <meta property="og:image" content="https://smkn1-osis.pages.dev/img/asset/logo.webp">
-  <meta property="og:image:alt" content="Logo OSIS SMKN 1 Lembah Melintang">
+  <meta property="og:image" content="https://smkn1-osis.pages.dev/img/asset/super.jpeg">
+  <meta property="og:image:alt" content="OSIS SMKN 1 Lembah Melintang">
   <meta property="og:site_name" content="OSIS SMKN 1 LEMBAH MELINTANG">
   <meta property="og:locale" content="id_ID">
   
-  <!-- Twitter Card -->
+  <!-- ✅ Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Agenda Kegiatan - OSIS SMKN 1 LEMBAH MELINTANG">
   <meta name="twitter:description" content="Agenda kegiatan OSIS SMKN 1 LEMBAH MELINTANG - Jadwal acara dan program kerja">
-  <meta name="twitter:image" content="https://smkn1-osis.pages.dev/img/asset/logo.webp">
+  <meta name="twitter:image" content="https://smkn1-osis.pages.dev/img/asset/super.jpeg">
   
+  <!-- ✅ Favicons -->
   <link rel="icon" type="image/ico" href="../../img/asset/icon.ico">
   <link rel="icon" type="image/png" href="img/asset/icon0.png">
+  
+  <!-- ✅ Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- ✅ CSS: Global dulu, baru page-specific -->
   <link rel="stylesheet" href="../../style/global/style.css">
   <link rel="stylesheet" href="../../style/agenda/style.css">
-  <!-- Marked.js (load sebelum script agenda) -->
-  <script src="https://cdn.jsdelivr.net/npm/marked@18.0.4/lib/marked.umd.min.js" defer></script>
   <link rel="stylesheet" href="../../style/notification.css">
+  
+  <!-- ✅ Marked.js for Markdown Rendering (load sebelum script) -->
+  <script src="https://cdn.jsdelivr.net/npm/marked@18.0.4/lib/marked.umd.min.js" defer></script>
+  
+  <!-- ✅ Config & Dynamic Meta Tags Script -->
   <script src="../../config.js" defer></script>
+  
+  <!-- ✅ Script: Update Open Graph Meta Tags berdasarkan ?file= -->
+  <script>
+    (function() {
+      // Helper resolveImage - sama dengan config.js
+      function resolveImage(path) {
+        if (!path) return null;
+        if (path.startsWith("http") || path.startsWith("//")) {
+          return path;
+        }
+        const baseUrl = window.location.origin;
+        if (path.startsWith("/")) {
+          return baseUrl + path;
+        }
+        return baseUrl + "/" + path;
+      }
+      
+      // Nilai OG Image dari config.js (heroBg)
+      const CONFIG_HERO_BG = 'img/asset/super.jpeg';
+      
+      const params = new URLSearchParams(window.location.search);
+      const fileParam = params.get('file');
+
+      if (fileParam && fileParam.endsWith('.md')) {
+        const safeFile = fileParam.replace(/[^a-zA-Z0-9._-]/g, '');
+        
+        fetch('../../post/' + safeFile)
+          .then(res => res.ok ? res.text() : Promise.reject('Not found'))
+          .then(text => {
+            // Parse Frontmatter
+            const match = text.match(/^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/m);
+            let frontmatter = {};
+            if (match) {
+              const yaml = match[1];
+              yaml.split('\n').forEach(line => {
+                const kv = line.match(/^(\w+):\s*(.*)/);
+                if (kv) frontmatter[kv[1].toLowerCase()] = kv[2].trim().replace(/^["']|["']$/g, '');
+              });
+            }
+
+            const title = frontmatter.title || 'Agenda OSIS';
+            const descRaw = text.replace(/---[\s\S]*?---/, '').replace(/[#*`\[\]]/g, '').substring(0, 160).trim();
+            const description = descRaw || frontmatter.description || 'Baca agenda lengkap dari OSIS SMKN 1 Lembah Melintang.';
+            
+            // IMAGE OG: Selalu ambil dari config.js (heroBg)
+            const image = resolveImage(CONFIG_HERO_BG);
+
+            // Update Meta Tags menggunakan fungsi dari config.js jika tersedia
+            if (typeof updateOpenGraphTags === 'function') {
+              updateOpenGraphTags(title, description, image);
+            } else {
+              // Fallback inline jika config.js belum load
+              const setMeta = (property, content, name = null) => {
+                let el = document.querySelector(`meta[property="${property}"]`) || 
+                         document.querySelector(`meta[name="${name}"]`);
+                if (!el) {
+                  el = document.createElement('meta');
+                  if (property) el.setAttribute('property', property);
+                  if (name) el.setAttribute('name', name);
+                  document.head.appendChild(el);
+                }
+                el.setAttribute('content', content);
+              };
+              setMeta('og:title', title);
+              setMeta('og:description', description);
+              setMeta('og:type', 'article');
+              setMeta('og:image', image);
+              setMeta('og:url', window.location.href);
+              setMeta('twitter:card', 'summary_large_image', 'twitter:card');
+              setMeta('twitter:title', title, 'twitter:title');
+              setMeta('twitter:description', description, 'twitter:description');
+              setMeta('twitter:image', image, 'twitter:image');
+            }
+            
+            console.log('✅ Meta tags updated for:', safeFile, '| Image:', image);
+          })
+          .catch(err => console.warn('⚠️ Gagal load preview meta untuk', safeFile, err));
+      }
+    })();
+  </script>
+  
+  <!-- ✅ Page Script -->
   <script src="../../script/agenda/script.js" defer></script>
 </head>
 <body class="dynamic-page">
