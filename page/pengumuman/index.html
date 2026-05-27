@@ -3,9 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Pengumuman resmi dari OSIS SMKN 1 LEMBAH MELINTANG - Informasi terbaru dan penting">
   <title>Pengumuman - OSIS SMKN 1 LEMBAH MELINTANG</title>
-
-  <link rel="icon" type="image/ico" href="img/asset/icon.ico">
+  
+  <!-- Open Graph / Facebook / WhatsApp Preview -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://smkn1-osis.pages.dev/page/pengumuman/">
+  <meta property="og:title" content="Pengumuman - OSIS SMKN 1 LEMBAH MELINTANG">
+  <meta property="og:description" content="Pengumuman resmi dari OSIS SMKN 1 LEMBAH MELINTANG - Informasi terbaru dan penting">
+  <meta property="og:image" content="https://smkn1-osis.pages.dev/img/asset/logo.webp">
+  <meta property="og:image:alt" content="Logo OSIS SMKN 1 Lembah Melintang">
+  <meta property="og:site_name" content="OSIS SMKN 1 LEMBAH MELINTANG">
+  <meta property="og:locale" content="id_ID">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Pengumuman - OSIS SMKN 1 LEMBAH MELINTANG">
+  <meta name="twitter:description" content="Pengumuman resmi dari OSIS SMKN 1 LEMBAH MELINTANG - Informasi terbaru dan penting">
+  <meta name="twitter:image" content="https://smkn1-osis.pages.dev/img/asset/logo.webp">
+  
+  <link rel="icon" type="image/ico" href="../../img/asset/icon.ico">
   <link rel="icon" type="image/png" href="img/asset/icon0.png">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -18,6 +35,89 @@
   <!-- ✅ Marked.js (load sebelum script pengumuman) -->
   <script src="https://cdn.jsdelivr.net/npm/marked@18.0.4/lib/marked.umd.min.js" defer></script>
   <script src="../../config.js" defer></script>
+  
+  <!-- ✅ Script Khusus untuk Update Meta Tags Open Graph berdasarkan ?file= -->
+  <script>
+    (function() {
+      // Fungsi ini dijalankan SEBELUM DOMContentLoaded agar meta tag siap saat bot membaca
+      const params = new URLSearchParams(window.location.search);
+      const fileParam = params.get('file');
+
+      if (fileParam && fileParam.endsWith('.md')) {
+        // Sanitasi nama file
+        const safeFile = fileParam.replace(/[^a-zA-Z0-9._-]/g, '');
+        
+        // Kita buat fetch langsung di sini (synchronous-like via async IIFE)
+        // Catatan: Bot modern seperti WhatsApp kadang menunggu JS sederhana, 
+        // tapi cara paling aman adalah pre-rendering. Namun untuk solusi JS murni:
+        
+        fetch('../../post/' + safeFile)
+          .then(res => res.ok ? res.text() : Promise.reject('Not found'))
+          .then(text => {
+            // Parse Frontmatter sederhana
+            const match = text.match(/^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/m);
+            let frontmatter = {};
+            if (match) {
+              const yaml = match[1];
+              yaml.split('\n').forEach(line => {
+                const kv = line.match(/^(\w+):\s*(.*)/);
+                if (kv) frontmatter[kv[1].toLowerCase()] = kv[2].trim().replace(/^["']|["']$/g, '');
+              });
+            }
+
+            // Ambil data
+            const title = frontmatter.title || 'Pengumuman OSIS';
+            const descRaw = text.replace(/---[\s\S]*?---/, '').replace(/[#*`\[\]]/g, '').substring(0, 160).trim();
+            const description = descRaw || frontmatter.description || 'Baca pengumuman lengkap dari OSIS SMKN 1 Lembah Melintang.';
+            
+            // Coba ambil gambar dari konten jika ada, atau pakai default
+            let image = 'https://smkn1-osis.pages.dev/img/asset/logo.webp';
+            const imgMatch = text.match(/!\[.*?\]\((.*?)\)/);
+            if (imgMatch && imgMatch[1]) {
+              let imgSrc = imgMatch[1];
+              if (!imgSrc.startsWith('http') && !imgSrc.startsWith('/')) {
+                // Asumsi relatif terhadap root atau post folder, sesuaikan jika perlu
+                // Untuk OG, kita butuh absolute URL. Jika gambar di /img/
+                if(imgSrc.startsWith('img/')) image = 'https://smkn1-osis.pages.dev/' + imgSrc;
+                else image = 'https://smkn1-osis.pages.dev/img/' + imgSrc.split('/').pop(); // Fallback
+              } else if (imgSrc.startsWith('/')) {
+                image = 'https://smkn1-osis.pages.dev' + imgSrc;
+              } else {
+                image = imgSrc;
+              }
+            }
+
+            // Update Meta Tags
+            document.querySelector('title').textContent = title + ' - OSIS SMKN 1 LEMBAH MELINTANG';
+            
+            const setMeta = (prop, content, isProperty = false) => {
+              const selector = isProperty ? `meta[property="${prop}"]` : `meta[name="${prop}"]`;
+              let el = document.querySelector(selector);
+              if (!el) {
+                el = document.createElement('meta');
+                if (isProperty) el.setAttribute('property', prop);
+                else el.setAttribute('name', prop);
+                document.head.appendChild(el);
+              }
+              el.setAttribute('content', content);
+            };
+
+            setMeta('og:title', title, true);
+            setMeta('og:description', description, true);
+            setMeta('og:image', image, true);
+            setMeta('og:url', window.location.href, true);
+            
+            setMeta('twitter:title', title);
+            setMeta('twitter:description', description);
+            setMeta('twitter:image', image);
+            
+            console.log('✅ Meta tags updated for:', safeFile);
+          })
+          .catch(err => console.warn('⚠️ Gagal load preview meta untuk', safeFile, err));
+      }
+    })();
+  </script>
+  
   <script src="../../script/pengumuman/script.js" defer></script>
   <!-- CMS NOTIFICATION POPUP -->
   <div id="notification-popup" class="notification-popup" style="display:none" role="dialog" aria-modal="true"></div>
