@@ -60,14 +60,19 @@ function isLinkActive(href) {
 }
 
 // ================================================
-// HELPER: Resolve image path
+// HELPER: Resolve image path to full URL
 // ================================================
 function resolveImage(path) {
   if (!path) return null;
-  if (path.startsWith("http") || path.startsWith("//") || path.startsWith("/") || path.startsWith(".")) {
+  if (path.startsWith("http") || path.startsWith("//")) {
     return path;
   }
-  return "/" + path;
+  // Jika path relatif, prepend dengan base URL
+  const baseUrl = window.location.origin;
+  if (path.startsWith("/")) {
+    return baseUrl + path;
+  }
+  return baseUrl + "/" + path;
 }
 
 // ================================================
@@ -222,6 +227,44 @@ function emptyStateHTML(type = 'empty', message = 'Tidak ada data.') {
   };
   const icon = icons[type] || icons.empty;
   return `<div class="empty-state empty-state--${type}">${icon}<p class="empty-state__text">${message}</p></div>`;
+}
+
+// ================================================
+// HELPER: Update Open Graph Meta Tags dynamically
+// ================================================
+function updateOpenGraphTags(title, description, imageUrl) {
+  // Helper to set or create meta tag
+  const setMeta = (property, content, name = null) => {
+    let el = document.querySelector(`meta[property="${property}"]`) || 
+             document.querySelector(`meta[name="${name}"]`);
+    if (!el) {
+      el = document.createElement('meta');
+      if (property) el.setAttribute('property', property);
+      if (name) el.setAttribute('name', name);
+      document.head.appendChild(el);
+    }
+    el.setAttribute('content', content);
+  };
+
+  // Set basic OG tags
+  setMeta('og:title', title || SITE_CONFIG.school.name);
+  setMeta('og:description', description || SITE_CONFIG.school.tagline);
+  setMeta('og:type', 'article');
+  
+  // Set OG image from config.js (heroBg) atau custom imageUrl
+  const ogImage = imageUrl ? imageUrl : resolveImage(SITE_CONFIG.school.heroBg);
+  setMeta('og:image', ogImage);
+  setMeta('og:image:alt', title || 'Preview image');
+  setMeta('og:url', window.location.href);
+  setMeta('og:site_name', SITE_CONFIG.school.osis);
+  
+  // Set Twitter Card tags
+  setMeta('twitter:card', 'summary_large_image', 'twitter:card');
+  setMeta('twitter:title', title || SITE_CONFIG.school.name, 'twitter:title');
+  setMeta('twitter:description', description || SITE_CONFIG.school.tagline, 'twitter:description');
+  setMeta('twitter:image', ogImage, 'twitter:image');
+  
+  console.log('🔗 Open Graph tags updated:', { title, description, image: ogImage });
 }
 
 // ================================================

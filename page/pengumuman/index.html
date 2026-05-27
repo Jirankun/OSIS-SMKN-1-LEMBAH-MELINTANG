@@ -36,25 +36,35 @@
   <script src="https://cdn.jsdelivr.net/npm/marked@18.0.4/lib/marked.umd.min.js" defer></script>
   <script src="../../config.js" defer></script>
   
-  <!-- ✅ Script Khusus untuk Update Meta Tags Open Graph berdasarkan ?file= -->
+  <!-- ✅ Script: Update Open Graph Meta Tags berdasarkan ?file= -->
   <script>
     (function() {
-      // Fungsi ini dijalankan SEBELUM DOMContentLoaded agar meta tag siap saat bot membaca
+      // Helper resolveImage - sama dengan config.js
+      function resolveImage(path) {
+        if (!path) return null;
+        if (path.startsWith("http") || path.startsWith("//")) {
+          return path;
+        }
+        const baseUrl = window.location.origin;
+        if (path.startsWith("/")) {
+          return baseUrl + path;
+        }
+        return baseUrl + "/" + path;
+      }
+      
+      // Nilai OG Image dari config.js (heroBg)
+      const CONFIG_HERO_BG = 'img/asset/super.jpeg';
+      
       const params = new URLSearchParams(window.location.search);
       const fileParam = params.get('file');
 
       if (fileParam && fileParam.endsWith('.md')) {
-        // Sanitasi nama file
         const safeFile = fileParam.replace(/[^a-zA-Z0-9._-]/g, '');
-        
-        // Kita buat fetch langsung di sini (synchronous-like via async IIFE)
-        // Catatan: Bot modern seperti WhatsApp kadang menunggu JS sederhana, 
-        // tapi cara paling aman adalah pre-rendering. Namun untuk solusi JS murni:
         
         fetch('../../post/' + safeFile)
           .then(res => res.ok ? res.text() : Promise.reject('Not found'))
           .then(text => {
-            // Parse Frontmatter sederhana
+            // Parse Frontmatter
             const match = text.match(/^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/m);
             let frontmatter = {};
             if (match) {
@@ -65,53 +75,41 @@
               });
             }
 
-            // Ambil data
             const title = frontmatter.title || 'Pengumuman OSIS';
             const descRaw = text.replace(/---[\s\S]*?---/, '').replace(/[#*`\[\]]/g, '').substring(0, 160).trim();
             const description = descRaw || frontmatter.description || 'Baca pengumuman lengkap dari OSIS SMKN 1 Lembah Melintang.';
             
-            // Coba ambil gambar dari konten jika ada, atau pakai default
-            let image = 'https://smkn1-osis.pages.dev/img/asset/logo.webp';
-            const imgMatch = text.match(/!\[.*?\]\((.*?)\)/);
-            if (imgMatch && imgMatch[1]) {
-              let imgSrc = imgMatch[1];
-              if (!imgSrc.startsWith('http') && !imgSrc.startsWith('/')) {
-                // Asumsi relatif terhadap root atau post folder, sesuaikan jika perlu
-                // Untuk OG, kita butuh absolute URL. Jika gambar di /img/
-                if(imgSrc.startsWith('img/')) image = 'https://smkn1-osis.pages.dev/' + imgSrc;
-                else image = 'https://smkn1-osis.pages.dev/img/' + imgSrc.split('/').pop(); // Fallback
-              } else if (imgSrc.startsWith('/')) {
-                image = 'https://smkn1-osis.pages.dev' + imgSrc;
-              } else {
-                image = imgSrc;
-              }
+            // IMAGE OG: Selalu ambil dari config.js (heroBg)
+            const image = resolveImage(CONFIG_HERO_BG);
+
+            // Update Meta Tags menggunakan fungsi dari config.js jika tersedia
+            if (typeof updateOpenGraphTags === 'function') {
+              updateOpenGraphTags(title, description, image);
+            } else {
+              // Fallback inline jika config.js belum load
+              const setMeta = (property, content, name = null) => {
+                let el = document.querySelector(`meta[property="${property}"]`) || 
+                         document.querySelector(`meta[name="${name}"]`);
+                if (!el) {
+                  el = document.createElement('meta');
+                  if (property) el.setAttribute('property', property);
+                  if (name) el.setAttribute('name', name);
+                  document.head.appendChild(el);
+                }
+                el.setAttribute('content', content);
+              };
+              setMeta('og:title', title);
+              setMeta('og:description', description);
+              setMeta('og:type', 'article');
+              setMeta('og:image', image);
+              setMeta('og:url', window.location.href);
+              setMeta('twitter:card', 'summary_large_image', 'twitter:card');
+              setMeta('twitter:title', title, 'twitter:title');
+              setMeta('twitter:description', description, 'twitter:description');
+              setMeta('twitter:image', image, 'twitter:image');
             }
-
-            // Update Meta Tags
-            document.querySelector('title').textContent = title + ' - OSIS SMKN 1 LEMBAH MELINTANG';
             
-            const setMeta = (prop, content, isProperty = false) => {
-              const selector = isProperty ? `meta[property="${prop}"]` : `meta[name="${prop}"]`;
-              let el = document.querySelector(selector);
-              if (!el) {
-                el = document.createElement('meta');
-                if (isProperty) el.setAttribute('property', prop);
-                else el.setAttribute('name', prop);
-                document.head.appendChild(el);
-              }
-              el.setAttribute('content', content);
-            };
-
-            setMeta('og:title', title, true);
-            setMeta('og:description', description, true);
-            setMeta('og:image', image, true);
-            setMeta('og:url', window.location.href, true);
-            
-            setMeta('twitter:title', title);
-            setMeta('twitter:description', description);
-            setMeta('twitter:image', image);
-            
-            console.log('✅ Meta tags updated for:', safeFile);
+            console.log('✅ Meta tags updated for:', safeFile, '| Image:', image);
           })
           .catch(err => console.warn('⚠️ Gagal load preview meta untuk', safeFile, err));
       }

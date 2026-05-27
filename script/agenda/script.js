@@ -200,6 +200,13 @@ async function loadMarkdownContent(filename) {
       <div class="agenda-body">${htmlContent}</div>
     `;
     
+    // ✅ Update Open Graph tags dynamically dengan judul dan deskripsi dari MD
+    // Image null = ambil dari config.js (SITE_CONFIG.school.heroBg)
+    const ogDescription = frontmatter.description || body.substring(0, 160).replace(/[#*`]/g, '').trim();
+    if (typeof updateOpenGraphTags === 'function') {
+      updateOpenGraphTags(frontmatter.title, ogDescription, null);
+    }
+    
     console.log('✅ Content rendered successfully');
     
   } catch (err) {
