@@ -33,6 +33,17 @@ Mobile-First, Modern, Energik
   --shadow-lg: 0 12px 40px rgba(0,0,0,0.5); --shadow-glow: 0 0 40px rgba(14,165,233,0.15);
 }
 
+/* Light Theme (Default) - Ensure proper colors */
+[data-theme="light"] {
+  --white: #ffffff; --gray-50: #f8fafc; --gray-100: #f1f5f9;
+  --gray-200: #e2e8f0; --gray-300: #cbd5e1; --gray-400: #94a3b8;
+  --gray-500: #64748b; --gray-600: #475569; --gray-700: #334155;
+  --gray-800: #1e293b; --gray-900: #0f172a;
+  --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.1); --shadow: 0 4px 16px rgba(0,0,0,0.12);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.18); --shadow-glow: 0 0 40px rgba(14,165,233,0.25);
+}
+
 /* ---- Reset & Base ---- */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
@@ -461,10 +472,13 @@ THEME SWITCH (FOOTER)
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  cursor: pointer;
+  user-select: none;
 }
 
 .theme-switch-label i {
   font-size: 1rem;
+  transition: var(--transition);
 }
 
 /* Toggle Switch Styling */
@@ -479,6 +493,7 @@ THEME SWITCH (FOOTER)
   cursor: pointer;
   transition: var(--transition);
   flex-shrink: 0;
+  outline: none;
 }
 
 .theme-switch::after {
@@ -505,6 +520,10 @@ THEME SWITCH (FOOTER)
 
 .theme-switch:hover::after {
   box-shadow: 0 0 0 2px var(--primary-light);
+}
+
+.theme-switch:focus-visible {
+  box-shadow: 0 0 0 2px var(--primary);
 }
 
 @media (prefers-reduced-motion: reduce) {
