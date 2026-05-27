@@ -22,6 +22,17 @@ Mobile-First, Modern, Energik
   --transition: 0.25s cubic-bezier(0.4,0,0.2,1);
 }
 
+/* Dark Theme Variables */
+[data-theme="dark"] {
+  --white: #0f172a; --gray-50: #1e293b; --gray-100: #334155;
+  --gray-200: #475569; --gray-300: #64748b; --gray-400: #94a3b8;
+  --gray-500: #cbd5e1; --gray-600: #e2e8f0; --gray-700: #f1f5f9;
+  --gray-800: #f8fafc; --gray-900: #ffffff;
+  --bg-gradient: linear-gradient(135deg, #020617 0%, #0f172a 50%, #020617 100%);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3); --shadow: 0 4px 16px rgba(0,0,0,0.4);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.5); --shadow-glow: 0 0 40px rgba(14,165,233,0.15);
+}
+
 /* ---- Reset & Base ---- */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
@@ -428,6 +439,79 @@ ANIMATION SYSTEM (GLOBAL)
 
 /* Back to Top */
 #backToTop { position: fixed; bottom: 1.5rem; right: 1.5rem; width: 48px; height: 48px; border-radius: 50%; display: none; align-items: center; justify-content: center; padding: 0; z-index: 999; box-shadow: var(--shadow-lg); }
+
+/* ============================================
+THEME SWITCH (FOOTER)
+============================================ */
+.theme-switch-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  background: var(--gray-100);
+  border-radius: 12px;
+  max-width: fit-content;
+}
+
+.theme-switch-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--gray-700);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.theme-switch-label i {
+  font-size: 1rem;
+}
+
+/* Toggle Switch Styling */
+.theme-switch {
+  position: relative;
+  width: 52px;
+  height: 28px;
+  appearance: none;
+  -webkit-appearance: none;
+  background: var(--gray-300);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+
+.theme-switch::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  background: var(--white);
+  border-radius: 50%;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+
+.theme-switch:checked {
+  background: var(--primary);
+}
+
+.theme-switch:checked::after {
+  transform: translateX(24px);
+  background: var(--white);
+}
+
+.theme-switch:hover::after {
+  box-shadow: 0 0 0 2px var(--primary-light);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-switch, .theme-switch::after {
+    transition-duration: 0.01ms !important;
+  }
+}
 
 /* ============================================
 SPLASH SCREEN ANIMATION
