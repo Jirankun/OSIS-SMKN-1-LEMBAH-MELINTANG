@@ -56,6 +56,9 @@
     const theme = getSavedTheme();
     applyTheme(theme);
 
+    // Setup event listeners untuk semua theme switch
+    setupSwitchListeners();
+
     // Listen untuk perubahan preferensi sistem
     if (window.matchMedia) {
       window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
@@ -66,6 +69,35 @@
         }
       });
     }
+  }
+
+  // Setup listeners untuk semua theme switch di halaman
+  function setupSwitchListeners() {
+    const switches = document.querySelectorAll('.theme-switch');
+    switches.forEach(sw => {
+      // Hapus listener lama (jika ada) dengan clone
+      const newSwitch = sw.cloneNode(true);
+      sw.parentNode.replaceChild(newSwitch, sw);
+      
+      // Set initial state
+      newSwitch.checked = (document.documentElement.getAttribute('data-theme') === DARK_THEME);
+      
+      // Add click listener
+      newSwitch.addEventListener('change', function() {
+        const newTheme = this.checked ? DARK_THEME : LIGHT_THEME;
+        applyTheme(newTheme);
+        saveTheme(newTheme);
+        
+        // Update icon label jika ada
+        const label = this.closest('.theme-switch-wrapper')?.querySelector('.theme-switch-label i');
+        if (label) {
+          label.className = this.checked ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+        }
+        
+        // Dispatch event untuk listener lain
+        window.dispatchEvent(new CustomEvent('themechange', { detail: { theme: newTheme } }));
+      });
+    });
   }
 
   // Jalankan inisialisasi
