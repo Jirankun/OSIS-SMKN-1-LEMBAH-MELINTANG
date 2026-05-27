@@ -69,31 +69,38 @@ async function loadPengumumanIndex() {
 
 // Render List
 function renderPengumumanList(items) {
-  const list = document.getElementById('pengumumanList');
+  const list = document.getElementById("pengumumanList");
   if (!list) return;
-  
-  list.innerHTML = items.map((item, i) => `
-    <div class="pengumuman-item anim-stagger" data-filename="${item.filename}" style="animation-delay:${i * 50}ms">
-      <div class="pengumuman-item__content">
-        <div class="pengumuman-item__title">${item.title || 'Tanpa Judul'}</div>
-        <div class="pengumuman-item__meta">
-          <span><i class="fa-regular fa-calendar"></i> ${formatDateID(item.date)}</span>
-          <span>•</span>
-          <span>${item.author || 'Admin'}</span>
+
+  // Dapatkan filename yang sedang aktif dari URL
+  const params = new URLSearchParams(window.location.search);
+  const activeFile = params.get("file");
+
+  list.innerHTML = items.map((item, i) => {
+    const isActive = item.filename === activeFile ? "active" : "";
+    return `
+      <div class="pengumuman-item ${isActive} anim-stagger" data-filename="${item.filename}" style="animation-delay:${i * 50}ms">
+        <div class="pengumuman-item__content">
+          <div class="pengumuman-item__title">${item.title || "Tanpa Judul"}</div>
+          <div class="pengumuman-item__meta">
+            <span><i class="fa-regular fa-calendar"></i> ${formatDateID(item.date)}</span>
+            <span>•</span>
+            <span>${item.author || "Admin"}</span>
+          </div>
         </div>
       </div>
-    </div>
-  `).join('');
-  
-  list.querySelectorAll('.pengumuman-item').forEach(el => {
-    el.addEventListener('click', async () => {
+    `;
+  }).join("");
+
+  list.querySelectorAll(".pengumuman-item").forEach(el => {
+    el.addEventListener("click", async () => {
       const filename = el.dataset.filename;
-      list.querySelectorAll('.pengumuman-item').forEach(i => i.classList.remove('active'));
-      el.classList.add('active');
-      
+      list.querySelectorAll(".pengumuman-item").forEach(i => i.classList.remove("active"));
+      el.classList.add("active");
+
       await loadMarkdownContent(filename);
       const newUrl = `?file=${encodeURIComponent(filename)}`;
-      window.history.pushState({ file: filename }, '', newUrl);
+      window.history.pushState({ file: filename }, "", newUrl);
     });
   });
 }

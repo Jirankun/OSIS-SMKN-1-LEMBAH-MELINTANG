@@ -69,31 +69,38 @@ async function loadAgendaIndex() {
 
 // Render List
 function renderAgendaList(items) {
-  const list = document.getElementById('agendaList');
+  const list = document.getElementById("agendaList");
   if (!list) return;
-  
-  list.innerHTML = items.map((item, i) => `
-    <div class="agenda-item anim-stagger" data-filename="${item.filename}" style="animation-delay:${i * 50}ms">
-      <div class="agenda-item__content">
-        <div class="agenda-item__title">${item.title || 'Tanpa Judul'}</div>
-        <div class="agenda-item__meta">
-          <span><i class="fa-regular fa-calendar"></i> ${formatDateID(item.date)}</span>
-          <span>•</span>
-          <span>${item.author || 'Admin'}</span>
+
+  // Dapatkan filename yang sedang aktif dari URL
+  const params = new URLSearchParams(window.location.search);
+  const activeFile = params.get("file");
+
+  list.innerHTML = items.map((item, i) => {
+    const isActive = item.filename === activeFile ? "active" : "";
+    return `
+      <div class="agenda-item ${isActive} anim-stagger" data-filename="${item.filename}" style="animation-delay:${i * 50}ms">
+        <div class="agenda-item__content">
+          <div class="agenda-item__title">${item.title || "Tanpa Judul"}</div>
+          <div class="agenda-item__meta">
+            <span><i class="fa-regular fa-calendar"></i> ${formatDateID(item.date)}</span>
+            <span>•</span>
+            <span>${item.author || "Admin"}</span>
+          </div>
         </div>
       </div>
-    </div>
-  `).join('');
-  
-  list.querySelectorAll('.agenda-item').forEach(el => {
-    el.addEventListener('click', async () => {
+    `;
+  }).join("");
+
+  list.querySelectorAll(".agenda-item").forEach(el => {
+    el.addEventListener("click", async () => {
       const filename = el.dataset.filename;
-      list.querySelectorAll('.agenda-item').forEach(i => i.classList.remove('active'));
-      el.classList.add('active');
-      
+      list.querySelectorAll(".agenda-item").forEach(i => i.classList.remove("active"));
+      el.classList.add("active");
+
       await loadMarkdownContent(filename);
       const newUrl = `?file=${encodeURIComponent(filename)}`;
-      window.history.pushState({ file: filename }, '', newUrl);
+      window.history.pushState({ file: filename }, "", newUrl);
     });
   });
 }

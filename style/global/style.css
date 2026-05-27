@@ -66,8 +66,20 @@ NAVBAR (GLOBAL)
 .navbar__brand { display: flex; align-items: center; gap: 0.625rem; flex-shrink: 0; }
 .navbar__logo { width: 36px; height: 36px; border-radius: 8px; object-fit: contain; background: var(--primary); padding: 2px; }
 .navbar__title { display: flex; flex-direction: column; }
-.navbar__title-main { font-size: 0.7rem; font-weight: 800; color: var(--white); letter-spacing: 0.04em; line-height: 1.2; text-transform: uppercase; }
-.navbar__title-sub { font-size: 0.6rem; color: var(--gray-400); letter-spacing: 0.02em; }
+.navbar__title-main { 
+  font-size: 0.7rem; 
+  font-weight: 800; 
+  color: #ffffff !important; 
+  letter-spacing: 0.04em; 
+  line-height: 1.2; 
+  text-transform: uppercase; 
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+.navbar__title-sub { 
+  font-size: 0.6rem; 
+  color: #cbd5e1 !important; 
+  letter-spacing: 0.02em; 
+}
 
 /* Desktop nav */
 .navbar__links { display: none; gap: 0.25rem; align-items: center; }
@@ -566,24 +578,26 @@ SPLASH SCREEN ANIMATION
   font-family: var(--font-display);
   font-size: clamp(1.8rem, 5vw, 2.5rem);
   font-weight: 700;
-  color: var(--white);
+  color: #ffffff !important;
   line-height: 1.2;
   margin-bottom: 0.3rem;
   opacity: 0;
   animation: splashTitleEnter 0.8s ease forwards;
   animation-delay: 0.3s;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
 .splash__subtitle {
   font-family: var(--font-body);
   font-size: clamp(1rem, 3vw, 1.3rem);
   font-weight: 600;
-  color: var(--primary);
+  color: #38bdf8 !important;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   opacity: 0;
   animation: splashTitleEnter 0.8s ease forwards;
   animation-delay: 0.5s;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .splash__loader {

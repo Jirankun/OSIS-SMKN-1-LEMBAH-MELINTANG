@@ -83,15 +83,20 @@ function renderBeritaList(items) {
   const list = document.getElementById('beritaList');
   if (!list) return;
   
+  // Dapatkan filename yang sedang aktif dari URL
+  const params = new URLSearchParams(window.location.search);
+  const activeFile = params.get('file');
+  
   list.innerHTML = items.map((item, i) => {
     const imgUrl = resolvePageImage(item.image);
+    const isActive = item.filename === activeFile ? 'active' : '';
     const thumbHTML = imgUrl 
       ? `<img src="${imgUrl}" alt="${item.title}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">`
       : '';
     const placeholderHTML = `<div style="width:100%;height:100%;display:${imgUrl ? 'none' : 'flex'};align-items:center;justify-content:center;background:var(--gray-100);color:var(--gray-400)"><i class="fa-solid fa-file-lines"></i></div>`;
     
     return `
-      <div class="berita-item anim-stagger" data-filename="${item.filename}" style="animation-delay:${i * 50}ms;cursor:pointer;background:var(--white);border-radius:var(--radius);padding:1rem;border:2px solid transparent;transition:var(--transition);display:flex;gap:0.75rem;align-items:flex-start">
+      <div class="berita-item ${isActive} anim-stagger" data-filename="${item.filename}" style="animation-delay:${i * 50}ms;cursor:pointer;background:var(--white);border-radius:var(--radius);padding:1rem;border:2px solid transparent;transition:var(--transition);display:flex;gap:0.75rem;align-items:flex-start">
         <div style="flex-shrink:0;width:60px;height:60px;border-radius:var(--radius);overflow:hidden;background:var(--gray-100)">
           ${thumbHTML}
           ${placeholderHTML}
