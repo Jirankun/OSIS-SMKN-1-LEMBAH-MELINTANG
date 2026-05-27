@@ -3,9 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Pengumuman resmi dari OSIS SMKN 1 LEMBAH MELINTANG - Informasi terbaru dan penting">
   <title>Pengumuman - OSIS SMKN 1 LEMBAH MELINTANG</title>
-
-  <link rel="icon" type="image/ico" href="img/asset/icon.ico">
+  
+  <!-- Open Graph / Facebook / WhatsApp Preview -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://smkn1-osis.pages.dev/page/pengumuman/">
+  <meta property="og:title" content="Pengumuman - OSIS SMKN 1 LEMBAH MELINTANG">
+  <meta property="og:description" content="Pengumuman resmi dari OSIS SMKN 1 LEMBAH MELINTANG - Informasi terbaru dan penting">
+  <meta property="og:image" content="https://smkn1-osis.pages.dev/img/asset/logo.webp">
+  <meta property="og:image:alt" content="Logo OSIS SMKN 1 Lembah Melintang">
+  <meta property="og:site_name" content="OSIS SMKN 1 LEMBAH MELINTANG">
+  <meta property="og:locale" content="id_ID">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Pengumuman - OSIS SMKN 1 LEMBAH MELINTANG">
+  <meta name="twitter:description" content="Pengumuman resmi dari OSIS SMKN 1 LEMBAH MELINTANG - Informasi terbaru dan penting">
+  <meta name="twitter:image" content="https://smkn1-osis.pages.dev/img/asset/logo.webp">
+  
+  <link rel="icon" type="image/ico" href="../../img/asset/icon.ico">
   <link rel="icon" type="image/png" href="img/asset/icon0.png">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -18,6 +35,101 @@
   <!-- ✅ Marked.js (load sebelum script pengumuman) -->
   <script src="https://cdn.jsdelivr.net/npm/marked@18.0.4/lib/marked.umd.min.js" defer></script>
   <script src="../../config.js" defer></script>
+  
+  <!-- ✅ Script Khusus untuk Update Meta Tags Open Graph berdasarkan ?file= -->
+  <script>
+    (function() {
+      // Fungsi ini dijalankan SEBELUM DOMContentLoaded agar meta tag siap saat bot membaca
+      // Karena config.js di-load dengan defer, kita perlu define helper sendiri dulu
+      
+      // Helper resolveImage - sama persis dengan yang ada di config.js
+      function resolveImage(path) {
+        if (!path) return null;
+        if (path.startsWith("http") || path.startsWith("//")) {
+          return path;
+        }
+        const baseUrl = window.location.origin;
+        if (path.startsWith("/")) {
+          return baseUrl + path;
+        }
+        return baseUrl + "/" + path;
+      }
+      
+      // Helper updateOpenGraphTags - sama persis dengan yang ada di config.js
+      function updateOGTags(title, description, imageUrl) {
+        const setMeta = (property, content, name = null) => {
+          let el = document.querySelector(`meta[property="${property}"]`) || 
+                   document.querySelector(`meta[name="${name}"]`);
+          if (!el) {
+            el = document.createElement('meta');
+            if (property) el.setAttribute('property', property);
+            if (name) el.setAttribute('name', name);
+            document.head.appendChild(el);
+          }
+          el.setAttribute('content', content);
+        };
+
+        setMeta('og:title', title || 'OSIS SMKN 1 LEMBAH MELINTANG');
+        setMeta('og:description', description || 'Informasi terbaru dari OSIS SMKN 1 Lembah Melintang');
+        setMeta('og:type', 'article');
+        
+        const ogImage = imageUrl ? imageUrl : resolveImage('img/asset/super.jpeg');
+        setMeta('og:image', ogImage);
+        setMeta('og:image:alt', title || 'Preview image');
+        setMeta('og:url', window.location.href);
+        setMeta('og:site_name', 'OSIS SMKN 1 LEMBAH MELINTANG');
+        
+        setMeta('twitter:card', 'summary_large_image', 'twitter:card');
+        setMeta('twitter:title', title || 'OSIS SMKN 1 LEMBAH MELINTANG', 'twitter:title');
+        setMeta('twitter:description', description || 'Informasi terbaru dari OSIS SMKN 1 Lembah Melintang', 'twitter:description');
+        setMeta('twitter:image', ogImage, 'twitter:image');
+        
+        console.log('🔗 Open Graph tags updated:', { title, description, image: ogImage });
+      }
+      
+      // Nilai OG Image dari config.js (heroBg) - HARUS SAMA dengan config.js
+      const CONFIG_HERO_BG = 'img/asset/super.jpeg';
+      
+      const params = new URLSearchParams(window.location.search);
+      const fileParam = params.get('file');
+
+      if (fileParam && fileParam.endsWith('.md')) {
+        // Sanitasi nama file
+        const safeFile = fileParam.replace(/[^a-zA-Z0-9._-]/g, '');
+        
+        // Fetch konten MD untuk ambil judul dan deskripsi
+        fetch('../../post/' + safeFile)
+          .then(res => res.ok ? res.text() : Promise.reject('Not found'))
+          .then(text => {
+            // Parse Frontmatter sederhana
+            const match = text.match(/^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/m);
+            let frontmatter = {};
+            if (match) {
+              const yaml = match[1];
+              yaml.split('\n').forEach(line => {
+                const kv = line.match(/^(\w+):\s*(.*)/);
+                if (kv) frontmatter[kv[1].toLowerCase()] = kv[2].trim().replace(/^["']|["']$/g, '');
+              });
+            }
+
+            // Ambil data
+            const title = frontmatter.title || 'Pengumuman OSIS';
+            const descRaw = text.replace(/---[\s\S]*?---/, '').replace(/[#*`\[\]]/g, '').substring(0, 160).trim();
+            const description = descRaw || frontmatter.description || 'Baca pengumuman lengkap dari OSIS SMKN 1 Lembah Melintang.';
+            
+            // IMAGE OG: Selalu ambil dari config.js (heroBg) - hardcoded agar konsisten
+            const image = resolveImage(CONFIG_HERO_BG);
+
+            // Update Meta Tags
+            updateOGTags(title, description, image);
+            
+            console.log('✅ Meta tags updated for:', safeFile, '| Image:', image);
+          })
+          .catch(err => console.warn('⚠️ Gagal load preview meta untuk', safeFile, err));
+      }
+    })();
+  </script>
+  
   <script src="../../script/pengumuman/script.js" defer></script>
   <!-- CMS NOTIFICATION POPUP -->
   <div id="notification-popup" class="notification-popup" style="display:none" role="dialog" aria-modal="true"></div>

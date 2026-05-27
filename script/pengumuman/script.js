@@ -198,6 +198,10 @@ async function loadMarkdownContent(filename) {
       <div class="pengumuman-body">${htmlContent}</div>
     `;
     
+    // Update Open Graph tags dynamically dengan judul dan deskripsi dari MD
+    const ogDescription = frontmatter.description || body.substring(0, 160).replace(/[#*`]/g, '').trim();
+    updateOpenGraphTags(frontmatter.title, ogDescription, null); // Image null = ambil dari config.js
+    
     // Init lightbox untuk gambar di konten
     initContentLightbox();
     
