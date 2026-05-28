@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderNavbar();
   renderFooter(3);
   loadTeamInti();
+  initMenuHistoryClear(); // Reset history saat navigasi menu
   loadTeamDivisi();
   initScrollObserver('.inti-card, .division-card');
   initBackToTop();

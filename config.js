@@ -311,6 +311,33 @@ function updateOpenGraphTags(title, description, imageUrl) {
 }
 
 // ================================================
+// HELPER: Clear history state saat navigasi menu
+// Mekanisme: Saat user klik menu dari navbar, history lama di-replace
+// sehingga tombol back hanya akan menutup halaman ini (bukan balik ke menu lain)
+// ================================================
+function initMenuHistoryClear() {
+  // Hanya jalankan di page (bukan home)
+  const isHomePage = window.location.pathname === '/' || window.location.pathname.endsWith('/index.html') || window.location.pathname === '';
+  if (isHomePage) return;
+  
+  // Tambahkan listener ke semua link navbar
+  document.addEventListener('DOMContentLoaded', () => {
+    const navLinks = document.querySelectorAll('#navLinks a, #mobileMenu a');
+    navLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        const href = link.getAttribute('href');
+        // Jika link menuju halaman yang berbeda (bukan anchor #)
+        if (href && !href.startsWith('#')) {
+          // Replace current history state dengan state baru tanpa menambah entry
+          // Ini membuat history "reset" saat pindah menu
+          window.history.replaceState({ pageReset: true }, '', window.location.href);
+        }
+      });
+    });
+  });
+}
+
+// ================================================
 // HELPER: Scroll observer untuk animasi
 // ================================================
 function initScrollObserver(selector = ".animate-on-scroll") {

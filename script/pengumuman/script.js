@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   initSearchFilter();
   initBackToTop();
   initScrollObserver();
+  initMenuHistoryClear(); // Reset history saat navigasi menu
   
   // Handle deep link: ?file=xxx.md
   const params = new URLSearchParams(window.location.search);
