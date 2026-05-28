@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Notification Debug</title>
+  <link rel="stylesheet" href="style/notification.css">
+  <link rel="stylesheet" href="style/global/style.css">
+</head>
+<body>
+  <h1>Test Notification Popup Debug</h1>
+  <button onclick="clearNotif()">Clear LocalStorage & Reload</button>
+  <div id="output"></div>
+  <div id="notification-popup" class="notification-popup" style="display:none" role="dialog" aria-modal="true"></div>
+
+  <script src="script/notification.js"></script>
+  <script>
+    function clearNotif() {
+      // Clear semua key notif_ dari localStorage
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith('notif_')) {
+          localStorage.removeItem(key);
+        }
+      });
+      document.getElementById('output').innerHTML = '<p style="color:green; margin-top:1rem;">LocalStorage cleared! Reloading...</p>';
+      setTimeout(() => location.reload(), 1000);
+    }
+    
+    // Log semua info ke halaman
+    setTimeout(() => {
+      const output = document.getElementById('output');
+      const keys = Object.keys(localStorage).filter(k => k.startsWith('notif_'));
+      output.innerHTML = '<pre style="background:#f0f0f0; padding:1rem; margin-top:1rem;">LocalStorage keys: ' + JSON.stringify(keys, null, 2) + '</pre>';
+    }, 2000);
+  </script>
+</body>
+</html>
