@@ -62,7 +62,6 @@ async function loadGallery() {
       `;
     }).join('');
   } catch (err) {
-    console.error('[Galeri] Error:', err);
     grid.innerHTML = emptyStateHTML('error', 'Gagal memuat galeri.');
   }
 }
@@ -90,7 +89,6 @@ function initLightbox() {
       galleryDataCache = items;
       return items;
     } catch (err) {
-      console.error('[Lightbox] Error loading gallery data:', err);
       return [];
     }
   }

@@ -1,1 +1,1 @@
-Nothing should be ignored in this case, as only a CSS file was modified and no build artifacts, dependencies, or temporary files were detected in the changes.
+(config.js, script/agenda/script.js, script/berita/script.js, script/galeri/script.js, script/home/script.js, script/notification.js, script/pengumuman/script.js, script/profil_osis/script.js, script/utils/helpers.js)

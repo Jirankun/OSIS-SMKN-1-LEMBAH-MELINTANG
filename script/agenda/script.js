@@ -1,13 +1,11 @@
 // ================================================
 // AGENDA PAGE SCRIPT
 // ================================================
-console.log('✅ Agenda script loaded');
 
 let allAgenda = [];
 
 // Init
 document.addEventListener('DOMContentLoaded', async () => {
-  console.log('✅ DOMContentLoaded');
   
   document.getElementById('year').textContent = new Date().getFullYear();
   
@@ -22,7 +20,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   const params = new URLSearchParams(window.location.search);
   const fileParam = params.get('file');
   if (fileParam) {
-    console.log('📅 Loading from URL:', fileParam);
     await loadMarkdownContent(fileParam);
     // Tandai item yang aktif berdasarkan filename dari URL
     setTimeout(() => {
@@ -37,7 +34,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // Load Agenda Index
 async function loadAgendaIndex() {
-  console.log('🔧 Loading agenda index...');
   const list = document.getElementById('agendaList');
   if (!list) return;
   
@@ -62,7 +58,6 @@ async function loadAgendaIndex() {
     renderAgendaList(allAgenda);
     
   } catch (err) {
-    console.error('❌ Error:', err);
     list.innerHTML = emptyStateHTML('error', 'Gagal memuat data agenda.');
   }
 }
@@ -107,13 +102,11 @@ function renderAgendaList(items) {
 
 // Load & Render Markdown
 async function loadMarkdownContent(filename) {
-  console.log('🔧 Loading markdown:', filename);
   const contentEl = document.getElementById('agendaContent');
   if (!contentEl) return;
   
   // Validasi ekstensi file - HARUS .md
   if (!filename || !filename.toLowerCase().endsWith('.md')) {
-    console.error('[Agenda] Invalid file extension:', filename);
     contentEl.innerHTML = `<div style="text-align:center;padding:3rem;color:var(--danger)">
       <i class="fa-solid fa-file-circle-xmark" style="font-size:2rem;margin-bottom:0.5rem;display:block"></i>
       <p>File tidak valid. Hanya file (.md) yang diperbolehkan.</p>
@@ -124,14 +117,12 @@ async function loadMarkdownContent(filename) {
   // Sanitasi filename untuk mencegah path traversal
   const sanitizedFilename = filename.replace(/[^a-zA-Z0-9._-]/g, '');
   if (sanitizedFilename !== filename) {
-    console.warn('[Agenda] Filename contained invalid characters, sanitized:', filename, '->', sanitizedFilename);
   }
   
   contentEl.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--gray-400)">Loading content...</div>';
   
   try {
     const filePath = `../../post/${sanitizedFilename}`;
-    console.log('[Agenda] Fetching:', filePath);
     
     const res = await fetch(filePath);
     
@@ -151,7 +142,6 @@ async function loadMarkdownContent(filename) {
     // Validasi konten - pastikan ini adalah file markdown, bukan HTML
     const trimmedContent = mdText.trim().toLowerCase();
     if (trimmedContent.startsWith('<!doctype') || trimmedContent.startsWith('<html')) {
-      console.error('[Agenda] File is HTML, not markdown:', sanitizedFilename);
       throw new Error('File yang diambil adalah HTML, bukan Markdown. Hanya file .md yang didukung.');
     }
     
@@ -214,10 +204,8 @@ async function loadMarkdownContent(filename) {
       updateOpenGraphTags(frontmatter.title, ogDescription, null);
     }
     
-    console.log('✅ Content rendered successfully');
     
   } catch (err) {
-    console.error('❌ Error loading markdown:', err);
     contentEl.innerHTML = `<div style="text-align:center;padding:3rem;color:var(--gray-400)">
       <i class="fa-solid fa-triangle-exclamation" style="font-size:2rem;margin-bottom:0.5rem;display:block"></i>
       <p><strong>Gagal memuat konten:</strong></p>
@@ -271,4 +259,3 @@ function closeLightbox() {
   }
 }
 
-console.log('✅ Agenda script ready');

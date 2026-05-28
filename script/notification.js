@@ -4,7 +4,6 @@
 async function initNotificationPopup() {
   const popupContainer = document.getElementById('notification-popup');
   if (!popupContainer) {
-    console.warn('[NOTIF] Container #notification-popup tidak ditemukan');
     return;
   }
   
@@ -21,21 +20,17 @@ async function initNotificationPopup() {
       jsonPath = '../'.repeat(depth) + 'content/notifications.json';
     }
     
-    console.log('[NOTIF] Fetching dari:', jsonPath);
-    
     const res = await fetch(jsonPath);
     if (!res.ok) {
       throw new Error('File not found: ' + res.status + ' ' + res.statusText);
     }
     const notifications = await res.json();
-    console.log('[NOTIF] Data loaded:', notifications);
     
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Reset time untuk perbandingan tanggal yang akurat
     
     const activeNotif = notifications.find(n => {
       if (!n.active) {
-        console.log('[NOTIF] Skip karena tidak active:', n.title);
         return false;
       }
       const fromDate = new Date(n.show_from);
@@ -44,19 +39,12 @@ async function initNotificationPopup() {
       untilDate.setHours(23, 59, 59, 999); // Include seluruh hari terakhir
       
       const isActive = today >= fromDate && today <= untilDate;
-      if (!isActive) {
-        console.log('[NOTIF] Skip karena tanggal tidak valid:', n.title, 
-          '| From:', n.show_from, '| Until:', n.show_until, '| Today:', today.toISOString().split('T')[0]);
-      }
       return isActive;
     });
     
     if (!activeNotif) {
-      console.log('[NOTIF] Tidak ada notifikasi aktif');
       return;
     }
-    
-    console.log('[NOTIF] Notifikasi aktif:', activeNotif.title);
     
     // Cek localStorage: udah ditutup belum?
     const version = activeNotif.version || 1;
@@ -64,7 +52,6 @@ async function initNotificationPopup() {
     const dismissedKey = 'notif_' + sanitizedTitle + '_v' + version;
     
     if (localStorage.getItem(dismissedKey)) {
-      console.log('[NOTIF] User sudah dismiss notifikasi ini (key:', dismissedKey + ')');
       return;
     }
     
@@ -89,8 +76,6 @@ async function initNotificationPopup() {
         '</div>' +
       '</div>';
     
-    console.log('[NOTIF] Popup rendered');
-    
     // Show dengan animasi
     requestAnimationFrame(function() {
       popupContainer.style.display = 'block';
@@ -99,13 +84,11 @@ async function initNotificationPopup() {
         var overlayEl = popupContainer.querySelector('.notification-popup__overlay');
         if (notifEl) notifEl.classList.add('show');
         if (overlayEl) overlayEl.classList.add('show');
-        console.log('[NOTIF] Popup shown with animation');
       }, 10);
     });
     
     // Close logic
     var closePopup = function() {
-      console.log('[NOTIF] Closing popup, saving to localStorage:', dismissedKey);
       localStorage.setItem(dismissedKey, 'true');
       
       var notifEl = popupContainer.querySelector('.notification-popup');
@@ -116,7 +99,6 @@ async function initNotificationPopup() {
       
       setTimeout(function() {
         popupContainer.style.display = 'none';
-        console.log('[NOTIF] Popup hidden');
       }, 200);
       
       // Remove ESC listener
@@ -137,25 +119,19 @@ async function initNotificationPopup() {
       
       if (closeBtn) {
         closeBtn.addEventListener('click', closePopup);
-        console.log('[NOTIF] Close button bound');
       }
       if (ghostBtn) {
         ghostBtn.addEventListener('click', closePopup);
-        console.log('[NOTIF] Ghost button bound');
       }
       if (overlay) {
         overlay.addEventListener('click', closePopup);
-        console.log('[NOTIF] Overlay bound');
       }
       
       // Close pake ESC
       document.addEventListener('keydown', onEscHandler);
-      console.log('[NOTIF] ESC listener bound');
     }, 50);
     
   } catch (e) {
-    console.error('[NOTIF] Gagal load notification:', e);
-    console.error('[NOTIF] Stack:', e.stack);
   }
 }
 

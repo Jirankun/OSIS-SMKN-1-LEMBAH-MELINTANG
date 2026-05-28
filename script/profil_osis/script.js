@@ -102,12 +102,10 @@ async function openDivisiLightbox(divisionName, memberIndex) {
     try {
       const rawData = await fetchJsonSilent('../../content/team_2.json', 'data divisi');
       if (!rawData) {
-        console.error('[Profil OSIS] Gagal memuat data divisi untuk lightbox');
         return;
       }
       cachedDivisionsData = Array.isArray(rawData) ? rawData : (rawData.divisions || rawData.data || []);
     } catch (e) {
-      console.error('[Profil OSIS] Error loading divisi data:', e);
       return;
     }
   }
@@ -115,7 +113,6 @@ async function openDivisiLightbox(divisionName, memberIndex) {
   // Find the division
   const division = cachedDivisionsData.find(d => d.division === divisionName);
   if (!division || !division.members || !division.members[memberIndex]) {
-    console.error('[Profil OSIS] Division or member not found:', divisionName, memberIndex);
     return;
   }
   
@@ -184,7 +181,6 @@ async function loadTeamInti() {
       `;
     }).join('');
   } catch (e) {
-    console.error('[Profil OSIS] Error:', e);
     grid.innerHTML = emptyStateHTML('error', 'Gagal memuat pengurus inti.');
   }
 }
@@ -236,7 +232,6 @@ async function loadTeamDivisi() {
         </div>
       `).join('');
   } catch (e) {
-    console.error('[Profil OSIS] Error divisi:', e);
     container.innerHTML = emptyStateHTML('error', 'Gagal memuat data divisi.');
   }
 }
