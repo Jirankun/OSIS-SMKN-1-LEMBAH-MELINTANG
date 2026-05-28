@@ -116,6 +116,7 @@
   display: flex;
   gap: 0.75rem;
   align-items: flex-start;
+  position: relative;
 }
 .berita-item:hover {
   border-color: var(--primary-light);
@@ -124,6 +125,18 @@
 .berita-item.active {
   border-color: var(--primary);
   background: var(--primary-light);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+.berita-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 80%;
+  background: var(--primary);
+  border-radius: 0 4px 4px 0;
 }
 .berita-item__thumb {
   flex-shrink: 0;
