@@ -212,17 +212,18 @@ function initBackToTop() {
   }
   
   const circle = btn.querySelector('.progress-ring__circle');
-  const radius = 20;
+  const radius = circle.r.baseVal.value;
   const circumference = 2 * Math.PI * radius;
   
   // Set initial state
   circle.style.strokeDasharray = `${circumference} ${circumference}`;
   circle.style.strokeDashoffset = circumference;
   
-  window.addEventListener("scroll", () => {
-    const scrollY = window.scrollY;
+  // Fungsi update progress
+  function updateScrollProgress() {
+    const scrollY = window.scrollY || window.pageYOffset;
     const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const scrollPercent = scrollY / docHeight;
+    const scrollPercent = docHeight > 0 ? scrollY / docHeight : 0;
     
     // Update progress ring
     const offset = circumference - (scrollPercent * circumference);
@@ -230,7 +231,22 @@ function initBackToTop() {
     
     // Show/hide button
     btn.style.display = scrollY > 400 ? "flex" : "none";
-  });
+  }
+  
+  // Call once on init
+  updateScrollProgress();
+  
+  // Add scroll listener with throttling for performance
+  let ticking = false;
+  window.addEventListener("scroll", () => {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        updateScrollProgress();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
   
   btn.addEventListener("click", (e) => {
     e.preventDefault();

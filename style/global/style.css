@@ -515,9 +515,11 @@ ANIMATION SYSTEM (GLOBAL)
   stroke-linecap: round;
 }
 #backToTop .progress-ring__circle {
-  stroke-dasharray: 126;
-  stroke-dashoffset: 126;
-  transition: stroke-dashoffset 0.2s ease;
+  /* stroke-dasharray dan stroke-dashoffset akan di-set via JavaScript */
+  transition: stroke-dashoffset 0.1s ease-out;
+}
+#backToTop .progress-ring__bg {
+  opacity: 0.3;
 }
 
 /* ============================================
