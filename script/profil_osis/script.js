@@ -89,6 +89,58 @@ function closeLightbox() {
 }
 
 // ================================================
+// LIGHTBOX DIVISI FUNCTIONS
+// ================================================
+let cachedDivisionsData = null;
+
+async function openDivisiLightbox(divisionName, memberIndex) {
+  if (!lightboxModal) initLightbox();
+  if (!lightboxModal) return;
+  
+  // Load data if not cached
+  if (!cachedDivisionsData) {
+    try {
+      const rawData = await fetchJsonSilent('../../content/team_2.json', 'data divisi');
+      if (!rawData) {
+        console.error('[Profil OSIS] Gagal memuat data divisi untuk lightbox');
+        return;
+      }
+      cachedDivisionsData = Array.isArray(rawData) ? rawData : (rawData.divisions || rawData.data || []);
+    } catch (e) {
+      console.error('[Profil OSIS] Error loading divisi data:', e);
+      return;
+    }
+  }
+  
+  // Find the division
+  const division = cachedDivisionsData.find(d => d.division === divisionName);
+  if (!division || !division.members || !division.members[memberIndex]) {
+    console.error('[Profil OSIS] Division or member not found:', divisionName, memberIndex);
+    return;
+  }
+  
+  const member = division.members[memberIndex];
+  const imgUrl = resolveImage(member.image);
+  const displayName = member.name || 'Tanpa Nama';
+  const displayRole = division.division || 'Anggota Divisi';
+  
+  lightboxImage.src = imgUrl;
+  lightboxImage.alt = displayName;
+  lightboxName.textContent = displayName;
+  lightboxRole.textContent = displayRole;
+  
+  // Remove closing class if exists
+  lightboxModal.classList.remove('closing');
+  
+  // Show modal
+  lightboxModal.classList.add('active');
+  lightboxModal.setAttribute('aria-hidden', 'false');
+  
+  // Prevent body scroll
+  document.body.style.overflow = 'hidden';
+}
+
+// ================================================
 // LOAD PENGURUS INTI
 // ================================================
 async function loadTeamInti() {
@@ -161,27 +213,28 @@ async function loadTeamDivisi() {
       return;
     }
 
-    container.innerHTML = divisions.map((div, idx) => `
-      <div class="division-card fade-up" style="animation-delay:${idx * 100}ms">
-        <h3 class="division-card__title"><i class="fa-solid fa-layer-group"></i> ${div.division || 'Divisi'}</h3>
-        <div class="division-members">
-          ${(div.members || []).map(m => {
-            const imgUrl = resolveImage(m.image);
-            return `
-              <div class="member-mini">
-                ${imgUrl 
-                  ? `<img src="${imgUrl}" alt="${m.name}" class="member-mini__img" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">`
-                  : ''}
-                <div class="member-mini__placeholder" style="display:${imgUrl ? 'none' : 'flex'}">
-                  <i class="fa-solid fa-user"></i>
+      container.innerHTML = divisions.map((div, idx) => `
+        <div class="division-card fade-up" style="animation-delay:${idx * 100}ms">
+          <h3 class="division-card__title"><i class="fa-solid fa-layer-group"></i> ${div.division || 'Divisi'}</h3>
+          <div class="division-members">
+            ${(div.members || []).map((m, mIdx) => {
+              const imgUrl = resolveImage(m.image);
+              const displayName = m.name || 'Tanpa Nama';
+              return `
+                <div class="member-mini" style="cursor: pointer;" onclick="openDivisiLightbox('${div.division}', ${mIdx})" title="Klik untuk lihat detail">
+                  ${imgUrl 
+                    ? `<img src="${imgUrl}" alt="${displayName}" class="member-mini__img" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">`
+                    : ''}
+                  <div class="member-mini__placeholder" style="display:${imgUrl ? 'none' : 'flex'}">
+                    <i class="fa-solid fa-user"></i>
+                  </div>
+                  <div class="member-mini__name">${displayName}</div>
                 </div>
-                <div class="member-mini__name">${m.name || 'Tanpa Nama'}</div>
-              </div>
-            `;
-          }).join('')}
+              `;
+            }).join('')}
+          </div>
         </div>
-      </div>
-    `).join('');
+      `).join('');
   } catch (e) {
     console.error('[Profil OSIS] Error divisi:', e);
     container.innerHTML = emptyStateHTML('error', 'Gagal memuat data divisi.');
