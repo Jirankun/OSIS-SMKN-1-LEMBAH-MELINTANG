@@ -21,17 +21,42 @@ document.addEventListener('DOMContentLoaded', async () => {
   const params = new URLSearchParams(window.location.search);
   const fileParam = params.get('file');
   if (fileParam) {
-    await loadMarkdownContent(fileParam);
-    // Tandai item yang aktif berdasarkan filename dari URL
-    setTimeout(() => {
-      const activeItem = document.querySelector(`.agenda-item[data-filename="${fileParam}"]`);
-      if (activeItem) {
-        document.querySelectorAll('.agenda-item').forEach(i => i.classList.remove('active'));
-        activeItem.classList.add('active');
-      }
-    }, 100);
+    // ✅ FIX: Validasi file ada di index sebelum mencoba load
+    const fileExists = allAgenda.some(item => item.filename === fileParam);
+    if (fileExists) {
+      await loadMarkdownContent(fileParam);
+      // Tandai item yang aktif berdasarkan filename dari URL
+      setTimeout(() => {
+        const activeItem = document.querySelector(`.agenda-item[data-filename="${fileParam}"]`);
+        if (activeItem) {
+          document.querySelectorAll('.agenda-item').forEach(i => i.classList.remove('active'));
+          activeItem.classList.add('active');
+        }
+      }, 100);
+    } else {
+      // ✅ File tidak ada di index, hapus parameter ?file= dari URL
+      const cleanUrl = window.location.pathname;
+      window.history.replaceState({}, "", cleanUrl);
+    }
   }
 });
+
+// Fungsi untuk membersihkan URL jika ada parameter ?file= yang tidak valid
+function cleanInvalidFileUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const fileParam = params.get('file');
+  
+  if (!fileParam) return;
+  
+  // Cek apakah file masih ada di allAgenda
+  const fileExists = allAgenda.some(item => item.filename === fileParam);
+  if (!fileExists) {
+    // File tidak ada, hapus parameter dari URL
+    params.delete('file');
+    const newUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
+    window.history.replaceState({}, '', newUrl);
+  }
+}
 
 // Load Agenda Index
 async function loadAgendaIndex() {
@@ -99,12 +124,32 @@ function renderAgendaList(items) {
       window.history.pushState({ file: filename }, "", newUrl);
     });
   });
+  
+  // ✅ FIX: Jika file di URL tidak ada di index, hapus parameter ?file= dan reset tampilan
+  if (activeFile && !items.some(item => item.filename === activeFile)) {
+    const cleanUrl = window.location.pathname;
+    window.history.replaceState({}, "", cleanUrl);
+    document.querySelectorAll(".agenda-item").forEach(i => i.classList.remove("active"));
+  }
 }
 
 // Load & Render Markdown
 async function loadMarkdownContent(filename) {
   const contentEl = document.getElementById('agendaContent');
   if (!contentEl) return;
+  
+  // ✅ FIX: Validasi file ada di allAgenda sebelum mencoba load
+  const fileExists = allAgenda.some(item => item.filename === filename);
+  if (!fileExists) {
+    contentEl.innerHTML = `<div style="text-align:center;padding:3rem;color:var(--gray-400)">
+      <i class="fa-solid fa-file-circle-xmark" style="font-size:2rem;margin-bottom:0.5rem;display:block"></i>
+      <p>Agenda tidak ditemukan atau telah dihapus.</p>
+    </div>`;
+    // Hapus parameter ?file= dari URL karena file tidak valid
+    const cleanUrl = window.location.pathname;
+    window.history.replaceState({}, "", cleanUrl);
+    return;
+  }
   
   // Validasi ekstensi file - HARUS .md
   if (!filename || !filename.toLowerCase().endsWith('.md')) {

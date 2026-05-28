@@ -21,6 +21,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   const params = new URLSearchParams(window.location.search);
   const fileParam = params.get('file');
   if (fileParam) {
+    // Validasi: cek apakah file masih ada di allPengumuman
+    const fileExists = allPengumuman.some(item => item.filename === fileParam);
+    if (!fileExists) {
+      // File tidak ada di index, hapus parameter dan tampilkan list biasa
+      const cleanUrl = window.location.pathname;
+      window.history.replaceState({}, '', cleanUrl);
+      return;
+    }
     await loadMarkdownContent(fileParam);
     // Tandai item yang aktif berdasarkan filename dari URL
     setTimeout(() => {
@@ -32,6 +40,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     }, 100);
   }
 });
+
+// Fungsi untuk membersihkan URL jika ada parameter ?file= yang tidak valid
+function cleanInvalidFileUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const fileParam = params.get('file');
+  
+  if (!fileParam) return;
+  
+  // Cek apakah file masih ada di allPengumuman
+  const fileExists = allPengumuman.some(item => item.filename === fileParam);
+  if (!fileExists) {
+    // File tidak ada, hapus parameter dari URL
+    params.delete('file');
+    const newUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
+    window.history.replaceState({}, '', newUrl);
+  }
+}
 
 // Load Pengumuman Index
 async function loadPengumumanIndex() {
@@ -105,6 +130,19 @@ function renderPengumumanList(items) {
 async function loadMarkdownContent(filename) {
   const contentEl = document.getElementById('pengumumanContent');
   if (!contentEl) return;
+  
+  // Validasi: cek apakah file masih ada di allPengumuman
+  const fileExists = allPengumuman.some(item => item.filename === filename);
+  if (!fileExists) {
+    contentEl.innerHTML = `<div style="text-align:center;padding:3rem;color:var(--gray-400)">
+      <i class="fa-solid fa-file-circle-xmark" style="font-size:2rem;margin-bottom:0.5rem;display:block"></i>
+      <p>Pengumuman tidak ditemukan atau telah dihapus.</p>
+    </div>`;
+    // Hapus parameter ?file= dari URL karena file tidak valid
+    const cleanUrl = window.location.pathname;
+    window.history.replaceState({}, '', cleanUrl);
+    return;
+  }
   
   // Validasi ekstensi file - HARUS .md
   if (!filename || !filename.toLowerCase().endsWith('.md')) {
