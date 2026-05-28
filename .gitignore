@@ -7,30 +7,29 @@
 # Environment
 .env
 .env.local
-*.env.*
-
-# Dependencies
-node_modules/
+.env.*
 
 # Editors
 .vscode/
 .idea/
 
-# Python
+# Dependencies
+node_modules/
+venv/
+.venv/
 __pycache__/
+.mypy_cache/
+.pytest_cache/
+
+# Build artifacts
+dist/
+build/
+target/
+
+# Python specific
 *.pyc
 *.pyo
 *.pyd
-
-# Build outputs
-dist/
-build/
-*.min.js
-*.min.css
-
-# OS generated files
-.DS_Store
-Thumbs.db
 
 # Original rules preserved
 *.log
