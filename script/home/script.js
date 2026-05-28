@@ -224,7 +224,7 @@ async function loadGallery() {
     }
 
     if (items[0]?.date) items.sort((a, b) => new Date(b.date) - new Date(a.date));
-    const limited = items.slice(0, 3);
+    const limited = items.slice(0, 4);
 
     grid.innerHTML = limited.map((item, i) => `
       <div class="galeri-item" style="animation: fadeUp 0.5s ${i * 0.1}s ease both">
