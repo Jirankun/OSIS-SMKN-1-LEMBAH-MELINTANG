@@ -1,0 +1,13 @@
+[
+  {
+    "title": "info terbaru",
+    "message": "ada info terbaru hari ini,jadi silahkan periksa",
+    "type": "info",
+    "active": true,
+    "show_from": "2026-05-28",
+    "show_until": "2026-05-30",
+    "has_action": true,
+    "link": "https://tkj1.pages.dev",
+    "link_text": "periksa"
+  }
+]
