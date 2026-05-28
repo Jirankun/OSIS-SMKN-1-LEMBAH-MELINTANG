@@ -15,8 +15,6 @@ content:
         label: "Judul"
         type: string
         required: true
-        pattern: "^.{1,30}$"
-        description: "Maksimal 30 karakter (digunakan sebagai nama file)"
       - name: type
         label: "Tipe Konten"
         required: true
@@ -33,7 +31,14 @@ content:
         options:
           input: img/post
           output: img/post
+      - name: video_url
+        label: "Link Video (Opsional)"
+        type: string
+        required: false
+        pattern: "^(?!.*(youtube\\.com|youtu\\.be)).*$"
+        description: "Khusus tipe Agenda: link YouTube tidak diizinkan. Gunakan platform lain (Google Drive, Vimeo, dll)."
       - { name: body, label: "Isi Konten", type: rich-text, required: true }
+
   # ============================================
   # GALERI KEGIATAN
   # ============================================
@@ -53,6 +58,7 @@ content:
         options:
           input: img/galeri
           output: img/galeri
+
   # ============================================
   # PENGURUS INTI OSIS
   # ============================================
@@ -71,6 +77,7 @@ content:
         options:
           input: img/pengurus/inti
           output: img/pengurus/inti
+
   # ============================================
   # STRUKTUR DIVISI OSIS
   # ============================================
@@ -94,69 +101,3 @@ content:
             options:
               input: img/pengurus/divisi
               output: img/pengurus/divisi
-# ============================================
-  # NOTIFIKASI POPUP
-  # ============================================
-  - name: notifications
-    label: "Notifikasi Popup"
-    type: file
-    path: content/notifications.json
-    list: true
-    fields:
-      - name: title
-        label: "Judul Notifikasi"
-        type: string
-        required: true
-        description: "Judul singkat yang muncul di popup"
-      
-      - name: message
-        label: "Pesan"
-        type: text
-        required: true
-        description: "Isi pesan notifikasi"
-      
-      - name: type
-        label: "Tipe Notifikasi"
-        type: select
-        required: true
-        options:
-          values: [info, warning]
-        default: info
-        description: "Info = informasi biasa | Warning = peringatan penting"
-      
-      - name: active
-        label: "Aktif"
-        type: boolean
-        default: false
-        description: "HANYA AKTIFKAN 1 NOTIFIKASI! Matikan yang lain jika ingin ganti."
-      
-      - name: show_from
-        label: "Tampilkan Mulai"
-        type: date
-        required: true
-        description: "Notifikasi mulai muncul sejak tanggal ini"
-      
-      - name: show_until
-        label: "Tampilkan Sampai"
-        type: date
-        required: true
-        description: "Batas waktu notifikasi berakhir"
-      
-      - name: has_action
-        label: "Tampilkan Tombol Aksi"
-        type: boolean
-        default: false
-        description: "Aktifkan jika popup butuh tombol aksi (selain tombol tutup). Jika diaktifkan, isi Link dan Teks Tombol di bawah."
-      
-      - name: link
-        label: "Link Tujuan"
-        type: string
-        required: false
-        description: "🔗 Hanya diisi jika 'Tampilkan Tombol Aksi' = ON. URL tujuan ketika tombol aksi diklik."
-      
-      - name: link_text
-        label: "Teks Tombol Aksi"
-        type: string
-        required: false
-        default: "Lihat Detail"
-        description: "Hanya diisi jika 'Tampilkan Tombol Aksi' = ON. Label tombol aksi."
