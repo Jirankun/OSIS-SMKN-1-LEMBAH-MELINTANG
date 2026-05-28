@@ -17,6 +17,78 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ================================================
+// LIGHTBOX FUNCTIONS
+// ================================================
+let lightboxModal = null;
+let lightboxImage = null;
+let lightboxName = null;
+let lightboxRole = null;
+
+function initLightbox() {
+  lightboxModal = document.getElementById('lightboxModal');
+  lightboxImage = document.getElementById('lightboxImage');
+  lightboxName = document.getElementById('lightboxName');
+  lightboxRole = document.getElementById('lightboxRole');
+  
+  if (!lightboxModal) return;
+  
+  // Close button
+  const closeBtn = lightboxModal.querySelector('.lightbox-close');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => closeLightbox());
+  }
+  
+  // Backdrop click
+  const backdrop = lightboxModal.querySelector('.lightbox-backdrop');
+  if (backdrop) {
+    backdrop.addEventListener('click', () => closeLightbox());
+  }
+  
+  // Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && lightboxModal.classList.contains('active')) {
+      closeLightbox();
+    }
+  });
+}
+
+function openLightbox(imageSrc, name, role) {
+  if (!lightboxModal) initLightbox();
+  if (!lightboxModal) return;
+  
+  lightboxImage.src = imageSrc;
+  lightboxImage.alt = name;
+  lightboxName.textContent = name;
+  lightboxRole.textContent = role;
+  
+  // Remove closing class if exists
+  lightboxModal.classList.remove('closing');
+  
+  // Show modal
+  lightboxModal.classList.add('active');
+  lightboxModal.setAttribute('aria-hidden', 'false');
+  
+  // Prevent body scroll
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  if (!lightboxModal) return;
+  
+  // Add closing animation
+  lightboxModal.classList.add('closing');
+  
+  // Wait for animation to finish
+  setTimeout(() => {
+    lightboxModal.classList.remove('active', 'closing');
+    lightboxModal.setAttribute('aria-hidden', 'true');
+    
+    // Restore body scroll
+    document.body.style.overflow = '';
+  }, 300);
+}
+
+// ================================================
 // LOAD PENGURUS INTI
 // ================================================
 async function loadTeamInti() {
@@ -43,17 +115,19 @@ async function loadTeamInti() {
     grid.innerHTML = members.map((m, i) => {
       const imgUrl = resolveImage(m.image);
       const isKetua = i === 0 ? ' inti-card--ketua' : '';
+      const displayName = m.name || 'Tanpa Nama';
+      const displayRole = m.role || 'Anggota';
       
       return `
-        <div class="card inti-card${isKetua} fade-up" style="animation-delay:${i * 100}ms">
+        <div class="card inti-card${isKetua} fade-up" style="animation-delay:${i * 100}ms; cursor: pointer;" onclick="openLightbox('${imgUrl}', '${displayName.replace(/'/g, "\\'")}', '${displayRole.replace(/'/g, "\\'")}')">
           ${imgUrl 
-            ? `<img src="${imgUrl}" alt="${m.name}" class="inti-card__img" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">`
+            ? `<img src="${imgUrl}" alt="${displayName}" class="inti-card__img" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">`
             : ''}
           <div class="inti-card__placeholder" style="display:${imgUrl ? 'none' : 'flex'}">
             <i class="fa-solid fa-user"></i>
           </div>
-          <div class="inti-card__name">${m.name || 'Tanpa Nama'}</div>
-          <span class="inti-card__role">${m.role || 'Anggota'}</span>
+          <div class="inti-card__name">${displayName}</div>
+          <span class="inti-card__role">${displayRole}</span>
         </div>
       `;
     }).join('');
