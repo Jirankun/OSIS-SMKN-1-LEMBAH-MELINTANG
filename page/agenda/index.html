@@ -113,9 +113,9 @@
               setMeta('twitter:image', image, 'twitter:image');
             }
             
-            console.log('✅ Meta tags updated for:', safeFile, '| Image:', image);
+            
           })
-          .catch(err => console.warn('⚠️ Gagal load preview meta untuk', safeFile, err));
+          .catch(err => {});
       }
     })();
   </script>

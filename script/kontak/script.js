@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderFooter(3);
   populateKontakInfo();
   initForm();
+  initMenuHistoryClear(); // Reset history saat navigasi menu
   initBackToTop();
   initScrollObserver();
 });

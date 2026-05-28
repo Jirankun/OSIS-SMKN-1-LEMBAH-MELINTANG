@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderFooter(3);
   await loadGallery();
   initLightbox();
+  initMenuHistoryClear(); // Reset history saat navigasi menu
   initScrollObserver('.galeri-full-item');
   initBackToTop();
 });

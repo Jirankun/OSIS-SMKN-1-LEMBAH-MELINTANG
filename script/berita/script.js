@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderNavbar();
   renderFooter(3);
   await loadBeritaIndex();
+  initMenuHistoryClear(); // Reset history saat navigasi menu
   initSearchFilter();
   initScrollObserver();
   
