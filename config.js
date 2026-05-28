@@ -194,14 +194,44 @@ function renderFooter(customNavCount = 4) {
 }
 
 // ================================================
-// HELPER: Back to top button
+// HELPER: Back to top button dengan progress scroll
 // ================================================
 function initBackToTop() {
   const btn = document.getElementById("backToTop");
   if (!btn) return;
+  
+  // Buat SVG ring untuk progress jika belum ada
+  if (!btn.querySelector('svg')) {
+    btn.innerHTML = `
+      <svg viewBox="0 0 48 48">
+        <circle class="progress-ring__bg" cx="24" cy="24" r="20"></circle>
+        <circle class="progress-ring__circle" cx="24" cy="24" r="20"></circle>
+      </svg>
+      <i class="fa-solid fa-arrow-up" style="position:absolute;font-size:1rem;"></i>
+    `;
+  }
+  
+  const circle = btn.querySelector('.progress-ring__circle');
+  const radius = 20;
+  const circumference = 2 * Math.PI * radius;
+  
+  // Set initial state
+  circle.style.strokeDasharray = `${circumference} ${circumference}`;
+  circle.style.strokeDashoffset = circumference;
+  
   window.addEventListener("scroll", () => {
-    btn.style.display = window.scrollY > 400 ? "flex" : "none";
+    const scrollY = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const scrollPercent = scrollY / docHeight;
+    
+    // Update progress ring
+    const offset = circumference - (scrollPercent * circumference);
+    circle.style.strokeDashoffset = offset;
+    
+    // Show/hide button
+    btn.style.display = scrollY > 400 ? "flex" : "none";
   });
+  
   btn.addEventListener("click", (e) => {
     e.preventDefault();
     window.scrollTo({ top: 0, behavior: "smooth" });
