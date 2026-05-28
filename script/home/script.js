@@ -255,7 +255,6 @@ async function loadTeamInti() {
     grid.innerHTML = emptyStateHTML('error', 'Gagal memuat pengurus inti.');
   }
 }
-}
 
 // ================================================
 // SEARCH & FILTER
