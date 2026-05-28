@@ -34,7 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
   loadTeamInti();
   initScrollObserverCustom();
   initBackToTop();
-  initLightbox();
+  initLightboxGaleri();
+  initLightboxModal();
 });
 
 function initConfig() {
@@ -213,7 +214,6 @@ async function loadGallery() {
     grid.innerHTML = emptyStateHTML('error', 'Gagal memuat galeri.');
   }
 }
-
 async function loadTeamInti() {
   const grid = document.getElementById('pengurusGrid');
   grid.innerHTML = `
@@ -224,12 +224,12 @@ async function loadTeamInti() {
   `;
   try {
     const data = await fetchJsonSilent('content/team_1.json', 'pengurus inti');
-    
+
     if (!data) {
       grid.innerHTML = emptyStateHTML('users', 'Data pengurus inti belum tersedia.');
       return;
     }
-    
+
     const members = data.team || (Array.isArray(data) ? data : []);
 
     if (!members.length) {
@@ -237,17 +237,24 @@ async function loadTeamInti() {
       return;
     }
 
-    grid.innerHTML = members.map((m, i) => `
-      <div class="pengurus-card ${i === 0 ? 'pengurus-card--ketua' : ''} fade-up">
-        <img src="${resolveImage(m.image)}" alt="${m.name}" class="pengurus-card__photo" onerror="this.src='https://via.placeholder.com/80?text=No+Img'">
-        <div class="pengurus-card__name">${m.name}</div>
-        <span class="pengurus-card__jabatan">${m.role}</span>
-      </div>
-    `).join('');
+    grid.innerHTML = members.map((m, i) => {
+      const imgUrl = resolveImage(m.image);
+      const displayName = m.name || 'Tanpa Nama';
+      const displayRole = m.role || 'Anggota';
+      
+      return `
+        <div class="pengurus-card ${i === 0 ? 'pengurus-card--ketua' : ''} fade-up" style="cursor: pointer;" onclick="openLightboxModal('${imgUrl}', '${displayName.replace(/'/g, "\\'")}', '${displayRole.replace(/'/g, "\\'")}')">
+          <img src="${imgUrl}" alt="${displayName}" class="pengurus-card__photo" onerror="this.src='https://via.placeholder.com/80?text=No+Img'">
+          <div class="pengurus-card__name">${displayName}</div>
+          <span class="pengurus-card__jabatan">${displayRole}</span>
+        </div>
+      `;
+    }).join('');
   } catch (err) {
     console.error('[Home] Error pengurus inti:', err);
     grid.innerHTML = emptyStateHTML('error', 'Gagal memuat pengurus inti.');
   }
+}
 }
 
 // ================================================
@@ -305,10 +312,10 @@ function initNewsFilter() {
 }
 
 // ================================================
-// LIGHTBOX
+// LIGHTBOX GALERI (untuk foto kegiatan)
 // ================================================
-function initLightbox() {
-  const lb = document.getElementById('lightbox');
+function initLightboxGaleri() {
+  const lb = document.getElementById('lightboxGaleri');
   const lbImg = document.getElementById('lightboxImg');
   const grid = document.getElementById('galeriGrid');
   if (!lb || !lbImg || !grid) return;
@@ -327,6 +334,78 @@ function initLightbox() {
   document.getElementById('lightboxClose').addEventListener('click', close);
   lb.addEventListener('click', e => { if(e.target === lb) close(); });
   document.addEventListener('keydown', e => { if(e.key === 'Escape') close(); });
+}
+
+// ================================================
+// LIGHTBOX MODAL (untuk pengurus inti)
+// ================================================
+let lightboxModal = null;
+let lightboxImage = null;
+let lightboxName = null;
+let lightboxRole = null;
+
+function initLightboxModal() {
+  lightboxModal = document.getElementById('lightboxModal');
+  lightboxImage = document.getElementById('lightboxImage');
+  lightboxName = document.getElementById('lightboxName');
+  lightboxRole = document.getElementById('lightboxRole');
+  
+  if (!lightboxModal) return;
+  
+  // Close button
+  const closeBtn = lightboxModal.querySelector('.lightbox-close');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => closeLightboxModal());
+  }
+  
+  // Backdrop click
+  const backdrop = lightboxModal.querySelector('.lightbox-backdrop');
+  if (backdrop) {
+    backdrop.addEventListener('click', () => closeLightboxModal());
+  }
+  
+  // Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && lightboxModal.classList.contains('active')) {
+      closeLightboxModal();
+    }
+  });
+}
+
+function openLightboxModal(imageSrc, name, role) {
+  if (!lightboxModal) initLightboxModal();
+  if (!lightboxModal) return;
+  
+  lightboxImage.src = imageSrc;
+  lightboxImage.alt = name;
+  lightboxName.textContent = name;
+  lightboxRole.textContent = role;
+  
+  // Remove closing class if exists
+  lightboxModal.classList.remove('closing');
+  
+  // Show modal
+  lightboxModal.classList.add('active');
+  lightboxModal.setAttribute('aria-hidden', 'false');
+  
+  // Prevent body scroll
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightboxModal() {
+  if (!lightboxModal) return;
+  
+  // Add closing animation
+  lightboxModal.classList.add('closing');
+  
+  // Wait for animation to finish
+  setTimeout(() => {
+    lightboxModal.classList.remove('active', 'closing');
+    lightboxModal.setAttribute('aria-hidden', 'true');
+    
+    // Restore body scroll
+    document.body.style.overflow = '';
+  }, 300);
 }
 
 // ================================================
