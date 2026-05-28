@@ -1,6 +1,6 @@
 ---
 title: TES FITUR YOUTUBE EMBED
-type: berita
+type: agenda
 date: 2026-05-26
 author: Zhyllan (Dev)
 ---
@@ -14,16 +14,16 @@ Berikut video YouTube nya :
 
 - *Adna vanky remix*
 
-https://www.youtube.com/watch?v=uCvVTyXKzQk
+[https://www.youtube.com/watch?v=uCvVTyXKzQk](https://www.youtube.com/watch?v=uCvVTyXKzQk)
 
 
 
 - *Reol official*
 
-https://www.youtube.com/watch?v=Mgd-rPsrdQo
+[https://www.youtube.com/watch?v=Mgd-rPsrdQo](https://www.youtube.com/watch?v=Mgd-rPsrdQo)
 
 
 
 - SaLVOICE
 
-https://www.youtube.com/watch?v=VpghGeZaiO8
+[https://www.youtube.com/watch?v=VpghGeZaiO8](https://www.youtube.com/watch?v=VpghGeZaiO8)
