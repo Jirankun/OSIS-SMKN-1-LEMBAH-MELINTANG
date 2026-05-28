@@ -56,8 +56,8 @@ async function initNotificationPopup() {
     }
     
     // Render popup
-    const hasAction = activeNotif.has_action && activeNotif.link_url;
-    const linkUrl = activeNotif.link_url || '#';
+    const hasAction = activeNotif.has_action && activeNotif.link;
+    const linkUrl = activeNotif.link || '#';
     const linkText = activeNotif.link_text || 'Lihat Detail';
     
     popupContainer.innerHTML = 

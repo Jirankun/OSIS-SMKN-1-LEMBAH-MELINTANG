@@ -8,7 +8,8 @@
     "show_until": "2026-05-30",
     "has_action": true,
     "link": "https://tkj1.pages.dev",
-    "link_text": "periksa"
+    "link_text": "periksa",
+    "version": 1
   },
   {
     "title": "Ujian sebentar lagi",
@@ -19,6 +20,7 @@
     "show_until": "2026-05-31",
     "has_action": true,
     "link": "https://link.lanjut.co",
-    "link_text": "lanjut"
+    "link_text": "lanjut",
+    "version": 1
   }
 ]
