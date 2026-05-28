@@ -211,10 +211,29 @@
     </div>
   </footer>
 
-  <!-- LIGHTBOX -->
-  <div class="lightbox" id="lightbox">
+  <!-- LIGHTBOX GALERI (untuk foto kegiatan) -->
+  <div class="lightbox" id="lightboxGaleri">
     <img class="lightbox__img" id="lightboxImg" src="" alt="Preview">
     <button class="lightbox__close" id="lightboxClose"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+
+  <!-- LIGHTBOX MODAL (untuk pengurus inti) -->
+  <div id="lightboxModal" class="lightbox-modal" aria-hidden="true">
+    <div class="lightbox-backdrop"></div>
+    <div class="lightbox-container">
+      <button class="lightbox-close" aria-label="Tutup">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div class="lightbox-content">
+        <div class="lightbox-left">
+          <img src="" alt="" class="lightbox-image" id="lightboxImage">
+        </div>
+        <div class="lightbox-right">
+          <h3 class="lightbox-name" id="lightboxName"></h3>
+          <p class="lightbox-role" id="lightboxRole"></p>
+        </div>
+      </div>
+    </div>
   </div>
 
 

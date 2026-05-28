@@ -75,3 +75,263 @@ HOME PAGE STYLES - OSIS SMKN 1 LEMBAH MELINTANG
 #newsGrid .card {
   will-change: transform, opacity;
 }
+/* ============================================
+   LIGHTBOX GALERI STYLES (untuk foto kegiatan)
+   ============================================ */
+.lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+.lightbox.open {
+  opacity: 1;
+  visibility: visible;
+}
+.lightbox__img {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-2xl);
+}
+.lightbox__close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--white);
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: var(--gray-700);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+.lightbox__close:hover {
+  background: var(--primary);
+  color: var(--white);
+  transform: rotate(90deg);
+}
+
+/* ============================================
+   LIGHTBOX MODAL STYLES (untuk pengurus inti)
+   ============================================ */
+.lightbox-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s linear 0.3s, opacity 0.3s ease;
+}
+
+.lightbox-modal.active {
+  visibility: visible;
+  opacity: 1;
+  transition: visibility 0s linear 0s, opacity 0.3s ease;
+}
+
+.lightbox-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(4px);
+}
+
+.lightbox-container {
+  position: relative;
+  z-index: 1;
+  width: 90%;
+  max-width: 800px;
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-2xl);
+  transform: scale(0.9);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.lightbox-modal.active .lightbox-container {
+  transform: scale(1);
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--gray-100);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  color: var(--gray-600);
+  transition: all 0.2s ease;
+  z-index: 2;
+}
+
+.lightbox-close:hover {
+  background: var(--primary);
+  color: var(--white);
+  transform: rotate(90deg);
+}
+
+.lightbox-content {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  gap: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .lightbox-content {
+    flex-direction: row;
+    align-items: center;
+    padding: 2.5rem;
+  }
+}
+
+.lightbox-left {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.lightbox-image {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid var(--primary-light);
+  box-shadow: var(--shadow-lg);
+  /* Animasi masuk dari kiri */
+  opacity: 0;
+  transform: translateX(-50px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.lightbox-modal.active .lightbox-image {
+  opacity: 1;
+  transform: translateX(0);
+  transition-delay: 0.1s;
+}
+
+.lightbox-right {
+  flex: 1;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .lightbox-right {
+    text-align: left;
+    padding-left: 1.5rem;
+  }
+}
+
+.lightbox-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--gray-800);
+  margin: 0;
+  /* Animasi masuk dari kanan */
+  opacity: 0;
+  transform: translateX(50px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.lightbox-modal.active .lightbox-name {
+  opacity: 1;
+  transform: translateX(0);
+  transition-delay: 0.2s;
+}
+
+.lightbox-role {
+  font-size: 1rem;
+  color: var(--primary);
+  font-weight: 600;
+  background: var(--primary-light);
+  padding: 0.4rem 1rem;
+  border-radius: 100px;
+  display: inline-block;
+  align-self: center;
+  /* Animasi masuk dari kanan */
+  opacity: 0;
+  transform: translateX(50px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+@media (min-width: 640px) {
+  .lightbox-role {
+    align-self: flex-start;
+  }
+}
+
+.lightbox-modal.active .lightbox-role {
+  opacity: 1;
+  transform: translateX(0);
+  transition-delay: 0.3s;
+}
+
+/* Animasi keluar - foto ke kiri, teks ke kanan */
+.lightbox-modal.closing .lightbox-image {
+  opacity: 0;
+  transform: translateX(-50px);
+  transition-delay: 0s;
+}
+
+.lightbox-modal.closing .lightbox-name,
+.lightbox-modal.closing .lightbox-role {
+  opacity: 0;
+  transform: translateX(50px);
+  transition-delay: 0s;
+}
+
+/* Dark mode adjustments */
+[data-theme="dark"] .lightbox-container {
+  background: var(--gray-800);
+}
+
+[data-theme="dark"] .lightbox-name {
+  color: var(--gray-100);
+}
+
+[data-theme="dark"] .lightbox-close {
+  background: var(--gray-700);
+  color: var(--gray-300);
+}
+
+[data-theme="dark"] .lightbox-close:hover {
+  background: var(--primary);
+  color: var(--white);
+}
