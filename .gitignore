@@ -1,53 +1,51 @@
 ```
-# Compiled and build artifacts
-*.pyc
-__pycache__/
-
-# Dependencies
-node_modules/
-venv/
-.venv/
-.env
-.env.local
-.env.*
-
 # Logs and temp files
 *.log
 *.tmp
 *.swp
 
+# Environment
+.env
+.env.local
+*.env.*
+
 # Editors
 .vscode/
 .idea/
 
-# Coverage reports
+# Dependencies
+node_modules/
+venv/
+.venv/
+__pycache__/
+.mypy_cache/
+.pytest_cache/
+dist/
+build/
+target/
+.gradle/
+
+# Compiled files
+*.pyc
+*.class
+*.o
+*.exe
+*.dll
+*.so
+*.a
+*.obj
+*.out
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Coverage
 coverage/
 htmlcov/
 .coverage
 
-# Distribution / packaging
-dist/
-build/
-*.egg-info/
-
-# OS generated files
-.DS_Store
-Thumbs.db
-
-# Local configuration files
-config.local.*
-settings.local.*
-
-# Cache directories
-.cache/
-.mypy_cache/
-.pytest_cache/
-.coverage*/
-.julia/
-zig-cache/
-target/
-
-# Compressed archives
+# Compressed files
 *.zip
 *.gz
 *.tar
@@ -70,216 +68,4 @@ target/
 *.tar.bz2
 *.tar.xz
 *.tar.zst
-
-# Security and certificates
-*.pem
-*.crt
-*.key
-
-# Database
-*.db
-*.sqlite
-*.sqlite3
-
-# Backup files
-*~
-*.bak
-*.backup
-
-# IDE specific
-.vs/
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# Testing
-*.coverage
-coverage.xml
-nosetests.xml
-
-# Documentation builds
-docs/_build/
-
-# Jupyter notebooks
-.ipynb_checkpoints/
-
-# Rust
-Cargo.lock
-
-# Go
-go.sum
-
-# Java
-*.class
-*.jar
-*.war
-*.ear
-.gradle/
-build/
-
-# C/C++
-*.o
-*.a
-*.so
-*.dll
-*.exe
-*.out
-*.obj
-
-# Python virtual environments
-.venv/
-venv/
-env/
-ENV/
-
-# Node.js
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Bower
-bower_components/
-
-# Grunt
-.grunt
-
-# Sass
-.sass-cache/
-
-# Rails
-*.rbc
-capybara-*.html
-.rspec
-public/system/
-vendor/bundle/
-.bundle/
-.rbx/
-
-# Android
-*.apk
-*.ap_
-build/
-gen/
-
-# iOS
-*.ipa
-*.dSYM/
-build/
-
-# Web
-.svn/
- CVS/
-
-# Temporary files
-*.tmp
-*.temp
-*.log
-*.swp
-*.swo
-*~
-.DS_Store
-Thumbs.db
-
-# Environment variables
-.env
-.env.local
-.env.*
-!.env.example
-!.env.sample
-!.env*.example
-!.env*.sample
-
-# Configuration
-config/
-!config/*.example
-!config/*.sample
-!config/**/*.example
-!config/**/*.sample
-
-# Secrets
-secrets/
-secret/
-*.secret
-!*.secret.example
-!*.secret.sample
-
-# API keys
-*.key
-*.token
-*.secret
-api-key
-api_key
-secret-key
-secret_key
-
-# Authentication
-auth/
-authentication/
-credentials/
-*.credentials
-!*.credentials.example
-!*.credentials.sample
-
-# Database dumps
-*.sql
-*.dump
-*.dmp
-*.backup
-
-# Log files
-*.log
-!*.log.example
-!*.log.sample
-
-# Cache
-.cache/
-*.cache
-!*.cache.example
-!*.cache.sample
-
-# Lock files
-*.lock
-!*.lock.example
-!*.lock.sample
-
-# State files
-*.state
-!*.state.example
-!*.state.sample
-
-# Temporary directories
-tmp/
-temp/
-tmp*/
-temp*/
-
-# OS X
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-# Linux
-*~
-
-# Windows
-Thumbs.db
-ehthumbs.db
-Icon?
-```
-
-Wait, let me reconsider this. Looking at the file changes again:
-
-Added files: []
-Deleted files: []
-Modified files: ['.gitignore', 'page/galeri/index.html', 'script/galeri/script.js', 'style/global/style.css']
-
-These are all source files (HTML, CSS, JS) and the .gitignore itself. No build artifacts, dependencies, or temporary files are being changed. According to rule #6, if the change list contains only source or config files and no build artifacts, dependencies, or temp files, I should output an empty .gitignore.
-
-```
-
 ```
