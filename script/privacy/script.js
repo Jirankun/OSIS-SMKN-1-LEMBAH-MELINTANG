@@ -19,10 +19,12 @@ document.addEventListener('DOMContentLoaded', () => {
 function initSplashScreen() {
   const splash = document.getElementById('splashScreen');
   if (splash) {
-    // Hapus splash setelah animasi selesai (5s delay + 1s fade out)
+    // Hapus splash setelah animasi selesai (2s delay + 0.6s fade)
     setTimeout(() => {
       splash.style.display = 'none';
-    }, 6000);
+      // Beri tanda bahwa splash sudah selesai
+      document.body.classList.add('anim-ready');
+    }, 2600);
   }
 }
 

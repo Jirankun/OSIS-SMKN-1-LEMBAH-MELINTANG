@@ -59,6 +59,9 @@
     // Setup event listeners untuk semua theme switch
     setupSwitchListeners();
 
+    // Sync icon navbar theme button dengan tema saat ini
+    updateThemeBtnIcon();
+
     // Listen untuk perubahan preferensi sistem
     if (window.matchMedia) {
       window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
@@ -69,6 +72,16 @@
         }
       });
     }
+  }
+
+  // Fungsi untuk update icon navbar theme button
+  function updateThemeBtnIcon() {
+    const btn = document.getElementById('themeToggleBtn');
+    if (!btn) return;
+    const icon = btn.querySelector('i');
+    if (!icon) return;
+    const isDark = document.documentElement.getAttribute('data-theme') === DARK_THEME;
+    icon.className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
   }
 
   // Setup listeners untuk semua theme switch di halaman
@@ -87,6 +100,7 @@
         const newTheme = this.checked ? DARK_THEME : LIGHT_THEME;
         applyTheme(newTheme);
         saveTheme(newTheme);
+        updateThemeBtnIcon();
         
         // Update icon label jika ada
         const label = this.closest('.theme-switch-wrapper')?.querySelector('.theme-switch-label i');
@@ -98,7 +112,30 @@
         window.dispatchEvent(new CustomEvent('themechange', { detail: { theme: newTheme } }));
       });
     });
+    
+    // Setup navbar theme button — simple toggle
+    const themeBtn = document.getElementById('themeToggleBtn');
+    if (themeBtn) {
+      themeBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const current = document.documentElement.getAttribute('data-theme') || LIGHT_THEME;
+        const newTheme = current === DARK_THEME ? LIGHT_THEME : DARK_THEME;
+        applyTheme(newTheme);
+        saveTheme(newTheme);
+        updateThemeBtnIcon();
+        
+        // Sync checkbox switches
+        document.querySelectorAll('.theme-switch').forEach(sw => {
+          sw.checked = (newTheme === DARK_THEME);
+        });
+        
+        window.dispatchEvent(new CustomEvent('themechange', { detail: { theme: newTheme } }));
+      });
+    }
   }
+  
+  // Update icon juga saat theme berubah dari preferensi sistem
+  window.addEventListener('themechange', updateThemeBtnIcon);
 
   // Jalankan inisialisasi
   if (document.readyState === 'loading') {

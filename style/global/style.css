@@ -24,10 +24,10 @@ Mobile-First, Modern, Energik
 
 /* Dark Theme Variables */
 [data-theme="dark"] {
-  --white: #0f172a; --gray-50: #1e293b; --gray-100: #334155;
-  --gray-200: #475569; --gray-300: #64748b; --gray-400: #94a3b8;
-  --gray-500: #cbd5e1; --gray-600: #e2e8f0; --gray-700: #f1f5f9;
-  --gray-800: #f8fafc; --gray-900: #ffffff;
+  --white: #1e293b; --gray-50: #0f172a; --gray-100: #1a2332;
+  --gray-200: #334155; --gray-300: #475569; --gray-400: #64748b;
+  --gray-500: #94a3b8; --gray-600: #cbd5e1; --gray-700: #e2e8f0;
+  --gray-800: #f1f5f9; --gray-900: #ffffff;
   --bg-gradient: linear-gradient(135deg, #020617 0%, #0f172a 50%, #020617 100%);
   --shadow-sm: 0 1px 3px rgba(0,0,0,0.3); --shadow: 0 4px 16px rgba(0,0,0,0.4);
   --shadow-lg: 0 12px 40px rgba(0,0,0,0.5); --shadow-glow: 0 0 40px rgba(14,165,233,0.15);
@@ -46,7 +46,8 @@ Mobile-First, Modern, Energik
 
 /* ---- Reset & Base ---- */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; scrollbar-width: none; }
+html::-webkit-scrollbar { display: none; }
 body { font-family: var(--font-body); background: var(--gray-50); color: var(--gray-800); line-height: 1.6; min-height: 100vh; overflow-x: hidden; 
   /* App-like feel: disable tap highlight & touch callout */
   -webkit-tap-highlight-color: transparent;
@@ -78,8 +79,8 @@ NAVBAR (GLOBAL)
 ============================================ */
 .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.08); transition: var(--transition); }
 .navbar.scrolled { background: rgba(15, 23, 42, 0.98); box-shadow: var(--shadow-lg); }
-.navbar__inner { display: flex; align-items: center; justify-content: space-between; height: 64px; gap: 1rem; }
-.navbar__brand { display: flex; align-items: center; gap: 0.625rem; flex-shrink: 0; }
+.navbar__inner { display: flex; align-items: center; height: 64px; gap: 0.5rem; }
+.navbar__brand { display: flex; align-items: center; gap: 0.625rem; flex-shrink: 0; margin-right: auto; }
 .navbar__logo { width: 36px; height: 36px; border-radius: 8px; object-fit: contain; background: var(--primary); padding: 2px; }
 .navbar__title { display: flex; flex-direction: column; }
 .navbar__title-main { 
@@ -99,11 +100,36 @@ NAVBAR (GLOBAL)
 
 /* Desktop nav */
 .navbar__links { display: none; gap: 0.25rem; align-items: center; }
-@media (min-width: 900px) { .navbar__links { display: flex; } }
+@media (min-width: 900px) { 
+  .navbar__links { 
+    display: flex; 
+  } 
+}
 .navbar__link { padding: 0.45rem 0.85rem; border-radius: 8px; font-size: 0.82rem; font-weight: 600; color: var(--gray-300); transition: var(--transition); white-space: nowrap; }
 .navbar__link:hover, .navbar__link.active { color: var(--white); background: rgba(14,165,233,0.18); }
 .navbar__link.active { color: var(--primary); font-weight: 600; position: relative; }
 .navbar__link.active::after { content: ''; position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); width: 20px; height: 3px; background: var(--primary); border-radius: 2px; }
+
+/* Theme toggle button in navbar */
+.navbar__theme-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray-300);
+  font-size: 1rem;
+  transition: var(--transition);
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+.navbar__theme-btn:hover {
+  background: rgba(255,255,255,0.1);
+  color: var(--white);
+}
 
 /* Hamburger */
 .navbar__hamburger { display: flex; flex-direction: column; gap: 5px; padding: 8px; border-radius: 8px; transition: var(--transition); }
@@ -286,24 +312,9 @@ body.dynamic-page .container.main-content {
   margin: 0;
 }
 
-/* Footer FULL WIDTH seperti header - tidak terpengaruh container */
+/* Footer — pakai default .footer (.container max-width + padding otomatis) */
 body.dynamic-page .footer {
-  position: relative;
-  width: 100vw;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
   margin-top: auto;
-  padding: 3rem 20px 1.5rem;
-}
-
-/* Konten di dalam footer tetap punya padding tapi tidak dibatasi max-width */
-body.dynamic-page .footer .container {
-  max-width: none !important;
-  width: 100%;
-  margin: 0;
-  padding: 0;
 }
 
 /* Tabel dan video bisa melebarkan container */
@@ -318,7 +329,7 @@ body.dynamic-page .video-wrapper iframe {
   min-width: 300px;
 }
 
-/* Pada desktop, footer tetap full width mengikuti konten */
+/* Pada desktop */
 @media (min-width: 768px) {
   body.dynamic-page table {
     display: table;
@@ -327,17 +338,6 @@ body.dynamic-page .video-wrapper iframe {
   body.dynamic-page .container.main-content {
     max-width: none;
     margin: 0;
-  }
-  
-  body.dynamic-page .footer {
-    padding: 3rem 40px 1.5rem;
-  }
-  
-  body.dynamic-page .footer .container {
-    max-width: none !important;
-    width: 100%;
-    margin: 0;
-    padding: 0;
   }
 }
 
@@ -377,6 +377,8 @@ ANIMATION SYSTEM (GLOBAL)
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes slideInLeft { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
 @keyframes slideInRight { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes slideInTop { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideInBottom { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes scaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
 @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
@@ -469,12 +471,37 @@ ANIMATION SYSTEM (GLOBAL)
 
 /* ---- Split view content entrance (applied inline via HTML/JS) ---- */
 
-/* ---- Toast (unchanged) ---- */
-.toast { position: fixed; bottom: 0.3rem; right: 1.5rem; background: var(--gray-900); color: var(--white); padding: 0.85rem 1.25rem; border-radius: 12px; font-size: 0.85rem; font-weight: 600; box-shadow: var(--shadow-lg); transform: translateY(120%); transition: transform 0.3s ease; z-index: 9000; display: flex; align-items: center; gap: 0.6rem; max-width: calc(100vw - 3rem); }
+/* ---- Toast ---- */
+.toast { position: fixed; bottom: 5rem; right: 1.5rem; background: var(--gray-900); color: var(--white); padding: 0.85rem 1.25rem; border-radius: 12px; font-size: 0.85rem; font-weight: 600; box-shadow: var(--shadow-lg); transform: translateY(calc(100% + 5rem)); transition: transform 0.3s ease; z-index: 9000; display: flex; align-items: center; gap: 0.6rem; max-width: calc(100vw - 3rem); }
 .toast.show { transform: translateY(0); }
 .toast--success { border-left: 4px solid var(--success); }
 .toast--error { border-left: 4px solid var(--danger); }
-.toast--cookie { border-left: 4px solid var(--accent); padding-right: 0.5rem; }
+.toast--cookie {
+  border-left: none;
+  overflow: hidden;
+  gap: 0.75rem;
+  padding: 0.5rem 0.5rem 0.5rem 1rem;
+  clip-path: circle(18px at calc(100% - 22px) 50%);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+              clip-path 0.45s ease 0.35s;
+}
+.toast--cookie.show {
+  clip-path: circle(200% at calc(100% - 22px) 50%);
+}
+.toast--cookie .toast__text {
+  font-size: 0.82rem;
+  min-width: 0;
+}
+.toast--cookie .toast__icon {
+  font-size: 1.1rem;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+.toast--cookie .toast__close {
+  font-size: 0.72rem;
+  padding: 0.3rem 0.7rem;
+  margin-left: auto;
+}
 .toast__close { background: var(--accent); color: var(--white); padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; gap: 0.3rem; transition: var(--transition); margin-left: auto; }
 .toast__close:hover { background: var(--accent-dark); transform: scale(1.05); }
 
@@ -604,6 +631,258 @@ THEME SWITCH (FOOTER)
 }
 
 /* ============================================
+DEV MODAL (Tentang Developer)
+============================================ */
+.dev-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s linear 0.4s, opacity 0.3s ease;
+}
+.dev-modal.open {
+  visibility: visible;
+  opacity: 1;
+  transition: visibility 0s linear 0s, opacity 0.3s ease;
+}
+
+.dev-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.dev-modal.open .dev-modal__backdrop {
+  opacity: 1;
+}
+
+.dev-modal__container {
+  position: relative;
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  max-width: 560px;
+  width: 100%;
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  transform: scale(0.92);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.dev-modal.open .dev-modal__container {
+  transform: scale(1);
+}
+
+.dev-modal__close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--gray-100);
+  color: var(--gray-500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  transition: var(--transition);
+  z-index: 2;
+  border: none;
+  cursor: pointer;
+}
+.dev-modal__close:hover {
+  background: var(--gray-200);
+  color: var(--gray-700);
+  transform: rotate(90deg);
+}
+.dev-modal__content {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  gap: 1.5rem;
+}
+@media (min-width: 480px) {
+  .dev-modal__content {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
+.dev-modal__left {
+  flex-shrink: 0;
+  text-align: center;
+}
+.dev-modal__photo {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid var(--primary-light);
+  box-shadow: 0 0 0 2px var(--primary);
+  margin: 0 auto;
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+@media (min-width: 480px) {
+  .dev-modal__photo {
+    width: 140px;
+    height: 140px;
+  }
+}
+.dev-modal.open .dev-modal__photo {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.dev-modal__right {
+  flex: 1;
+  min-width: 0;
+}
+.dev-modal__name {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: 0.15rem;
+  line-height: 1.2;
+  opacity: 0;
+  transform: translateY(-30px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.dev-modal.open .dev-modal__name {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.dev-modal__role {
+  font-size: 0.82rem;
+  color: var(--primary);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.75rem;
+  opacity: 0;
+  transform: translateX(30px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.dev-modal.open .dev-modal__role {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.dev-modal__bio {
+  font-size: 0.88rem;
+  color: var(--gray-600);
+  line-height: 1.7;
+  margin-bottom: 1rem;
+  opacity: 0;
+  transform: translateX(30px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.dev-modal__bio strong {
+  color: var(--gray-800);
+}
+.dev-modal.open .dev-modal__bio {
+  opacity: 1;
+  transform: translateX(0);
+  transition-delay: 0.05s;
+}
+
+.dev-modal__tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.dev-modal.open .dev-modal__tech {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.1s;
+}
+.dev-modal__tech span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.7rem;
+  border-radius: 100px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: var(--gray-100);
+  color: var(--gray-600);
+}
+.dev-modal__tech span i {
+  font-size: 0.75rem;
+  color: var(--primary);
+}
+
+/* ---- Exit transitions (reverse order + direct, no delay) ---- */
+.dev-modal.closing .dev-modal__backdrop {
+  opacity: 0;
+  transition-duration: 0.3s;
+}
+.dev-modal.closing .dev-modal__container {
+  transform: scale(0.92);
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+}
+.dev-modal.closing .dev-modal__tech {
+  opacity: 0;
+  transform: translateY(30px);
+  transition-duration: 0.3s;
+}
+.dev-modal.closing .dev-modal__bio {
+  opacity: 0;
+  transform: translateX(30px);
+  transition-duration: 0.3s;
+  transition-delay: 0.05s;
+}
+.dev-modal.closing .dev-modal__role {
+  opacity: 0;
+  transform: translateX(30px);
+  transition-duration: 0.3s;
+  transition-delay: 0.1s;
+}
+.dev-modal.closing .dev-modal__name {
+  opacity: 0;
+  transform: translateY(-30px);
+  transition-duration: 0.3s;
+  transition-delay: 0.15s;
+}
+.dev-modal.closing .dev-modal__photo {
+  opacity: 0;
+  transform: translateX(-30px);
+  transition-duration: 0.3s;
+  transition-delay: 0.2s;
+}
+
+/* Trigger button in footer */
+.dev-trigger {
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: inherit;
+  font-family: inherit;
+  padding: 0;
+  display: inline;
+}
+.dev-trigger:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+/* ============================================
 SPLASH SCREEN ANIMATION
 ============================================ */
 .splash-screen {
@@ -614,8 +893,8 @@ SPLASH SCREEN ANIMATION
   align-items: center;
   justify-content: center;
   z-index: 10000;
-  animation: splashFadeOut 1s ease forwards;
-  animation-delay: 4s; /* Delay lebih lama agar user sempat melihat logo */
+  animation: splashFadeOut 0.6s ease forwards;
+  animation-delay: 2s;
 }
 
 .splash__content {
@@ -630,7 +909,7 @@ SPLASH SCREEN ANIMATION
   object-fit: contain;
   margin: 0 auto 1.5rem;
   filter: drop-shadow(0 0 30px rgba(14,165,233,0.6));
-  animation: splashLogoEnter 1s ease forwards;
+  animation: splashLogoEnter 0.6s ease forwards;
 }
 
 .splash__title {
@@ -641,8 +920,8 @@ SPLASH SCREEN ANIMATION
   line-height: 1.2;
   margin-bottom: 0.3rem;
   opacity: 0;
-  animation: splashTitleEnter 0.8s ease forwards;
-  animation-delay: 0.3s;
+  animation: splashTitleEnter 0.5s ease forwards;
+  animation-delay: 0.15s;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
@@ -654,8 +933,8 @@ SPLASH SCREEN ANIMATION
   letter-spacing: 0.08em;
   text-transform: uppercase;
   opacity: 0;
-  animation: splashTitleEnter 0.8s ease forwards;
-  animation-delay: 0.5s;
+  animation: splashTitleEnter 0.5s ease forwards;
+  animation-delay: 0.3s;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
@@ -664,8 +943,8 @@ SPLASH SCREEN ANIMATION
   color: var(--primary);
   margin-top: 2rem;
   opacity: 0;
-  animation: splashTitleEnter 0.8s ease forwards;
-  animation-delay: 0.7s;
+  animation: splashTitleEnter 0.5s ease forwards;
+  animation-delay: 0.45s;
 }
 
 /* Override fa-spin untuk splash loader agar lebih smooth */

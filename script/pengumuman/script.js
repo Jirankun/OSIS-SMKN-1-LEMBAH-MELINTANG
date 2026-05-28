@@ -221,6 +221,9 @@ async function loadMarkdownContent(filename) {
     // Hapus sisa link YouTube yang mungkin masih nempel (fallback jika regex utama gagal)
     htmlContent = htmlContent.replace(/<a[^>]*?href=["']https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)[a-zA-Z0-9_-]{11}[^"']*["'][^>]*?>[^<]*?<\/a>/gi, '');
     
+    // ✅ Wrap tables for mobile horizontal scroll (overflow protection)
+    htmlContent = htmlContent.replace(/<table\b[^>]*>/gi, '<div class="table-wrapper"><table>').replace(/<\/table>/gi, '<\/table><\/div>');
+    
     // Render layout
     contentEl.innerHTML = `
       <div style="border-bottom:2px solid var(--gray-100);padding-bottom:1.5rem;margin-bottom:2rem">

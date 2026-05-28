@@ -11,6 +11,28 @@
     return; // Jangan tampilkan lagi selamanya
   }
   
+  // Tunggu sampai body punya class 'anim-ready' (tanda splash selesai / halaman tanpa splash)
+  function waitForAnimReady() {
+    return new Promise(function(resolve) {
+      if (document.body.classList.contains('anim-ready')) {
+        resolve();
+        return;
+      }
+      var observer = new MutationObserver(function() {
+        if (document.body.classList.contains('anim-ready')) {
+          observer.disconnect();
+          resolve();
+        }
+      });
+      observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+      // Safety timeout: max 10 detik
+      setTimeout(function() {
+        observer.disconnect();
+        resolve();
+      }, 10000);
+    });
+  }
+  
   // Fungsi untuk menampilkan toast
   function showCookieToast() {
     // Buat elemen toast jika belum ada
@@ -19,18 +41,21 @@
       toast = document.createElement('div');
       toast.id = 'cookie-toast';
       toast.className = 'toast toast--cookie';
-      toast.innerHTML = '<i class="fa-solid fa-cookie-bite"></i>' +
-        '<span>Website ini menggunakan cookie dan tracking user untuk meningkatkan pengalaman pengguna. Dengan melanjutkan, Anda menyetujui penggunaan cookie.</span>' +
+      toast.innerHTML = 
+        '<span class="toast__text">Situs ini gunakan cookie untuk kenyamanan Anda</span>' +
         '<button class="toast__close" aria-label="Mengerti">' +
-        '<i class="fa-solid fa-check"></i> Mengerti' +
-        '</button>';
+          '<i class="fa-solid fa-check"></i> Mengerti' +
+        '</button>' +
+        '<i class="fa-solid fa-cookie-bite toast__icon"></i>';
       document.body.appendChild(toast);
     }
     
-    // Tampilkan dengan animasi setelah delay singkat
-    setTimeout(function() {
-      toast.classList.add('show');
-    }, 500);
+    // Tunggu splash selesai, lalu muncul dengan stagger
+    waitForAnimReady().then(function() {
+      setTimeout(function() {
+        toast.classList.add('show');
+      }, 800);
+    });
     
     // Event listener untuk tombol close
     var closeBtn = toast.querySelector('.toast__close');

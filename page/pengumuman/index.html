@@ -30,7 +30,6 @@
   <!-- ✅ CSS: Global dulu, baru page-specific -->
   <link rel="stylesheet" href="../../style/global/style.css">
   <link rel="stylesheet" href="../../style/pengumuman/style.css">
-  <link rel="stylesheet" href="../../style/notification.css">
   
   <!-- ✅ Marked.js (load sebelum script pengumuman) -->
   <script src="https://cdn.jsdelivr.net/npm/marked@18.0.4/lib/marked.umd.min.js" defer></script>
@@ -79,8 +78,12 @@
             const descRaw = text.replace(/---[\s\S]*?---/, '').replace(/[#*`\[\]]/g, '').substring(0, 160).trim();
             const description = descRaw || frontmatter.description || 'Baca pengumuman lengkap dari OSIS SMKN 1 Lembah Melintang.';
             
-            // IMAGE OG: Selalu ambil dari config.js (heroBg)
-            const image = resolveImage(CONFIG_HERO_BG);
+            // IMAGE OG: aman dari video heroBg — jika heroBg berformat video, fallback ke logo
+            let ogImagePath = CONFIG_HERO_BG;
+            if (ogImagePath && /\.(mp4|webm|mov|avi|mkv)$/i.test(ogImagePath)) {
+              ogImagePath = '/img/asset/logo.webp';
+            }
+            const image = resolveImage(ogImagePath);
 
             // Update Meta Tags menggunakan fungsi dari config.js jika tersedia
             if (typeof updateOpenGraphTags === 'function') {
@@ -117,8 +120,6 @@
   </script>
   
   <script src="../../script/pengumuman/script.js" defer></script>
-  <!-- CMS NOTIFICATION POPUP -->
-  <div id="notification-popup" class="notification-popup" style="display:none" role="dialog" aria-modal="true"></div>
 
 </head>
 <body class="dynamic-page">
@@ -134,6 +135,9 @@
         </div>
       </a>
       <div class="navbar__links" id="navLinks"></div>
+      <button class="navbar__theme-btn" id="themeToggleBtn" aria-label="Toggle dark mode">
+        <i class="fa-solid fa-moon"></i>
+      </button>
       <button class="navbar__hamburger" id="hamburger" aria-label="Toggle Menu">
         <span></span><span></span><span></span>
       </button>
@@ -182,23 +186,22 @@
         <img src="../../img/asset/logo.webp" alt="Logo OSIS" class="footer__brand-logo">
         <h3 class="footer__brand-name" id="footerBrand"></h3>
         <p class="footer__brand-desc" id="footerDesc"></p>
-        
-        <!-- Theme Switch -->
-        <div class="theme-switch-wrapper">
-          <label class="theme-switch-label" for="themeToggle">
-            <i class="fa-solid fa-moon"></i>
-            <span>Mode Gelap</span>
-          </label>
-          <input type="checkbox" id="themeToggle" class="theme-switch" aria-label="Toggle dark mode">
-        </div>
+
       </div>
       <div>
         <h4 class="footer__heading">Navigasi Cepat</h4>
         <ul class="footer__links" id="footerLinks"></ul>
       </div>
+      <div>
+        <h4 class="footer__heading">Media Sosial</h4>
+        <div class="footer__socials" id="socials"></div>
+      </div>
     </div>
+    
+    
     <div class="container footer__bottom">
       <span>&copy; <span id="year"></span> OSIS SMKN 1 LM. All rights reserved.</span>
+      <span>Dibuat dengan <i class="fa-solid fa-mug-hot"></i> & <i class="fa-solid fa-heart"></i> oleh <button class="dev-trigger" onclick="openDevModal()">Tim Jurnalistik OSIS</button></span>
     </div>
   </footer>
 
@@ -207,8 +210,57 @@
     <i class="fa-solid fa-arrow-up"></i>
   </button>
 
+  <!-- DEV MODAL (Info Developer) -->
+<div id="devModal" class="dev-modal" aria-hidden="true">
+  <div class="dev-modal__backdrop" onclick="closeDevModal()"></div>
+  <div class="dev-modal__container">
+    <button class="dev-modal__close" onclick="closeDevModal()" aria-label="Tutup">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <div class="dev-modal__content">
+      <div class="dev-modal__left">
+        <img src="/img/asset/dev.png" alt="Zhyllan Fyllah" class="dev-modal__photo" onerror="this.style.display='none'">
+      </div>
+      <div class="dev-modal__right">
+        <h3 class="dev-modal__name">Zhyllan Fyllah</h3>
+        <p class="dev-modal__role"><i class="fa-solid fa-code"></i> Web Developer</p>
+        <p class="dev-modal__bio">
+          Seorang siswa TKJ yang penasaran dan suka belajar hal baru. Website ini dibuat sebagai wujud semangat untuk memodernisasi OSIS SMKN 1 Lembah Melintang.
+          <br><br>
+          <strong>"Terus belajar, terus berkembang."</strong>
+          <br><br>
+          🤖 Dibantu oleh <strong>Codebuff AI</strong> — asisten coding yang selalu siap.
+        </p>
+        <div class="dev-modal__tech">
+          <span><i class="fa-brands fa-html5"></i> HTML</span>
+          <span><i class="fa-brands fa-css3-alt"></i> CSS</span>
+          <span><i class="fa-brands fa-js"></i> JS</span>
+          <span><i class="fa-solid fa-cloud"></i> Cloudflare</span>
+          <span><i class="fa-solid fa-robot"></i> Codebuff AI</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  function openDevModal() {
+    document.getElementById('devModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeDevModal() {
+    var m = document.getElementById('devModal');
+    m.classList.add('closing');
+    setTimeout(function() {
+      m.classList.remove('open', 'closing');
+      document.body.style.overflow = '';
+    }, 550);
+  }
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeDevModal();
+  });
+</script>
+
   <script src="../../script/cookie-toast.js" defer></script>
-  <script src="../../script/notification.js" defer></script>
   <script src="../../script/utils/theme.js" defer></script>
 </body>
 </html>

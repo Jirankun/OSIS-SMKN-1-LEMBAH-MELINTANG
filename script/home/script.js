@@ -9,15 +9,14 @@ function initSplashScreen() {
   const splash = document.getElementById('splashScreen');
   if (!splash) return;
   
-  // Splash akan otomatis hilang setelah animasi CSS selesai (4s delay + 1s fade out)
-  // Kita tambahkan cleanup untuk memastikan elemen dihapus dari DOM
+  // Splash akan otomatis hilang setelah animasi CSS selesai (2s delay + 0.6s fade)
   setTimeout(() => {
     if (splash) {
       splash.style.display = 'none';
-      // Optional: hapus dari DOM setelah animasi selesai
-      // splash.remove();
+      // Beri tanda bahwa splash sudah selesai → trigger animasi hero, toast, dsb.
+      document.body.classList.add('anim-ready');
     }
-  }, 5200); // Total durasi: 4s delay + 1s fade + buffer 0.2s
+  }, 2600); // Total durasi: 2s delay + 0.6s fade
 }
 
 // ================================================
@@ -27,7 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Cek dan bersihkan URL jika ada parameter ?file= yang tidak valid
   cleanInvalidFileUrl();
   initSplashScreen();
-  initNotificationPopup();
   renderNavbar();
   initConfig();
   renderFooter(4);

@@ -296,8 +296,13 @@ function updateOpenGraphTags(title, description, imageUrl) {
   setMeta('og:description', description || SITE_CONFIG.school.tagline);
   setMeta('og:type', 'article');
   
-  // Set OG image from config.js (heroBg) atau custom imageUrl
-  const ogImage = imageUrl ? imageUrl : resolveImage(SITE_CONFIG.school.heroBg);
+  // Set OG image: jika imageUrl diberikan, pakai itu. Jika tidak, fallback dari heroBg.
+  // Tapi jika heroBg adalah video, gunakan logo sebagai gantinya (video ga bisa dipreview)
+  let fallbackImage = SITE_CONFIG.school.heroBg;
+  if (fallbackImage && /\.(mp4|webm|mov|avi|mkv)$/i.test(fallbackImage)) {
+    fallbackImage = SITE_CONFIG.school.logo;
+  }
+  const ogImage = imageUrl ? imageUrl : resolveImage(fallbackImage);
   setMeta('og:image', ogImage);
   setMeta('og:image:alt', title || 'Preview image');
   setMeta('og:url', window.location.href);
@@ -336,6 +341,23 @@ function initMenuHistoryClear() {
     });
   });
 }
+
+// ================================================
+// GLOBAL: Tambah class anim-ready ke body (fallback untuk halaman tanpa splash)
+// ================================================
+(function() {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', addAnimReadyFallback);
+  } else {
+    addAnimReadyFallback();
+  }
+  function addAnimReadyFallback() {
+    // Hanya tambah jika tidak ada splash screen (halaman dalam tidak punya splash)
+    if (!document.getElementById('splashScreen')) {
+      document.body.classList.add('anim-ready');
+    }
+  }
+})();
 
 // ================================================
 // HELPER: Scroll observer untuk animasi

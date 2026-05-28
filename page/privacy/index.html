@@ -32,20 +32,19 @@
   <!-- CSS: Global dulu, baru page-specific -->
   <link rel="stylesheet" href="../../style/global/style.css">
   <link rel="stylesheet" href="../../style/privacy/style.css">
-  <link rel="stylesheet" href="../../style/notification.css">
 </head>
 <body>
-
-  <!-- CMS NOTIFICATION POPUP -->
-  <div id="notification-popup" class="notification-popup" style="display:none" role="dialog" aria-modal="true"></div>
 
   <!-- PAGE HEADER -->
   <header class="page-header">
     <div class="container">
-      <div style="margin-bottom:1rem">
+      <div style="margin-bottom:1rem;display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap">
         <a href="javascript:tutupAtauKembali()" class="btn btn-outline btn-sm" style="color:var(--gray-600);border-color:var(--gray-300);background:var(--white)">
           <i class="fa-solid fa-arrow-left"></i> Kembali
         </a>
+        <button class="navbar__theme-btn" id="themeToggleBtn" aria-label="Toggle dark mode" style="background:var(--gray-100);color:var(--gray-600);width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;border:none;cursor:pointer;transition:all 0.25s ease">
+          <i class="fa-solid fa-moon"></i>
+        </button>
       </div>
       <h1 class="page-header__title">Kebijakan Privasi</h1>
       <p class="page-header__subtitle">OSIS SMKN 1 Lembah Melintang</p>
@@ -233,14 +232,7 @@
         <img src="../../img/asset/logo.webp" alt="Logo OSIS" class="footer__brand-logo">
         <h3 class="footer__brand-name" id="footerBrand"></h3>
         <p class="footer__brand-desc" id="footerDesc"></p>
-        <!-- Theme Switch -->
-       <div class="theme-switch-wrapper">
-         <label class="theme-switch-label" for="themeToggle">
-            <i class="fa-solid fa-moon"></i>
-            <span>Mode Gelap</span>
-         </label>
-         <input type="checkbox" id="themeToggle" class="theme-switch" aria-label="Toggle dark mode">
-       </div>
+
       </div>
       <div>
         <h4 class="footer__heading">Navigasi Cepat</h4>
@@ -255,6 +247,7 @@
     
     <div class="container footer__bottom">
       <span>&copy; <span id="year"></span> OSIS SMKN 1 LM. All rights reserved.</span>
+      <span>Dibuat dengan <i class="fa-solid fa-mug-hot"></i> & <i class="fa-solid fa-heart"></i> oleh <button class="dev-trigger" onclick="openDevModal()">Tim Jurnalistik OSIS</button></span>
     </div>
   </footer>
 
@@ -264,10 +257,59 @@
   </button>
 
   <!-- JS -->
+  <!-- DEV MODAL (Info Developer) -->
+<div id="devModal" class="dev-modal" aria-hidden="true">
+  <div class="dev-modal__backdrop" onclick="closeDevModal()"></div>
+  <div class="dev-modal__container">
+    <button class="dev-modal__close" onclick="closeDevModal()" aria-label="Tutup">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <div class="dev-modal__content">
+      <div class="dev-modal__left">
+        <img src="/img/asset/dev.png" alt="Zhyllan Fyllah" class="dev-modal__photo" onerror="this.style.display='none'">
+      </div>
+      <div class="dev-modal__right">
+        <h3 class="dev-modal__name">Zhyllan Fyllah</h3>
+        <p class="dev-modal__role"><i class="fa-solid fa-code"></i> Web Developer</p>
+        <p class="dev-modal__bio">
+          Seorang siswa TKJ yang penasaran dan suka belajar hal baru. Website ini dibuat sebagai wujud semangat untuk memodernisasi OSIS SMKN 1 Lembah Melintang.
+          <br><br>
+          <strong>"Terus belajar, terus berkembang."</strong>
+          <br><br>
+          🤖 Dibantu oleh <strong>Codebuff AI</strong> — asisten coding yang selalu siap.
+        </p>
+        <div class="dev-modal__tech">
+          <span><i class="fa-brands fa-html5"></i> HTML</span>
+          <span><i class="fa-brands fa-css3-alt"></i> CSS</span>
+          <span><i class="fa-brands fa-js"></i> JS</span>
+          <span><i class="fa-solid fa-cloud"></i> Cloudflare</span>
+          <span><i class="fa-solid fa-robot"></i> Codebuff AI</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  function openDevModal() {
+    document.getElementById('devModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeDevModal() {
+    var m = document.getElementById('devModal');
+    m.classList.add('closing');
+    setTimeout(function() {
+      m.classList.remove('open', 'closing');
+      document.body.style.overflow = '';
+    }, 550);
+  }
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeDevModal();
+  });
+</script>
+
   <script src="../../config.js" defer></script>
   <script src="../../script/privacy/script.js" defer></script>
   <script src="../../script/cookie-toast.js" defer></script>
-  <script src="../../script/notification.js" defer></script>
   <script src="../../script/utils/theme.js" defer></script>
 </body>
 </html>
