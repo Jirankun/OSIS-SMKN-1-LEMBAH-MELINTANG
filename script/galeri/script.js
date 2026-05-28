@@ -70,18 +70,61 @@ async function loadGallery() {
 // ================================================
 // LIGHTBOX
 // ================================================
+let galleryDataCache = null;
+
 function initLightbox() {
   const lb = document.getElementById('lightbox');
   const lbImg = document.getElementById('lightboxImg');
+  const lbCaption = document.getElementById('lightboxCaption');
+  const lbDescription = document.getElementById('lightboxDescription');
   const grid = document.getElementById('galeriFullGrid');
   if (!lb || !lbImg || !grid) return;
 
-  grid.addEventListener('click', (e) => {
+  // Simpan data galeri untuk referensi lightbox
+  async function getGalleryData() {
+    if (galleryDataCache) return galleryDataCache;
+    try {
+      const rawData = await fetchJsonSilent('../../content/galeri.json', 'galeri');
+      let items = Array.isArray(rawData) ? rawData : (rawData.galeri || rawData.data || []);
+      if (items[0]?.date) items.sort((a, b) => new Date(b.date) - new Date(a.date));
+      galleryDataCache = items;
+      return items;
+    } catch (err) {
+      console.error('[Lightbox] Error loading gallery data:', err);
+      return [];
+    }
+  }
+
+  grid.addEventListener('click', async (e) => {
     const item = e.target.closest('.galeri-full-item');
     if (!item) return;
     const img = item.querySelector('img');
     if (img && img.src && img.style.display !== 'none') {
+      // Cari data item yang sesuai berdasarkan src gambar
+      const items = await getGalleryData();
+      const imgSrc = img.src;
+      const matchedItem = items.find(it => {
+        const resolvedUrl = resolveImage(it.image);
+        return resolvedUrl === imgSrc || it.image === imgSrc;
+      });
+
       lbImg.src = img.src;
+      
+      // Update caption dan description jika ada
+      if (lbCaption && matchedItem?.title) {
+        lbCaption.textContent = matchedItem.title;
+        lbCaption.style.display = 'block';
+      } else if (lbCaption) {
+        lbCaption.style.display = 'none';
+      }
+      
+      if (lbDescription && matchedItem?.description) {
+        lbDescription.textContent = matchedItem.description;
+        lbDescription.style.display = 'block';
+      } else if (lbDescription) {
+        lbDescription.style.display = 'none';
+      }
+      
       lb.classList.add('open');
       document.body.style.overflow = 'hidden';
     }
