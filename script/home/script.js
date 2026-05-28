@@ -24,6 +24,8 @@ function initSplashScreen() {
 // CORE INIT
 // ================================================
 document.addEventListener('DOMContentLoaded', () => {
+  // Cek dan bersihkan URL jika ada parameter ?file= yang tidak valid
+  cleanInvalidFileUrl();
   initSplashScreen();
   initNotificationPopup();
   renderNavbar();
@@ -37,6 +39,32 @@ document.addEventListener('DOMContentLoaded', () => {
   initLightboxGaleri();
   initLightboxModal();
 });
+
+function cleanInvalidFileUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const fileParam = params.get('file');
+  
+  if (!fileParam) return;
+  
+  // Cek apakah file masih ada di posts-index.json
+  fetch('content/posts-index.json')
+    .then(res => res.json())
+    .then(posts => {
+      const fileExists = posts.some(p => p.filename === fileParam);
+      if (!fileExists) {
+        // File tidak ada, hapus parameter dari URL
+        params.delete('file');
+        const newUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
+        window.history.replaceState({}, '', newUrl);
+      }
+    })
+    .catch(() => {
+      // Gagal fetch, hapus parameter untuk safety
+      params.delete('file');
+      const newUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
+      window.history.replaceState({}, '', newUrl);
+    });
+}
 
 function initConfig() {
   document.getElementById('heroSubtitle').textContent = SITE_CONFIG.school.tagline;
@@ -127,7 +155,7 @@ async function loadHomeContent() {
     recentPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
     const latest = recentPosts.slice(0, 6);
 
-    renderNewsCards(latest);
+    renderNewsCards(latest, posts);
     initNewsFilter();
   } catch (err) {
     grid.innerHTML = emptyStateHTML('error', 'Gagal memuat berita. Silakan refresh halaman.');
@@ -196,7 +224,7 @@ async function loadGallery() {
     }
 
     if (items[0]?.date) items.sort((a, b) => new Date(b.date) - new Date(a.date));
-    const limited = items.slice(0, 3);
+    const limited = items.slice(0, 4);
 
     grid.innerHTML = limited.map((item, i) => `
       <div class="galeri-item" style="animation: fadeUp 0.5s ${i * 0.1}s ease both">
