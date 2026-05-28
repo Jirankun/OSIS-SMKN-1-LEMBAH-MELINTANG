@@ -57,7 +57,6 @@ function initConfig() {
       heroSource.src = SITE_CONFIG.school.heroBg;
       heroVideo.load();
       heroVideo.play().catch(err => {
-        console.warn('Video autoplay gagal, bre:', err);
         // Fallback ke image kalo autoplay diblokir browser
         heroBg.style.backgroundImage = `url('${SITE_CONFIG.school.heroBg.replace('.mp4', '.jpeg')}')`;
       });
@@ -131,7 +130,6 @@ async function loadHomeContent() {
     renderNewsCards(latest);
     initNewsFilter();
   } catch (err) {
-    console.error('[Home] Error:', err);
     grid.innerHTML = emptyStateHTML('error', 'Gagal memuat berita. Silakan refresh halaman.');
   }
 }
@@ -210,7 +208,6 @@ async function loadGallery() {
       </div>
     `).join('');
   } catch (err) {
-    console.error('[Home] Error galeri:', err);
     grid.innerHTML = emptyStateHTML('error', 'Gagal memuat galeri.');
   }
 }
@@ -251,7 +248,6 @@ async function loadTeamInti() {
       `;
     }).join('');
   } catch (err) {
-    console.error('[Home] Error pengurus inti:', err);
     grid.innerHTML = emptyStateHTML('error', 'Gagal memuat pengurus inti.');
   }
 }

@@ -98,7 +98,6 @@ async function fetchJsonSilent(url, description = "data") {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     return await res.json();
   } catch (err) {
-    console.error(`[Fetch] Gagal mengambil ${description} dari ${url}:`, err.message);
     return null;
   }
 }
@@ -309,8 +308,6 @@ function updateOpenGraphTags(title, description, imageUrl) {
   setMeta('twitter:title', title || SITE_CONFIG.school.name, 'twitter:title');
   setMeta('twitter:description', description || SITE_CONFIG.school.tagline, 'twitter:description');
   setMeta('twitter:image', ogImage, 'twitter:image');
-  
-  console.log('🔗 Open Graph tags updated:', { title, description, image: ogImage });
 }
 
 // ================================================
