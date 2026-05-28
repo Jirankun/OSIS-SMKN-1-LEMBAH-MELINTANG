@@ -88,6 +88,14 @@ document.addEventListener("DOMContentLoaded",function(){displayDeviceInfo();});
         <img src="../../img/asset/logo.webp" alt="Logo OSIS" class="footer__brand-logo">
         <h3 class="footer__brand-name" id="footerBrand"></h3>
         <p class="footer__brand-desc" id="footerDesc"></p>
+<!-- Theme Switch -->
+       <div class="theme-switch-wrapper">
+         <label class="theme-switch-label" for="themeToggle">
+           <i class="fa-solid fa-moon"></i>
+           <span>Mode Gelap</span>
+         </label>
+         <input type="checkbox" id="themeToggle" class="theme-switch" aria-label="Toggle dark mode">
+       </div>
       </div>
       <div>
         <h4 class="footer__heading">Navigasi Cepat</h4>
@@ -99,16 +107,9 @@ document.addEventListener("DOMContentLoaded",function(){displayDeviceInfo();});
       </div>
     </div>
     
-    <!-- Theme Switch -->
+    
     <div class="container footer__bottom">
       <span>&copy; <span id="year"></span> OSIS SMKN 1 LM. All rights reserved.</span>
-      <div class="theme-switch-wrapper">
-        <label class="theme-switch-label" for="themeToggle">
-          <i class="fa-solid fa-moon"></i>
-          <span>Mode Gelap</span>
-        </label>
-        <input type="checkbox" id="themeToggle" class="theme-switch" aria-label="Toggle dark mode">
-      </div>
     </div>
   </footer>
   <button id="backToTop" class="btn btn-primary" style="position:fixed;bottom:1.5rem;right:1.5rem;width:48px;height:48px;border-radius:50%;display:none;align-items:center;justify-content:center;padding:0;z-index:999;box-shadow:var(--shadow-lg)"><i class="fa-solid fa-arrow-up"></i></button>
