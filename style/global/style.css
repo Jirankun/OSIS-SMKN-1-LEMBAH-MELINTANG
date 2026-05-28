@@ -47,11 +47,27 @@ Mobile-First, Modern, Energik
 /* ---- Reset & Base ---- */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
-body { font-family: var(--font-body); background: var(--gray-50); color: var(--gray-800); line-height: 1.6; min-height: 100vh; overflow-x: hidden; }
+body { font-family: var(--font-body); background: var(--gray-50); color: var(--gray-800); line-height: 1.6; min-height: 100vh; overflow-x: hidden; 
+  /* App-like feel: disable tap highlight & touch callout */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
 img { max-width: 100%; height: auto; display: block; }
 a { color: inherit; text-decoration: none; }
-button { cursor: pointer; border: none; background: none; font-family: inherit; }
+button { cursor: pointer; border: none; background: none; font-family: inherit; 
+  /* Remove default button tap highlight */
+  -webkit-tap-highlight-color: transparent;
+}
 ul, ol { list-style: none; }
+
+/* Global app-feel: remove tap/press effects on interactive elements */
+a, button, .btn, [role="button"], input, select, textarea {
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+input:focus, select:focus, textarea:focus {
+  outline: 2px solid var(--primary);
+}
 
 /* ---- Container ---- */
 .container { width: 100%; max-width: var(--container); margin: 0 auto; padding: 0 1.25rem; }
