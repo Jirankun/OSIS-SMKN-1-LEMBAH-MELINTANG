@@ -105,6 +105,14 @@
     <div class="container footer__bottom">
       <span>&copy; <span id="year"></span> OSIS SMKN 1 LM. All rights reserved.</span>
     </div>
+    <!-- Theme Switch -->
+    <div class="theme-switch-wrapper" style="margin-top:1rem;display:flex;align-items:center;gap:0.5rem;justify-content:center">
+      <label class="theme-switch-label" for="themeToggle" style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.9rem;color:var(--gray-700)">
+        <i class="fa-solid fa-moon"></i>
+        <span>Mode Gelap</span>
+      </label>
+      <input type="checkbox" id="themeToggle" class="theme-switch" aria-label="Toggle dark mode">
+    </div>
   </footer>
 
   <!-- BACK TO TOP -->
@@ -117,5 +125,6 @@
   <script src="../../script/profil_osis/script.js" defer></script>
   <script src="../../script/cookie-toast.js" defer></script>
   <script src="../../script/notification.js" defer></script>
+  <script src="../../script/utils/theme.js" defer></script>
 </body>
 </html>
