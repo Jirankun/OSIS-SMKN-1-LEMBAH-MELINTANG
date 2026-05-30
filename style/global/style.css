@@ -824,6 +824,44 @@ DEV MODAL (Tentang Developer)
   color: var(--primary);
 }
 
+/* ---- Portfolio Button ---- */
+.dev-modal__portfolio-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.2rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 100px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+  box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+  transition: all 0.3s ease;
+  opacity: 0;
+  transform: translateY(20px);
+}
+.dev-modal.open .dev-modal__portfolio-btn {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.15s;
+}
+.dev-modal__portfolio-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+  filter: brightness(1.1);
+}
+.dev-modal__portfolio-btn i {
+  font-size: 1rem;
+}
+.dev-modal.closing .dev-modal__portfolio-btn {
+  opacity: 0;
+  transform: translateY(20px);
+  transition-duration: 0.3s;
+}
+
 /* ---- Exit transitions (reverse order + direct, no delay) ---- */
 .dev-modal.closing .dev-modal__backdrop {
   opacity: 0;

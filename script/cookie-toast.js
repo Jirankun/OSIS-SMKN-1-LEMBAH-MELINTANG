@@ -1,10 +1,10 @@
 // ================================================
-// COOKIE CONSENT TOAST - Global Single Cache
+// TRACKING NOTICE TOAST - Global Single Cache
 // ================================================
 (function() {
   'use strict';
   
-  const CACHE_KEY = 'cookie_consent_dismissed_v1';
+  const CACHE_KEY = 'tracking_notice_dismissed_v1';
   
   // Cek apakah user sudah pernah menutup toast
   if (localStorage.getItem(CACHE_KEY)) {
@@ -34,7 +34,7 @@
   }
   
   // Fungsi untuk menampilkan toast
-  function showCookieToast() {
+  function showTrackingToast() {
     // Buat elemen toast jika belum ada
     var toast = document.getElementById('cookie-toast');
     if (!toast) {
@@ -42,11 +42,11 @@
       toast.id = 'cookie-toast';
       toast.className = 'toast toast--cookie';
       toast.innerHTML = 
-        '<span class="toast__text">Situs ini gunakan cookie untuk kenyamanan Anda</span>' +
+        '<span class="toast__text">Situs ini menggunakan analytics untuk statistik kunjungan</span>' +
         '<button class="toast__close" aria-label="Mengerti">' +
           '<i class="fa-solid fa-check"></i> Mengerti' +
         '</button>' +
-        '<i class="fa-solid fa-cookie-bite toast__icon"></i>';
+        '<i class="fa-solid fa-chart-simple toast__icon"></i>';
       document.body.appendChild(toast);
     }
     
@@ -76,8 +76,8 @@
   
   // Jalankan saat DOM ready
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', showCookieToast);
+    document.addEventListener('DOMContentLoaded', showTrackingToast);
   } else {
-    showCookieToast();
+    showTrackingToast();
   }
 })();
