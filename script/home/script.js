@@ -91,8 +91,7 @@ function cleanInvalidFileUrl() {
 }
 
 // ================================================
-// HERO BACKGROUND VIDEO — Streaming chunk-by-chunk
-// Browser native handle buffering & playback simultan
+// HERO BACKGROUND VIDEO — Load biasa, play langsung
 // ================================================
 
 // ================================================
@@ -108,13 +107,11 @@ function initHeroScrollPause() {
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (!entry.isIntersecting && video.classList.contains('video-visible')) {
-        // Hero keluar viewport → pause (biar bandwidth buat lazy images)
         if (!video.paused) {
           wasPlaying = true;
           video.pause();
         }
       } else if (entry.isIntersecting && wasPlaying) {
-        // Hero masuk viewport lagi → resume
         wasPlaying = false;
         video.play().catch(() => {});
       }
@@ -125,7 +122,7 @@ function initHeroScrollPause() {
 }
 
 // ================================================
-// HANDLE VIDEO PLAY SUCCESS (shared antara cache hit & miss)
+// HANDLE VIDEO PLAY SUCCESS
 // ================================================
 function handleHeroPlaySuccess(heroVideo, heroBg) {
   heroVideo.onerror = null;
@@ -136,7 +133,7 @@ function handleHeroPlaySuccess(heroVideo, heroBg) {
 }
 
 // ================================================
-// FALLBACK HERO KE GRADIENT (standalone)
+// FALLBACK HERO KE GRADIENT
 // ================================================
 function fallbackHeroToGradient() {
   if (fallbackHeroToGradient._done) return;
@@ -165,25 +162,25 @@ function fallbackHeroToGradient() {
 }
 
 // ================================================
-// HERO VIDEO — Play + Load streaming (chunk-by-chunk)
+// HERO VIDEO — Load biasa, play langsung
 // ================================================
-// Video source sudah di-set & di-load() saat initConfig (selama splash).
-// Di sini kita tinggal play — browser otomatis streaming chunk.
-// Progress bar tampil selama buffering, sembunyi setelah ≥ 95%.
+// Source di-set & di-load() saat initConfig (selama splash).
+// Pas fungsi ini dipanggil (~5.5s setelah load), tinggal play.
+// Gak pakai canplay / readyState — langsung play aja.
+// Kalo gagal (autoplay block / video broken) → fallback gradient.
 function initHeroVideoDelayed() {
   const heroVideo = document.getElementById('heroVideo');
   const heroBg = document.getElementById('heroBg');
   const progress = document.getElementById('heroProgress');
   const progressBar = progress?.querySelector('.hero__progress-bar');
   
-  // Skip kalo bukan mode video / udah error
   if (!heroVideo || !SITE_CONFIG.school.heroBg || SITE_CONFIG.school.heroType !== 'video') return;
   if (fallbackHeroToGradient._done) return;
 
   // Munculin progress bar
   progress?.classList.add('active');
   
-  // Update progress realtime dari buffer video (selama loading & playback)
+  // Update progress dari buffer
   function updateProgress() {
     if (!progressBar) return;
     if (heroVideo.buffered.length > 0) {
@@ -191,75 +188,25 @@ function initHeroVideoDelayed() {
       const duration = heroVideo.duration || 1;
       const pct = Math.min((buffered / duration) * 100, 100);
       progressBar.style.width = pct + '%';
+      if (pct >= 95) {
+        progress?.classList.remove('active');
+      }
     }
   }
   heroVideo.addEventListener('progress', updateProgress);
   
-  // Update segera kalo durasi udah known
-  if (heroVideo.duration && heroVideo.duration > 0) {
-    updateProgress();
-  }
-  
-  // ========== Play begitu ada cukup data ==========
-  function tryPlay() {
-    if (fallbackHeroToGradient._done) return;
-    
-    const playPromise = heroVideo.play();
-    if (playPromise !== undefined) {
-      playPromise
-        .then(() => {
-          // ✅ Play! Fade in video + scroll pause
-          handleHeroPlaySuccess(heroVideo, heroBg);
-          
-          // Sembunyiin progress bar setelah buffered ≥ 95%
-          function checkBufferComplete() {
-            if (!progress || !progressBar) return;
-            if (heroVideo.buffered.length > 0) {
-              const buffered = heroVideo.buffered.end(heroVideo.buffered.length - 1);
-              const duration = heroVideo.duration || 1;
-              const pct = Math.min((buffered / duration) * 100, 100);
-              if (pct >= 95) {
-                progress.classList.remove('active');
-                progressBar.style.width = '0%';
-                return;
-              }
-            }
-            // Cek lagi pas ada progress event
-          }
-          // Cek 2 detik setelah play, terus tiap progress update
-          setTimeout(checkBufferComplete, 2000);
-          heroVideo.addEventListener('progress', function onBuf() {
-            checkBufferComplete();
-            if (progress && progressBar && !progress.classList.contains('active')) {
-              heroVideo.removeEventListener('progress', updateProgress);
-              heroVideo.removeEventListener('progress', onBuf);
-            }
-          });
-        })
-        .catch(function(err) {
-          // ❌ Autoplay diblokir browser
-          fallbackHeroToGradient();
-        });
-    }
-  }
-  
-  // Coba play sekarang — browser: "gue usahain dulu ya"
-  // Kalo readyState >= 2 (HAVE_CURRENT_DATA), langsung play
-  // Kalo belum, tunggu event 'canplay' (lebih awal dari 'canplaythrough')
-  if (heroVideo.readyState >= 2) {
-    // Video udah punya cukup data — play sekarang
-    tryPlay();
-  } else {
-    // Tunggu sampai ada cukup data buat start (streaming: play sambil load)
-    heroVideo.addEventListener('canplay', tryPlay, { once: true });
-    
-    // Safety: kalo 15 detik masih belum, coba aja
-    setTimeout(function() {
-      if (!fallbackHeroToGradient._done) {
-        tryPlay();
-      }
-    }, 15000);
-  }
+  // Langsung play — video udah di-load dari splash
+  heroVideo.play()
+    .then(() => {
+      handleHeroPlaySuccess(heroVideo, heroBg);
+      // Sembunyiin progress bar 3 detik setelah play
+      setTimeout(() => {
+        progress?.classList.remove('active');
+      }, 3000);
+    })
+    .catch(() => {
+      fallbackHeroToGradient();
+    });
 }
 
 // ================================================
