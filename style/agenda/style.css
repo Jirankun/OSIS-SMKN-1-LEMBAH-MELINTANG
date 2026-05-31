@@ -1,3 +1,9 @@
+/* ---- Touch/Click Optimizations ---- */
+a, button, .agenda-item, .btn, [role="button"], input, select, textarea {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
 /* ============================================
    AGENDA PAGE - Table Optimized & Split View
    ============================================ */

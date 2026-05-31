@@ -3,41 +3,67 @@
 // ================================================
 
 // ================================================
-// SPLASH SCREEN HANDLER — Sequencing Animasi
+// SPLASH SCREEN HANDLER — Sequencing Animasi (optimized)
+// Urutan (~3.5s): enter → shimmer → logo zoom → fade out
+// Menggunakan time tracking untuk cleanup otomatis
 // ================================================
-// Urutan (~3.5s): 1s jeda → enter → shimmer → logo zoom (cepat) → fade out (pelan)
 function initSplashScreen() {
   const splash = document.getElementById('splashScreen');
   if (!splash) return;
   
-  // Fase 1: Jeda 1 detik biar browser santai dulu
-  setTimeout(() => {
-    // Fase 2: Efek shimmer — 1 kali sweep cahaya
+  // Lock scroll selama splash aktif
+  document.body.style.overflow = 'hidden';
+  
+  // Tampung semua timer ID untuk cleanup safety
+  var timers = [];
+  
+  // Fase 1: Jeda awal
+  timers.push(setTimeout(() => {
+    // Fase 2: Efek shimmer
     splash.classList.add('shimmer-active');
     
-    setTimeout(() => {
-      // Fase 3: Logo zoom in ke layar (cepat)
+    timers.push(setTimeout(() => {
+      // Fase 3: Logo zoom in
       splash.classList.add('zoom-active');
       
-      setTimeout(() => {
-        // Fase 4: Splash fade out (pelan-pelan)
+      timers.push(setTimeout(() => {
+        // Fase 4: Splash fade out
         splash.classList.add('fade-active');
         
-        setTimeout(() => {
-          // Fase 5: Selesai — sembunyiin, trigger hero & toast
+        timers.push(setTimeout(() => {
+          // Fase 5: Selesai — unlock scroll
           splash.style.display = 'none';
+          document.body.style.overflow = '';
+          
+          // Cek preferensi reduced motion — langsung trigger semua
+          const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          
           document.body.classList.add('anim-ready');
-          // Data fetching mulai setelah splash biar smooth
           loadAsyncContent();
           
-          // Jeda 1 detik, baru play hero video dengan progress bar
-          setTimeout(() => {
+          // Jeda untuk hero video (lebih pendek kalo reduced motion)
+          timers.push(setTimeout(() => {
             initHeroVideoDelayed();
-          }, 1000);
-        }, 800); // ← fade-out duration
-      }, 400); // ← zoom + buffer
-    }, 500); // ← shimmer duration
-  }, 1850); // ← 1 detik jeda + 0.85s enter animations
+          }, prefersReducedMotion ? 100 : 1000));
+          
+          // Bersihin timer references — gak perlu di-clear karena udah kepanggil
+          timers = [];
+        }, 800));
+      }, 400));
+    }, 500));
+  }, 1850));
+  
+  // Safety: fallback cleanup jika ada error di tengah splash
+  // Setelah 10 detik, paksa splash hilang
+  timers.push(setTimeout(function forceSplashEnd() {
+    if (splash.style.display !== 'none') {
+      splash.style.display = 'none';
+      document.body.style.overflow = '';
+      document.body.classList.add('anim-ready');
+      loadAsyncContent();
+      initHeroVideoDelayed();
+    }
+  }, 10000));
 }
 
 // ================================================
@@ -687,17 +713,26 @@ function closeLightboxModal() {
 }
 
 // ================================================
-// SCROLL OBSERVER (Kustom untuk Home)
+// SCROLL OBSERVER (Kustom untuk Home) + cleanup
 // ================================================
+var _homeScrollObserver = null;
 function initScrollObserverCustom() {
   if (!('IntersectionObserver' in window)) return;
-  const obs = new IntersectionObserver((entries) => {
+  _homeScrollObserver = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if(e.isIntersecting) {
         e.target.classList.add('fade-up');
-        obs.unobserve(e.target);
+        _homeScrollObserver.unobserve(e.target);
       }
     });
   }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
-  document.querySelectorAll('.card, .pengurus-card').forEach(el => obs.observe(el));
+  document.querySelectorAll('.card, .pengurus-card').forEach(el => _homeScrollObserver.observe(el));
 }
+
+// Cleanup observer saat page unload
+window.addEventListener('beforeunload', function() {
+  if (_homeScrollObserver) {
+    _homeScrollObserver.disconnect();
+    _homeScrollObserver = null;
+  }
+});

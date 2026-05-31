@@ -156,10 +156,39 @@ function renderNavbar() {
         mobile.classList.remove("open");
       })
     );
-  }
-
-  // Update active state when hash changes (for #kontak on home)
+  }  
+    // Update active state when hash changes (for #kontak on home)
   window.addEventListener("hashchange", buildNav);
+}
+
+// ================================================
+// HELPER: Navbar auto-hide on scroll down
+// ================================================
+var _lastScrollY = 0;
+var _scrollThreshold = 20;
+function initNavbarScrollHide() {
+  var navbar = document.getElementById("navbar");
+  if (!navbar) return;
+  
+  _lastScrollY = window.scrollY;
+  
+  window.addEventListener("scroll", function() {
+    var currentY = window.scrollY;
+    var delta = currentY - _lastScrollY;
+    
+    // Hanya trigger jika scroll melebihi threshold
+    if (Math.abs(delta) > _scrollThreshold) {
+      if (delta > 0 && currentY > 120) {
+        // Scroll ke bawah — sembunyikan navbar
+        navbar.classList.add("nav-hidden");
+      } else if (delta < 0) {
+        // Scroll ke atas — munculkan navbar
+        navbar.classList.remove("nav-hidden");
+      }
+    }
+    
+    _lastScrollY = currentY;
+  }, { passive: true });
 }
 
 // ================================================
@@ -234,8 +263,12 @@ function initBackToTop() {
     const offset = circumference - (scrollPercent * circumference);
     circle.style.strokeDashoffset = offset;
     
-    // Show/hide button
-    btn.style.display = scrollY > 400 ? "flex" : "none";
+    // Show/hide button — pakai class show biar transisi scale + opacity jalan
+    if (scrollY > 400) {
+      btn.classList.add("show");
+    } else {
+      btn.classList.remove("show");
+    }
   }
   
   // Call once on init
@@ -251,12 +284,29 @@ function initBackToTop() {
       });
       ticking = true;
     }
-  }, { passive: true });
+  }, { passive: true  });
   
   btn.addEventListener("click", (e) => {
     e.preventDefault();
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
+  
+  return btn;
+}
+
+// ================================================
+// GLOBAL INIT — Panggil fungsi init umum
+// ================================================
+function initGlobalFeatures() {
+  initBackToTop();
+  initNavbarScrollHide();
+}
+
+// Jalankan init setelah DOM siap
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initGlobalFeatures);
+} else {
+  initGlobalFeatures();
 }
 
 // ================================================
@@ -358,8 +408,9 @@ function initMenuHistoryClear() {
 })();
 
 // ================================================
-// HELPER: Scroll observer untuk animasi
+// HELPER: Scroll observer untuk animasi (dengan cleanup)
 // ================================================
+var _scrollObservers = [];
 function initScrollObserver(selector = ".animate-on-scroll") {
   if (!("IntersectionObserver" in window)) return;
   const obs = new IntersectionObserver(
@@ -374,4 +425,12 @@ function initScrollObserver(selector = ".animate-on-scroll") {
     { threshold: 0.15, rootMargin: "0px 0px -50px 0px" }
   );
   document.querySelectorAll(selector).forEach((el) => obs.observe(el));
+  _scrollObservers.push(obs);
 }
+
+// Cleanup semua observer saat page unload / SPA navigation
+function cleanupScrollObservers() {
+  _scrollObservers.forEach(function(obs) { obs.disconnect(); });
+  _scrollObservers = [];
+}
+window.addEventListener('beforeunload', cleanupScrollObservers);

@@ -20,6 +20,10 @@
   var timerInterval = null;
   var timerEl = null;
 
+  // Mousedown heuristic — bedain iframe click vs notif panel / alt+tab
+  var _clickedBeforeBlur = false;
+  var _clickedTimer = null;
+
   // --- DOM refs ---
   var fake404 = document.getElementById('examFake404');
   var examContent = document.getElementById('examContent');
@@ -130,8 +134,8 @@
     window.addEventListener('blur', onWindowBlur);
     window.addEventListener('focus', onWindowFocus);
 
-    // Track iframe focus untuk mencegah false positive dari window.blur
-    initIframeFocusTracking();
+    // Track pointer interaction (covers mouse & touch) untuk bedain iframe click vs notif panel / alt+tab
+    document.addEventListener('pointerdown', onDocumentPointerDown);
 
     // Selesai button
     if (finishBtn) {
@@ -342,64 +346,55 @@
   }
 
   // --- 6. Anti-Cheat: Window Blur Detection ---
-  // Mendeteksi: notification panel, control center, alt+tab
-  // NOTE: window.blur juga bisa terpicu saat user berinteraksi dengan iframe (Google Form).
-  //       Kita harus bedakan: blur karena pindah ke iframe (bukan pelanggaran) vs blur karena
-  //       user benar-benar meninggalkan halaman (pelanggaran).
-  var _iframeHasFocus = false;
-
-  // Track iframe focus state — ketika user klik di dalam iframe, iframe element mendapat focus
-  function initIframeFocusTracking() {
-    var frame = document.getElementById('examFrame');
-    if (!frame) return;
-
-    frame.addEventListener('focus', function() {
-      _iframeHasFocus = true;
-    });
-
-    frame.addEventListener('blur', function() {
-      _iframeHasFocus = false;
-    });
-  }
-
-  function isIframeFocused() {
-    // Cek via flag event listener
-    if (_iframeHasFocus) return true;
-    // Fallback: cek document.activeElement
-    try {
-      var active = document.activeElement;
-      if (active && (active.id === 'examFrame' || active.tagName === 'IFRAME')) {
-        return true;
-      }
-    } catch(e) {}
-    return false;
+  //
+  // Masalah: window.blur terpicu saat user klik di dalam iframe (Google Form),
+  //          tapi juga saat buka notif panel / control center / alt+tab.
+  //          Kita tidak bisa bedakan via iframe focus events (cross-origin).
+  //
+  // Solusi (mousedown heuristic):
+  //   - Saat user klik di halaman (termasuk di iframe), mousedown terpicu di parent doc
+  //   - Notif panel / control center / alt+tab TIDAK memicu mousedown
+  //   - Jadi kita set flag di mousedown, cek di onWindowBlur
+  //
+  function onDocumentPointerDown() {
+    _clickedBeforeBlur = true;
+    // Flag expires after 1.5s — cukup lama untuk menangkap blur dari iframe click
+    if (_clickedTimer) clearTimeout(_clickedTimer);
+    _clickedTimer = setTimeout(function() {
+      _clickedBeforeBlur = false;
+      _clickedTimer = null;
+    }, 1500);
   }
 
   function onWindowBlur() {
     if (!examStarted || timeUp || examCompleted) return;
 
-    // Jika blur disebabkan oleh user berinteraksi dengan iframe (Google Form), abaikan
-    if (isIframeFocused()) return;
+    // visibilitychange sudah handle ini — skip
+    if (document.hidden) return;
+
+    // Jika ada mousedown baru-baru ini → user klik di iframe → bukan pelanggaran
+    if (_clickedBeforeBlur) {
+      _clickedBeforeBlur = false;
+      return;
+    }
 
     if (_blurTimer) clearTimeout(_blurTimer);
     _blurTimer = setTimeout(function() {
-      // Cek ulang — mungkin focus pindah ke iframe selama grace period
-      if (isIframeFocused()) return;
-
-      // Sudah ditangani visibilitychange
       if (document.hidden) return;
 
-      // Notification panel / control center / alt+tab terdeteksi
+      // Cek ulang — mungkinkah mousedown terlewat?
+      if (_clickedBeforeBlur) return;
+
+      // Jika masih blur setelah grace period → notif panel / alt+tab
       showViolation('Jangan membuka panel notifikasi atau meninggalkan halaman ujian!');
 
-      // Jika blur berlangsung > 10 detik total → anggap user pindah ke link lain
+      // Jika blur berlangsung > 10 detik → anggap user pindah ke app lain
       _blurTimer = setTimeout(function() {
         if (examCompleted || timeUp) return;
-        if (!document.hidden && !isPageFullscreen()) {
-          // User sudah terlalu lama di luar — anggap ujian selesai
+        if (!document.hidden && !document.hasFocus()) {
           showCompletion();
         }
-      }, 8500); // 8500ms tambahan = ~10s total
+      }, 8500);
     }, 1500);
   }
 
@@ -421,12 +416,47 @@
   }
 
   // --- 8. Completion Screen ---
+  function cleanupExamListeners() {
+    // Hapus semua event listeners untuk mencegah memory leak
+    document.removeEventListener('fullscreenchange', onFullscreenChange);
+    document.removeEventListener('webkitfullscreenchange', onFullscreenChange);
+    document.removeEventListener('mozfullscreenchange', onFullscreenChange);
+    document.removeEventListener('MSFullscreenChange', onFullscreenChange);
+    document.removeEventListener('visibilitychange', onVisibilityChange);
+    window.removeEventListener('blur', onWindowBlur);
+    window.removeEventListener('focus', onWindowFocus);
+    document.removeEventListener('pointerdown', onDocumentPointerDown);
+  }
+
+  function clearAllTimers() {
+    // Bersihin semua timer yang mungkin pending
+    if (timerInterval) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+    }
+    if (_blurTimer) {
+      clearTimeout(_blurTimer);
+      _blurTimer = null;
+    }
+    if (_clickedTimer) {
+      clearTimeout(_clickedTimer);
+      _clickedTimer = null;
+    }
+    if (warningToast && warningToast._timeout) {
+      clearTimeout(warningToast._timeout);
+      warningToast._timeout = null;
+    }
+  }
+
   function showCompletion() {
     if (examCompleted) return;
     examCompleted = true;
 
-    // Stop timer
-    stopTimer();
+    // Bersihin semua timer yang pending
+    clearAllTimers();
+
+    // Hapus listener biar event2 selanjutnya (blur, scroll, dll) gak diesekusi
+    cleanupExamListeners();
 
     // Sembunyikan overlay lain
     violationOverlay.style.display = 'none';

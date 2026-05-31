@@ -1,3 +1,9 @@
+/* ---- Touch/Click Optimizations ---- */
+a, button, .exam-start__btn, .exam-topbar__exit, .exam-topbar__finish, .exam-violation__btn, .exam-completion__btn, .exam-confirm__btn, .btn, [role="button"], input, select, textarea {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
 /* ================================================
 EXAM PAGE STYLES - OSIS SMKN 1 LEMBAH MELINTANG
 Hidden page untuk ujian anggota OSIS

@@ -2,6 +2,12 @@
    BERITA PAGE - Split View Layout
    ============================================ */
 
+/* ---- Touch/Click Optimizations ---- */
+a, button, .berita-item, .btn, [role="button"], input, select, textarea {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
 /* ---- Split View Container ---- */
 .berita-split {
   display: grid;

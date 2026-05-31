@@ -3,6 +3,14 @@
 // ================================================
 
 let allPengumuman = [];
+var _pengumumanRenderCount = 0;
+var _pengumumanPageSize = 12;
+
+(function() {
+  if (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.site && SITE_CONFIG.site.postsPerPage) {
+    _pengumumanPageSize = SITE_CONFIG.site.postsPerPage;
+  }
+})();
 
 // Init
 document.addEventListener('DOMContentLoaded', async () => {
@@ -92,12 +100,25 @@ async function loadPengumumanIndex() {
 function renderPengumumanList(items) {
   const list = document.getElementById("pengumumanList");
   if (!list) return;
+  
+  _pengumumanRenderCount = _pengumumanPageSize;
+  renderPengumumanListPage(items);
+}
+
+// Render terbatas (paginated)
+function renderPengumumanListPage(items) {
+  const list = document.getElementById("pengumumanList");
+  if (!list) return;
+
+  var count = Math.min(_pengumumanRenderCount, items.length);
+  var visibleItems = items.slice(0, count);
+  var hasMore = count < items.length;
 
   // Dapatkan filename yang sedang aktif dari URL
   const params = new URLSearchParams(window.location.search);
   const activeFile = params.get("file");
 
-  list.innerHTML = items.map((item, i) => {
+  list.innerHTML = visibleItems.map((item, i) => {
     const isActive = item.filename === activeFile ? "active" : "";
     return `
       <div class="pengumuman-item ${isActive} anim-stagger" data-filename="${item.filename}" style="animation-delay:${i * 50}ms">
@@ -113,6 +134,20 @@ function renderPengumumanList(items) {
     `;
   }).join("");
 
+  // Load More button
+  var wrapper = list.parentElement.querySelector('.load-more-wrapper');
+  if (!wrapper) {
+    wrapper = document.createElement('div');
+    wrapper.className = 'load-more-wrapper';
+    list.parentElement.appendChild(wrapper);
+  }
+  
+  if (hasMore) {
+    wrapper.innerHTML = '<button class="load-more-btn" onclick="loadMorePengumuman()"><i class="fa-solid fa-arrow-down"></i> Tampilkan Lebih Banyak (' + (items.length - count) + ' tersisa)</button>';
+  } else {
+    wrapper.innerHTML = '';
+  }
+
   list.querySelectorAll(".pengumuman-item").forEach(el => {
     el.addEventListener("click", async () => {
       const filename = el.dataset.filename;
@@ -124,6 +159,20 @@ function renderPengumumanList(items) {
       window.history.pushState({ file: filename }, "", newUrl);
     });
   });
+}
+
+function loadMorePengumuman() {
+  _pengumumanRenderCount += _pengumumanPageSize;
+  const searchInput = document.getElementById('pengumumanSearch');
+  const term = searchInput ? searchInput.value.toLowerCase().trim() : '';
+  var filtered = allPengumuman;
+  if (term) {
+    filtered = allPengumuman.filter(item => 
+      (item.title?.toLowerCase() || '').includes(term) ||
+      (item.author?.toLowerCase() || '').includes(term)
+    );
+  }
+  renderPengumumanListPage(filtered);
 }
 
 // Load & Render Markdown

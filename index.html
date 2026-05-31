@@ -98,7 +98,7 @@
       <p class="hero__subtitle" id="heroSubtitle"></p>
       <div class="hero__actions">
         <a href="page/berita/index.html" class="btn btn-primary"><i class="fa-solid fa-book-open"></i> Jelajahi Berita</a>
-        <a href="/page/pengumuman" class="btn btn-outline"><i class="fa-solid fa-bullhorn"></i> Lihat Pengumuman</a>
+        <a href="/page/pengumuman/" class="btn btn-outline"><i class="fa-solid fa-bullhorn"></i> Lihat Pengumuman</a>
       </div>
 
       <!-- Tombol fullscreen video di pojok kanan atas hero -->
@@ -182,8 +182,6 @@
         <div class="footer__socials" id="socials"></div>
       </div>
       
-
-      
       <div>
         <h4 class="footer__heading">Navigasi</h4>
         <ul class="footer__links" id="footerLinks"></ul>
@@ -192,8 +190,6 @@
       <div>
         <h4 class="footer__heading">Informasi</h4>
         <ul class="footer__links">
-     <!-- <li><a href="page/profil_osis/index.html" class="footer__link"><i class="fa-solid fa-scroll"></i> AD/ART OSIS</a></li>
-          <li><a href="page/proker/index.html" class="footer__link"><i class="fa-solid fa-calendar-days"></i> Program Kerja</a></li>-->
           <li><a href="page/privacy/index.html" target="_blank" class="footer__link"><i class="fa-solid fa-lock"></i> Kebijakan Privasi</a></li>
         </ul>
       </div>
@@ -230,10 +226,9 @@
   </div>
 
 
-  
-<!-- ✅ GANTI JADI INI -->
-<button id="backToTop" class="btn btn-primary" style="position:fixed;bottom:1.5rem;right:1.5rem;width:48px;height:48px;border-radius:50%;display:none;align-items:center;justify-content:center;padding:0;z-index:999;box-shadow:var(--shadow-lg)">
-  <i class="fa-solid fa-arrow-up"></i>
+  <!-- BACK TO TOP — progress ring + panah, styling via CSS + JS -->
+<button id="backToTop" class="btn btn-primary" aria-label="Kembali ke atas">
+  <i class="fa-solid fa-arrow-up" style="position:absolute;font-size:1rem;"></i>
 </button>
 
   <!-- FULLSCREEN VIDEO PLAYER (Sutro) -->
@@ -313,6 +308,35 @@
   <script src="script/exam-toast.js" defer></script>
   <script src="script/utils/theme.js" defer></script>
   <script src="script/analisis.js" defer></script>
+
+  <!-- SERVICE WORKER REGISTRATION -->
+  <script>
+  (function() {
+    if ('serviceWorker' in navigator) {
+      // Tunggu load selesai biar gak compete sama resource kritikal
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js', { scope: '/' })
+          .then(function(reg) {
+            // Update otomatis kalo ada SW baru
+            reg.addEventListener('updatefound', function() {
+              var installing = reg.installing;
+              installing.addEventListener('statechange', function() {
+                if (installing.state === 'installed') {
+                  // SW baru terinstall — refresh halaman supaya aktif
+                  if (navigator.serviceWorker.controller) {
+                    console.log('[SW] Update available — refresh to activate');
+                  }
+                }
+              });
+            });
+          })
+          .catch(function(err) {
+            // Silent fail — SW gagal register, website tetap jalan normal
+          });
+      });
+    }
+  })();
+  </script>
 
 </body>
 </html>

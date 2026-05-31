@@ -53,8 +53,18 @@
 
   // Inisialisasi saat DOM siap
   function init() {
+    // Cegah transisi saat halaman pertama dimuat (biar gak flash)
+    document.documentElement.classList.add('disable-transition');
+    
     const theme = getSavedTheme();
     applyTheme(theme);
+    
+    // Aktifkan transisi setelah 2 frame — cukup untuk render perdana
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        document.documentElement.classList.remove('disable-transition');
+      });
+    });
 
     // Setup event listeners untuk semua theme switch
     setupSwitchListeners();

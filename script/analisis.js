@@ -315,6 +315,7 @@
             if (exitTracked) return; // cuma sekali
             exitTracked = true;
             clearInterval(interval);
+            interval = null;
             var seconds = Math.round((Date.now() - startTime) / 1000);
             if (seconds >= 10) {
                 try {
@@ -326,11 +327,23 @@
         // beforeunload = tab ditutup / navigasi
         window.addEventListener('beforeunload', trackFinalTime);
         // visibilitychange = tab disembunyikan (tapi jangan double-track)
-        document.addEventListener('visibilitychange', function() {
+        document.addEventListener('visibilitychange', function onHide() {
             if (document.hidden) {
                 trackFinalTime();
+                document.removeEventListener('visibilitychange', onHide);
             }
-        }, { once: true }); // sekali aja cukup
+        });
+        // pagehide = fallback untuk iOS Safari (tidak selalu fire beforeunload)
+        window.addEventListener('pagehide', function() {
+            trackFinalTime();
+        }, { once: true });
+
+        // SPA: cleanup interval + listeners saat page leave lewat History API
+        // window._analyticsCleanup dipanggil dari SPA handler
+        window._analyticsCleanup = function() {
+            if (!exitTracked) trackFinalTime();
+            window.removeEventListener('beforeunload', trackFinalTime);
+        }
     }
 
     // ================================================

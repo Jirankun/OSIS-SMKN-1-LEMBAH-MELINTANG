@@ -3,6 +3,14 @@
 // ================================================
 
 let allAgenda = [];
+var _agendaRenderCount = 0;
+var _agendaPageSize = 12;
+
+(function() {
+  if (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.site && SITE_CONFIG.site.postsPerPage) {
+    _agendaPageSize = SITE_CONFIG.site.postsPerPage;
+  }
+})();
 
 // Init
 document.addEventListener('DOMContentLoaded', async () => {
@@ -92,12 +100,25 @@ async function loadAgendaIndex() {
 function renderAgendaList(items) {
   const list = document.getElementById("agendaList");
   if (!list) return;
+  
+  _agendaRenderCount = _agendaPageSize;
+  renderAgendaListPage(items);
+}
+
+// Render terbatas (paginated)
+function renderAgendaListPage(items) {
+  const list = document.getElementById("agendaList");
+  if (!list) return;
+
+  var count = Math.min(_agendaRenderCount, items.length);
+  var visibleItems = items.slice(0, count);
+  var hasMore = count < items.length;
 
   // Dapatkan filename yang sedang aktif dari URL
   const params = new URLSearchParams(window.location.search);
   const activeFile = params.get("file");
 
-  list.innerHTML = items.map((item, i) => {
+  list.innerHTML = visibleItems.map((item, i) => {
     const isActive = item.filename === activeFile ? "active" : "";
     return `
       <div class="agenda-item ${isActive} anim-stagger" data-filename="${item.filename}" style="animation-delay:${i * 50}ms">
@@ -112,6 +133,20 @@ function renderAgendaList(items) {
       </div>
     `;
   }).join("");
+
+  // Load More button
+  var wrapper = list.parentElement.querySelector('.load-more-wrapper');
+  if (!wrapper) {
+    wrapper = document.createElement('div');
+    wrapper.className = 'load-more-wrapper';
+    list.parentElement.appendChild(wrapper);
+  }
+  
+  if (hasMore) {
+    wrapper.innerHTML = '<button class="load-more-btn" onclick="loadMoreAgenda()"><i class="fa-solid fa-arrow-down"></i> Tampilkan Lebih Banyak (' + (items.length - count) + ' tersisa)</button>';
+  } else {
+    wrapper.innerHTML = '';
+  }
 
   list.querySelectorAll(".agenda-item").forEach(el => {
     el.addEventListener("click", async () => {
@@ -131,6 +166,20 @@ function renderAgendaList(items) {
     window.history.replaceState({}, "", cleanUrl);
     document.querySelectorAll(".agenda-item").forEach(i => i.classList.remove("active"));
   }
+}
+
+function loadMoreAgenda() {
+  _agendaRenderCount += _agendaPageSize;
+  const searchInput = document.getElementById('agendaSearch');
+  const term = searchInput ? searchInput.value.toLowerCase().trim() : '';
+  var filtered = allAgenda;
+  if (term) {
+    filtered = allAgenda.filter(item => 
+      (item.title?.toLowerCase() || '').includes(term) ||
+      (item.author?.toLowerCase() || '').includes(term)
+    );
+  }
+  renderAgendaListPage(filtered);
 }
 
 // Load & Render Markdown

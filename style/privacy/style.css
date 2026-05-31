@@ -3,6 +3,12 @@
    Menggunakan design system utama (blue/white)
    ============================================ */
 
+/* ---- Touch/Click Optimizations ---- */
+a, button, .btn, [role="button"] {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
 /* ---- Content Wrapper ---- */
 .privacy-content {
   max-width: 800px;

@@ -1,3 +1,9 @@
+/* ---- Touch/Click Optimizations ---- */
+a, button, .inti-card, .member-mini, .division-card, .btn, [role="button"], input, select, textarea {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
 /* ============================================
    PROFIL OSIS - Page Specific Styles
    Hanya override yang beda dari global/style.css

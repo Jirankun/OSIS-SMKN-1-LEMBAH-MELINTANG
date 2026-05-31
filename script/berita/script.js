@@ -3,6 +3,15 @@
 // ================================================
 
 let allBerita = [];
+var _beritaRenderCount = 0;
+var _beritaPageSize = 12;
+
+// Inisialisasi pageSize dari config
+(function() {
+  if (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.site && SITE_CONFIG.site.postsPerPage) {
+    _beritaPageSize = SITE_CONFIG.site.postsPerPage;
+  }
+})();
 
 // Helper: Resolve image path from page/berita/ depth
 function resolvePageImage(path) {
@@ -103,12 +112,24 @@ async function loadBeritaIndex() {
 function renderBeritaList(items) {
   const list = document.getElementById('beritaList');
   if (!list) return;
-  
+  _beritaRenderCount = _beritaPageSize;
+  renderBeritaListPage(items);
+}
+
+// Render terbatas (paginated)
+function renderBeritaListPage(items) {
+  const list = document.getElementById('beritaList');
+  if (!list) return;
+
+  var count = Math.min(_beritaRenderCount, items.length);
+  var visibleItems = items.slice(0, count);
+  var hasMore = count < items.length;
+
   // Dapatkan filename yang sedang aktif dari URL
   const params = new URLSearchParams(window.location.search);
   const activeFile = params.get('file');
-  
-  list.innerHTML = items.map((item, i) => {
+
+  list.innerHTML = visibleItems.map((item, i) => {
     const imgUrl = resolvePageImage(item.image);
     const isActive = item.filename === activeFile ? 'active' : '';
     const thumbHTML = imgUrl 
@@ -133,6 +154,20 @@ function renderBeritaList(items) {
       </div>
     `;
   }).join('');
+
+  // Load More button
+  var wrapper = list.parentElement.querySelector('.load-more-wrapper');
+  if (!wrapper) {
+    wrapper = document.createElement('div');
+    wrapper.className = 'load-more-wrapper';
+    list.parentElement.appendChild(wrapper);
+  }
+  
+  if (hasMore) {
+    wrapper.innerHTML = '<button class="load-more-btn" onclick="loadMoreBerita()"><i class="fa-solid fa-arrow-down"></i> Tampilkan Lebih Banyak (' + (items.length - count) + ' tersisa)</button>';
+  } else {
+    wrapper.innerHTML = '';
+  }
   
   list.querySelectorAll('.berita-item').forEach(el => {
     el.addEventListener('click', async () => {
@@ -146,6 +181,21 @@ function renderBeritaList(items) {
       window.history.pushState({ file: filename }, '', newUrl);
     });
   });
+}
+
+function loadMoreBerita() {
+  _beritaRenderCount += _beritaPageSize;
+  // Dapatkan filtered items
+  const searchInput = document.getElementById('newsSearch');
+  const term = searchInput ? searchInput.value.toLowerCase().trim() : '';
+  var filtered = allBerita;
+  if (term) {
+    filtered = allBerita.filter(item => 
+      (item.title?.toLowerCase() || '').includes(term) ||
+      (item.author?.toLowerCase() || '').includes(term)
+    );
+  }
+  renderBeritaListPage(filtered);
 }
 
 // Load & Render Markdown dengan Marked.js + YouTube Embed + Image Centering

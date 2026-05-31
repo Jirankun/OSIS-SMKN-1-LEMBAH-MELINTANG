@@ -101,8 +101,17 @@ async function initNotificationPopup() {
         popupContainer.style.display = 'none';
       }, 200);
       
-      // Remove ESC listener
+      // Cleanup all listeners untuk mencegah memory leak
       document.removeEventListener('keydown', onEscHandler);
+      if (closeBtnRef && closeBtnRef.parentNode) {
+        closeBtnRef.removeEventListener('click', closePopup);
+      }
+      if (ghostBtnRef && ghostBtnRef.parentNode) {
+        ghostBtnRef.removeEventListener('click', closePopup);
+      }
+      if (overlayRef && overlayRef.parentNode) {
+        overlayRef.removeEventListener('click', closePopup);
+      }
     };
     
     var onEscHandler = function(e) {
@@ -111,20 +120,25 @@ async function initNotificationPopup() {
       }
     };
     
+    // Variables to hold listener refs for cleanup
+    var closeBtnRef = null;
+    var ghostBtnRef = null;
+    var overlayRef = null;
+    
     // Bind event listeners dengan delay kecil untuk memastikan elemen sudah render
     setTimeout(function() {
-      var closeBtn = popupContainer.querySelector('.notification-popup__close');
-      var ghostBtn = popupContainer.querySelector('.btn-popup--ghost');
-      var overlay = popupContainer.querySelector('.notification-popup__overlay');
+      closeBtnRef = popupContainer.querySelector('.notification-popup__close');
+      ghostBtnRef = popupContainer.querySelector('.btn-popup--ghost');
+      overlayRef = popupContainer.querySelector('.notification-popup__overlay');
       
-      if (closeBtn) {
-        closeBtn.addEventListener('click', closePopup);
+      if (closeBtnRef) {
+        closeBtnRef.addEventListener('click', closePopup);
       }
-      if (ghostBtn) {
-        ghostBtn.addEventListener('click', closePopup);
+      if (ghostBtnRef) {
+        ghostBtnRef.addEventListener('click', closePopup);
       }
-      if (overlay) {
-        overlay.addEventListener('click', closePopup);
+      if (overlayRef) {
+        overlayRef.addEventListener('click', closePopup);
       }
       
       // Close pake ESC

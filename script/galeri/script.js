@@ -2,6 +2,10 @@
 // GALERI PAGE SCRIPT
 // ================================================
 
+var _galleryRenderCount = 0;
+var _galleryPageSize = 12;
+var _galleryAllItems = [];
+
 // ================================================
 // CORE INIT
 // ================================================
@@ -24,7 +28,8 @@ async function loadGallery() {
   const grid = document.getElementById('galeriFullGrid');
   if (!grid) return;
   
-  grid.innerHTML = '<div class="empty-state"><i class="fa-solid fa-circle-notch fa-spin"></i><p>Memuat galeri...</p></div>';
+  // Tampilkan skeleton grid saat loading
+  grid.innerHTML = '<div class="galeri-skeleton">' + Array(12).fill('<div class="galeri-skeleton__item"></div>').join('') + '</div>';
 
   try {
     const rawData = await fetchJsonSilent('../../content/galeri.json', 'galeri');
@@ -43,28 +48,61 @@ async function loadGallery() {
 
     if (items[0]?.date) items.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-    grid.innerHTML = items.map((item, i) => {
-      const imgUrl = resolveImage(item.image);
-      const imgHTML = imgUrl 
-        ? `<img src="${imgUrl}" alt="${item.title || 'Foto Kegiatan'}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">`
-        : '';
-      const placeholderHTML = `<div style="display:${imgUrl ? 'none' : 'flex'};align-items:center;justify-content:center;height:100%;background:#f3f4f6;"><i class="fa-solid fa-image" style="font-size:2rem;color:var(--gray-400)"></i></div>`;
-
-      return `
-        <div class="galeri-full-item fade-up" style="animation-delay:${i * 50}ms">
-          ${imgHTML}
-          ${placeholderHTML}
-          <div class="galeri-full-item__overlay">
-            <span class="galeri-full-item__zoom"><i class="fa-solid fa-magnifying-glass-plus"></i></span>
-            <div class="galeri-full-item__title">${item.title || 'Tanpa Judul'}</div>
-            <div class="galeri-full-item__date">${formatDateID(item.date)}</div>
-          </div>
-        </div>
-      `;
-    }).join('');
+    _galleryAllItems = items;
+    _galleryRenderCount = _galleryPageSize;
+    renderGalleryPage();
+    
   } catch (err) {
     grid.innerHTML = emptyStateHTML('error', 'Gagal memuat galeri.');
   }
+}
+
+function renderGalleryPage() {
+  const grid = document.getElementById('galeriFullGrid');
+  if (!grid) return;
+
+  var count = Math.min(_galleryRenderCount, _galleryAllItems.length);
+  var visibleItems = _galleryAllItems.slice(0, count);
+  var hasMore = count < _galleryAllItems.length;
+
+  grid.innerHTML = visibleItems.map((item, i) => {
+    const imgUrl = resolveImage(item.image);
+    const imgHTML = imgUrl 
+      ? `<img src="${imgUrl}" alt="${item.title || 'Foto Kegiatan'}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">`
+      : '';
+    const placeholderHTML = `<div style="display:${imgUrl ? 'none' : 'flex'};align-items:center;justify-content:center;height:100%;background:#f3f4f6;"><i class="fa-solid fa-image" style="font-size:2rem;color:var(--gray-400)"></i></div>`;
+
+    return `
+      <div class="galeri-full-item fade-up" style="animation-delay:${i * 50}ms">
+        ${imgHTML}
+        ${placeholderHTML}
+        <div class="galeri-full-item__overlay">
+          <span class="galeri-full-item__zoom"><i class="fa-solid fa-magnifying-glass-plus"></i></span>
+          <div class="galeri-full-item__title">${item.title || 'Tanpa Judul'}</div>
+          <div class="galeri-full-item__date">${formatDateID(item.date)}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Load More button
+  var wrapper = grid.parentElement.querySelector('.load-more-wrapper');
+  if (!wrapper) {
+    wrapper = document.createElement('div');
+    wrapper.className = 'load-more-wrapper';
+    grid.parentElement.appendChild(wrapper);
+  }
+  
+  if (hasMore) {
+    wrapper.innerHTML = '<button class="load-more-btn" onclick="loadMoreGallery()"><i class="fa-solid fa-arrow-down"></i> Tampilkan Lebih Banyak (' + (_galleryAllItems.length - count) + ' tersisa)</button>';
+  } else {
+    wrapper.innerHTML = '';
+  }
+}
+
+function loadMoreGallery() {
+  _galleryRenderCount += _galleryPageSize;
+  renderGalleryPage();
 }
 
 // ================================================

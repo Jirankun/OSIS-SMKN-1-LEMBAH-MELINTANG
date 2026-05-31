@@ -5,7 +5,7 @@ HOME PAGE STYLES - OSIS SMKN 1 LEMBAH MELINTANG
 /* ---- HERO SECTION ---- */
 .hero { min-height: 100svh; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; background: var(--bg-gradient); }
 .hero__bg { position: absolute; inset: 0; background-size: cover; background-position: center; background-repeat: no-repeat; opacity: 0.92; transition: opacity 1s; }
-.hero__video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; opacity: 0; transition: opacity 0.8s ease; }
+.hero__video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; opacity: 0; transition: opacity 0.8s ease; will-change: opacity; }
 .hero__video.video-visible { opacity: 1; }
 .hero__bg.video-active { background-image: none !important; }
 
@@ -34,15 +34,15 @@ HOME PAGE STYLES - OSIS SMKN 1 LEMBAH MELINTANG
 .hero__overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(15,23,42,0.4) 0%, rgba(15,23,42,0.2) 40%, rgba(15,23,42,0.7) 100%); }
 
 /* Animated orbs */
-.hero__orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.3; animation: float 8s ease-in-out infinite; }
+.hero__orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.3; animation: float 8s ease-in-out infinite; will-change: transform; }
 .hero__orb--1 { width: 400px; height: 400px; background: var(--primary); top: -100px; right: -100px; animation-delay: 0s; }
 .hero__orb--2 { width: 300px; height: 300px; background: var(--accent); bottom: -50px; left: -50px; animation-delay: 3s; }
-@keyframes float { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(20px, -20px) scale(1.05); } }
+@keyframes float { 0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); } 50% { transform: translate(15px, -15px) scale(1.03) rotate(2deg); } }
 
 .hero__content { position: relative; z-index: 1; text-align: center; padding: 6rem 0.30rem 1rem; max-width: 760px; margin: 0 auto; }
 .hero__badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(14,165,233,0.2); border: 1px solid rgba(14,165,233,0.4); color: #7dd3fc; padding: 0.4rem 1rem; border-radius: 100px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 1rem; opacity: 0; transform: translateY(24px); }
 .hero__logo { width: 120px; height: 120px; border-radius: 50%; object-fit: contain; margin: 0 auto 1rem; filter: drop-shadow(0 0 24px rgba(14,165,233,0.5)); opacity: 0; transform: scale(0.8); }
-.hero__title { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 1.8rem); font-weight: 700; color: var(--white); line-height: 1.15; margin-bottom: 0.7rem; opacity: 0; transform: translateY(24px); }
+.hero__title { font-family: var(--font-display); font-size: clamp(1.8rem, 5vw, 3.2rem); font-weight: 700; color: var(--white); line-height: 1.15; margin-bottom: 0.7rem; opacity: 0; transform: translateY(24px); will-change: opacity, transform; }
 .hero__title span { color: var(--primary); font-style: italic; }
 .hero__subtitle { font-size: clamp(0.80rem, 2.5vw, 1.05rem); color: var(--gray-300); margin-bottom: 2rem; opacity: 0; transform: translateY(24px); }
 .hero__actions { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; opacity: 0; transform: translateY(24px); }
@@ -69,10 +69,12 @@ HOME PAGE STYLES - OSIS SMKN 1 LEMBAH MELINTANG
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   opacity: 0;
   transform: scale(0.8);
   box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  will-change: transform, opacity;
+  touch-action: manipulation;
 }
 .hero__fullscreen-btn:hover {
   background: var(--primary);
@@ -159,13 +161,13 @@ body.anim-ready .hero__fullscreen-btn {
   background: rgba(0,0,0,0.96);
 }
 
-/* ---- Splash-triggered hero entrance (staggered) ---- */
+/* ---- Splash-triggered hero entrance (staggered — parallel, not simultaneous) ---- */
 body.anim-ready .hero__badge { animation: fadeUp 0.6s ease both; }
-body.anim-ready .hero__logo { animation: scaleIn 0.6s 0.1s ease both; }
-body.anim-ready .hero__title { animation: fadeUp 0.6s 0.2s ease both; }
-body.anim-ready .hero__subtitle { animation: fadeUp 0.6s 0.35s ease both; }
-body.anim-ready .hero__actions { animation: fadeUp 0.6s 0.5s ease both; }
-body.anim-ready .hero__scroll { animation: fadeUp 0.6s 0.65s ease both, bounce 2s 1.25s ease infinite; }
+body.anim-ready .hero__logo { animation: scaleIn 0.6s 0.15s ease both; }
+body.anim-ready .hero__title { animation: fadeUp 0.6s 0.3s ease both; }
+body.anim-ready .hero__subtitle { animation: fadeUp 0.6s 0.45s ease both; }
+body.anim-ready .hero__actions { animation: fadeUp 0.6s 0.6s ease both; }
+body.anim-ready .hero__scroll { animation: fadeUp 0.6s 0.75s ease both, bounce 2s 1.45s ease infinite; }
 
 /* ---- STATS SECTION (Home Only) ---- */
 .stats { background: linear-gradient(135deg, var(--gray-900), #1e3a5f); padding: 3.5rem 0; }
@@ -216,6 +218,7 @@ body.anim-ready .hero__scroll { animation: fadeUp 0.6s 0.65s ease both, bounce 2
   transition: opacity 0.3s ease;
 }
 #newsGrid .card {
+  /* akan-change hanya pada card yang sedang visible (biar GPU memori tidak penuh) */
   will-change: transform, opacity;
 }
 /* ---- Dark Mode: Hero text tetap seperti light mode ---- */
@@ -225,6 +228,12 @@ body.anim-ready .hero__scroll { animation: fadeUp 0.6s 0.65s ease both, bounce 2
 [data-theme="dark"] .hero__scroll { color: #94a3b8; }
 [data-theme="dark"] .hero__scroll-arrow { border-right-color: #94a3b8; border-bottom-color: #94a3b8; }
 [data-theme="dark"] .hero__badge { color: #7dd3fc; }
+
+/* Hero buttons: teks tetap putih di kedua tema (hero bg selalu gelap) */
+.hero__actions .btn-primary,
+.hero__actions .btn-outline {
+  color: #ffffff;
+}
 
 /* ============================================
    LIGHTBOX GALERI STYLES (untuk foto kegiatan)

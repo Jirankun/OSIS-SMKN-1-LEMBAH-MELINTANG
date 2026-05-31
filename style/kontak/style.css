@@ -3,6 +3,12 @@
    Menggunakan design system utama (blue/white)
    ============================================ */
 
+/* ---- Touch/Click Optimizations ---- */
+a, button, .kontak-card, .kontak-social__link, .btn, [role="button"], input, select, textarea {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
 /* ---- Split View Layout ---- */
 .kontak-split {
   display: grid;

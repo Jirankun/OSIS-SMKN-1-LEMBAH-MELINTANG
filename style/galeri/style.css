@@ -2,11 +2,40 @@
    GALERI FULL PAGE - Page Specific Styles
    Hanya override yang beda dari global
    ============================================ */
+/* ---- Gallery Skeleton Loading ---- */
+.galeri-skeleton {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+@media (min-width: 640px) { .galeri-skeleton { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1024px) { .galeri-skeleton { grid-template-columns: repeat(4, 1fr); } }
+
+.galeri-skeleton__item {
+  aspect-ratio: 1;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: linear-gradient(
+    90deg,
+    var(--gray-100) 0%,
+    var(--gray-200) 40%,
+    var(--gray-100) 80%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* ---- Touch/Click Optimizations ---- */
+a, button, .galeri-full-item, .galeri-item, .btn, [role="button"] {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
 * {
-  -webkit-user-select: none; /* Safari */
-  -moz-user-select: none;    /* Firefox */
-  -ms-user-select: none;     /* Internet Explorer/Edge */
-  user-select: none;         /* Standar modern */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 /* Grid galeri full page */
@@ -38,7 +67,8 @@
   height: 100%;
   object-fit: cover;
   transition: transform 0.4s ease;
-  display: block; /* ✅ Fix: hindari gap bawah gambar */
+  display: block;
+  will-change: transform;
 }
 .galeri-full-item:hover img { transform: scale(1.05); }
 
