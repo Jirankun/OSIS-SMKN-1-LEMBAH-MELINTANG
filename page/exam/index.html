@@ -6,6 +6,9 @@
   <title>404 - Halaman Tidak Ditemukan</title>
   <meta name="robots" content="noindex, nofollow">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../style/global/style.css">
   <link rel="stylesheet" href="../../style/exam/style.css">
 
@@ -127,6 +130,18 @@
     <header class="exam-topbar">
       <div class="exam-topbar__inner">
         <h1 class="exam-topbar__title" id="examTitle">Ujian</h1>
+        <div class="exam-timer" id="examTimer" style="display:none">
+          <div class="exam-timer__display" id="examTimerDisplay">
+            <span class="exam-timer__digit" data-value="9">9</span>
+            <span class="exam-timer__digit" data-value="0">0</span>
+            <span class="exam-timer__sep">:</span>
+            <span class="exam-timer__digit" data-value="0">0</span>
+            <span class="exam-timer__digit" data-value="0">0</span>
+          </div>
+        </div>
+        <button class="exam-topbar__finish" id="examFinishBtn" title="Selesai ujian" style="display:none">
+          <i class="fa-solid fa-check"></i> Selesai
+        </button>
         <button class="exam-topbar__exit" id="examExitBtn" title="Keluar dari ujian">
           <i class="fa-solid fa-xmark"></i>
         </button>
@@ -136,15 +151,23 @@
     <!-- Start screen -->
     <div id="examStartScreen" class="exam-start">
       <div class="exam-start__card">
-        <div class="exam-start__icon">📝</div>
+        <div class="exam-start__icon">
+          <i class="fa-solid fa-pen-to-square" style="color:var(--primary);font-size:3rem;"></i>
+        </div>
         <h2 class="exam-start__title" id="examStartTitle">Ujian</h2>
         <p class="exam-start__desc">Anda akan memulai ujian ini. Pastikan Anda siap dan berada di tempat yang tenang.</p>
         <div class="exam-start__rules">
-          <div class="exam-start__rule"><i class="fa-solid fa-expand"></i> Ujian akan masuk mode layar penuh</div>
-          <div class="exam-start__rule"><i class="fa-solid fa-eye-slash"></i> Jangan keluar dari halaman selama ujian</div>
-          <div class="exam-start__rule"><i class="fa-solid fa-mobile-screen-button"></i> Jangan beralih ke aplikasi lain</div>
+          <div class="exam-start__rule"><i class="fa-solid fa-expand"></i> Ujian membutuhkan mode layar penuh</div>
+          <div class="exam-start__rule"><i class="fa-solid fa-clock"></i> Waktu pengerjaan <strong id="examDurationDisplay">90</strong> menit (hitungan mundur)</div>
+          <div class="exam-start__rule"><i class="fa-solid fa-eye-slash"></i> Dilarang keluar dari halaman / beralih aplikasi</div>
+          <div class="exam-start__rule"><i class="fa-solid fa-mobile-screen-button"></i> Dilarang keluar dari mode layar penuh</div>
         </div>
-        <button class="exam-start__btn" id="examStartBtn">
+        <label class="exam-start__perm">
+          <input type="checkbox" id="examPermCheck">
+          <span class="exam-start__perm-check"><i class="fa-solid fa-check"></i></span>
+          <span class="exam-start__perm-label">Saya mengizinkan mode layar penuh dan tidak akan meninggalkan halaman ujian</span>
+        </label>
+        <button class="exam-start__btn" id="examStartBtn" disabled>
           <i class="fa-solid fa-play"></i> Mulai Ujian
         </button>
       </div>
@@ -174,7 +197,9 @@
     <!-- Anti-cheat overlay (shown on violation) -->
     <div id="examViolationOverlay" class="exam-violation" style="display:none">
       <div class="exam-violation__card">
-        <div class="exam-violation__icon">⚠️</div>
+        <div class="exam-violation__icon">
+          <i class="fa-solid fa-triangle-exclamation" style="color:#ef4444;font-size:3rem;"></i>
+        </div>
         <h2 class="exam-violation__title">Peringatan!</h2>
         <p class="exam-violation__text" id="examViolationText">Anda keluar dari halaman ujian.</p>
         <p class="exam-violation__sub">Harap tetap fokus pada ujian. Pelanggaran berulang dapat dicatat.</p>
@@ -185,7 +210,9 @@
     <!-- Custom Confirm Modal (gantikan confirm() browser) -->
     <div id="examConfirmModal" class="exam-confirm" style="display:none">
       <div class="exam-confirm__card">
-        <div class="exam-confirm__icon">🚪</div>
+        <div class="exam-confirm__icon">
+          <i class="fa-solid fa-arrow-right-from-bracket" style="color:var(--gray-400);font-size:2.8rem;"></i>
+        </div>
         <h3 class="exam-confirm__title" id="examConfirmTitle">Yakin ingin keluar?</h3>
         <p class="exam-confirm__text" id="examConfirmText">Progress Anda akan hilang.</p>
         <div class="exam-confirm__actions">
@@ -194,8 +221,25 @@
         </div>
       </div>
     </div>
+    <!-- Completion Screen (shown when exam is done) -->
+    <div id="examCompletionOverlay" class="exam-completion" style="display:none">
+      <div class="exam-completion__card">
+        <div class="exam-completion__icon">
+          <div class="exam-completion__check">
+            <i class="fa-solid fa-check"></i>
+          </div>
+        </div>
+        <h2 class="exam-completion__title">Ujian Selesai</h2>
+        <p class="exam-completion__text">Terima kasih telah mengerjakan ujian ini.</p>
+        <p class="exam-completion__sub">Jawaban Anda telah tercatat. Silakan klik tombol di bawah untuk kembali ke beranda.</p>
+        <button class="exam-completion__btn" id="examCompletionBtn">
+          <i class="fa-solid fa-house"></i> Kembali ke Beranda
+        </button>
+      </div>
+    </div>
   </div>
 
+  <script src="../../config.js"></script>
   <script src="../../script/exam/script.js"></script>
   <script src="../../script/analisis.js"></script>
 </body>

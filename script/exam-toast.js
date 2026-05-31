@@ -33,6 +33,20 @@
         // Jangan tampilkan popup kalo link Google Form kosong
         if (!data.link) return;
 
+        // CEK CACHE: apakah user sudah menyelesaikan ujian ini sebelumnya
+        var examId = generateExamId(data.title, data.end_date);
+        var cacheKey = '_exam_submitted_' + examId;
+        var cached = localStorage.getItem(cacheKey);
+        if (cached) {
+          try {
+            var parsed = JSON.parse(cached);
+            // Jika user sudah submit dan tanggal sudah lewat → jangan tampilkan popup
+            if (parsed && parsed.completedAt && parsed.endDate === data.end_date) {
+              return;
+            }
+          } catch(e) {}
+        }
+
         renderExamPopup(data);
       })
       .catch(function() {
@@ -59,7 +73,7 @@
       '<div class="exam-popup__container">' +
         '<div class="exam-popup__content">' +
           '<div class="exam-popup__icon-wrap">' +
-            '<div class="exam-popup__icon">📝</div>' +
+            '<i class="fa-solid fa-pen-to-square" style="color:var(--primary);font-size:2.2rem;"></i>' +
           '</div>' +
           '<h3 class="exam-popup__title">' + escapeHtml(data.title) + '</h3>' +
           '<p class="exam-popup__period">' + startLabel + ' — ' + endLabel + '</p>' +
@@ -81,12 +95,13 @@
 
     // === EVENT LISTENERS ===
 
-    // Start button → token + redirect
+    // Start button → token + redirect + simpan end_date
     document.getElementById('examPopupStart').addEventListener('click', function() {
       var token = Math.random().toString(36).substring(2, 10) + Date.now().toString(36);
       sessionStorage.setItem('_exam_token', token);
       sessionStorage.setItem('_exam_link', data.link);
       sessionStorage.setItem('_exam_title', data.title);
+      sessionStorage.setItem('_exam_end_date', data.end_date);
       window.location.href = '/page/exam/?token=' + token;
     });
 
@@ -99,6 +114,11 @@
     popup.querySelector('.exam-popup__backdrop').addEventListener('click', function() {
       closePopup(popup);
     });
+  }
+
+  function generateExamId(title, endDate) {
+    var raw = (title || '') + '|' + (endDate || '');
+    return raw.toLowerCase().replace(/[^a-z0-9|]/g, '_');
   }
 
   function closePopup(popup) {

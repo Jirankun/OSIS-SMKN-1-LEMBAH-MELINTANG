@@ -33,6 +33,10 @@ const SITE_CONFIG = {
     adminPath: "/11892.21/",
     postsPerPage: 6,
   },
+  exam: {
+    // Durasi ujian dalam menit (default 90)
+    duration: 90,
+  },
   nav: [
     { label: "Beranda", href: "/", icon: "fa-solid fa-house" },
     { label: "Berita", href: "/page/berita/", icon: "fa-solid fa-newspaper" },
