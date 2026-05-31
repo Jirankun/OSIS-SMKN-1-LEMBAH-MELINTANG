@@ -109,7 +109,6 @@ content:
     label: "Ujian Tes"
     type: file
     path: content/ujian_tes.json
-    list: true
     fields:
       - { name: title, label: "Judul Ujian", type: string, required: true }
       - { name: start_date, label: "Mulai Tanggal", type: date, required: true }
