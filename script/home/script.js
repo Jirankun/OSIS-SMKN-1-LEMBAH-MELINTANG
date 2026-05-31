@@ -82,10 +82,17 @@ function initConfig() {
     if (heroSource) {
       heroSource.src = SITE_CONFIG.school.heroBg;
       heroVideo.load();
-      heroVideo.play().catch(err => {
-        // Fallback ke image kalo autoplay diblokir browser
-        heroBg.style.backgroundImage = `url('${SITE_CONFIG.school.heroBg.replace('.mp4', '.jpeg')}')`;
-      });
+      
+      // Play video dengan handle autoplay blocker
+      const playPromise = heroVideo.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(err => {
+          console.log('Autoplay dicegah browser, fallback ke image:', err);
+          // Fallback ke image kalo autoplay diblokir browser
+          heroBg.style.backgroundImage = `url('${SITE_CONFIG.school.heroBg.replace('.mp4', '.jpeg')}')`;
+          heroBg.classList.remove('video-active');
+        });
+      }
     }
     heroBg.classList.add('video-active');
   } else {
