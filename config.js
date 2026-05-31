@@ -35,7 +35,7 @@ const SITE_CONFIG = {
   },
   exam: {
     // Durasi ujian dalam menit (default 90)
-    duration: 90,
+    duration: 1,
   },
   nav: [
     { label: "Beranda", href: "/", icon: "fa-solid fa-house" },
