@@ -196,6 +196,8 @@
 
   function dismissViolation() {
     violationOverlay.style.display = 'none';
+    // Kembali ke fullscreen agar tidak ada celah
+    requestFullscreen();
   }
 
   // --- 7. Custom Confirm ---

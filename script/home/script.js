@@ -91,57 +91,9 @@ function cleanInvalidFileUrl() {
 }
 
 // ================================================
-// SESSION CACHE VIDEO — Cache API, auto cleanup saat tab ditutup
+// HERO BACKGROUND VIDEO — Streaming chunk-by-chunk
+// Browser native handle buffering & playback simultan
 // ================================================
-const VIDEO_CACHE_NAME = 'hero-video-session';
-let _cachedHeroBlobUrl = null;
-let _cacheFetchStarted = false;
-
-// Feature detection
-function _cacheAvailable() {
-  return 'caches' in window;
-}
-
-// Coba ambil video dari session cache
-async function getCachedVideoBlob(videoUrl) {
-  if (!_cacheAvailable()) return null;
-  try {
-    const cache = await caches.open(VIDEO_CACHE_NAME);
-    const response = await cache.match(videoUrl);
-    if (response) {
-      const blob = await response.blob();
-      return URL.createObjectURL(blob);
-    }
-  } catch (e) {}
-  return null;
-}
-
-// Fetch video dan simpan ke session cache — dipanggil EARLY (selama splash)
-async function cacheVideoResponse(videoUrl) {
-  if (!_cacheAvailable()) return;
-  if (_cacheFetchStarted) return;
-  _cacheFetchStarted = true;
-  try {
-    const cache = await caches.open(VIDEO_CACHE_NAME);
-    const exists = await cache.match(videoUrl);
-    if (exists) return;
-    const response = await fetch(videoUrl);
-    if (response.ok) {
-      cache.put(videoUrl, response);
-    }
-  } catch (e) {}
-}
-
-// Bersihin cache cuma kalo tab beneran ditutup (bukan navigasi internal)
-window.addEventListener('beforeunload', () => {
-  if (_cacheAvailable()) {
-    caches.delete(VIDEO_CACHE_NAME).catch(() => {});
-  }
-  if (_cachedHeroBlobUrl) {
-    URL.revokeObjectURL(_cachedHeroBlobUrl);
-    _cachedHeroBlobUrl = null;
-  }
-});
 
 // ================================================
 // SCROLL PAUSE/RESUME — Stop video pas hero gak kelihatan
@@ -213,53 +165,25 @@ function fallbackHeroToGradient() {
 }
 
 // ================================================
-// HERO VIDEO DELAYED — Play dengan progress bar + fade-in
+// HERO VIDEO — Play + Load streaming (chunk-by-chunk)
 // ================================================
-// Dipanggil 1 detik SETELAH splash selesai
-// Otomatis cek session cache dulu — kalo ada, langsung play dari blob
-async function initHeroVideoDelayed() {
+// Video source sudah di-set & di-load() saat initConfig (selama splash).
+// Di sini kita tinggal play — browser otomatis streaming chunk.
+// Progress bar tampil selama buffering, sembunyi setelah ≥ 95%.
+function initHeroVideoDelayed() {
   const heroVideo = document.getElementById('heroVideo');
   const heroBg = document.getElementById('heroBg');
   const progress = document.getElementById('heroProgress');
   const progressBar = progress?.querySelector('.hero__progress-bar');
   
-  // Skip kalo bukan mode video
+  // Skip kalo bukan mode video / udah error
   if (!heroVideo || !SITE_CONFIG.school.heroBg || SITE_CONFIG.school.heroType !== 'video') return;
-  // Skip kalo udah error
   if (fallbackHeroToGradient._done) return;
 
-  // ========== Coba ambil dari session cache dulu ==========
-  const videoUrl = SITE_CONFIG.school.heroBg;
-  const cachedBlob = await getCachedVideoBlob(videoUrl);
-  
-  if (cachedBlob) {
-    // ✅ Ada di cache! Play langsung dari blob (gak perlu progress bar)
-    _cachedHeroBlobUrl = cachedBlob;
-    heroVideo.src = cachedBlob;
-    heroVideo.load();
-    
-    const tryPlay = () => {
-      if (fallbackHeroToGradient._done) return;
-      heroVideo.play().then(() => {
-        handleHeroPlaySuccess(heroVideo, heroBg);
-      }).catch(() => {
-        fallbackHeroToGradient();
-      });
-    };
-    
-    if (heroVideo.readyState >= 3) {
-      tryPlay();
-    } else {
-      heroVideo.addEventListener('canplaythrough', tryPlay, { once: true });
-    }
-    return;
-  }
-  
-  // ========== Belum ada di cache → load normal + progress bar ==========
   // Munculin progress bar
   progress?.classList.add('active');
   
-  // Update progress realtime dari buffer video
+  // Update progress realtime dari buffer video (selama loading & playback)
   function updateProgress() {
     if (!progressBar) return;
     if (heroVideo.buffered.length > 0) {
@@ -271,53 +195,68 @@ async function initHeroVideoDelayed() {
   }
   heroVideo.addEventListener('progress', updateProgress);
   
-  // Kalau udah ada durasi, update langsung
+  // Update segera kalo durasi udah known
   if (heroVideo.duration && heroVideo.duration > 0) {
     updateProgress();
   }
   
-  // Fungsi buat play + fade-in + cache background
-  function playVideo() {
-    // Hapus listener progress
-    heroVideo.removeEventListener('progress', updateProgress);
+  // ========== Play begitu ada cukup data ==========
+  function tryPlay() {
+    if (fallbackHeroToGradient._done) return;
     
     const playPromise = heroVideo.play();
     if (playPromise !== undefined) {
       playPromise
         .then(() => {
-          // ✅ Berhasil! Fade in video
+          // ✅ Play! Fade in video + scroll pause
           handleHeroPlaySuccess(heroVideo, heroBg);
           
-          // Hide progress bar
-          setTimeout(() => {
-            progress?.classList.remove('active');
-            if (progressBar) progressBar.style.width = '0%';
-          }, 500);
+          // Sembunyiin progress bar setelah buffered ≥ 95%
+          function checkBufferComplete() {
+            if (!progress || !progressBar) return;
+            if (heroVideo.buffered.length > 0) {
+              const buffered = heroVideo.buffered.end(heroVideo.buffered.length - 1);
+              const duration = heroVideo.duration || 1;
+              const pct = Math.min((buffered / duration) * 100, 100);
+              if (pct >= 95) {
+                progress.classList.remove('active');
+                progressBar.style.width = '0%';
+                return;
+              }
+            }
+            // Cek lagi pas ada progress event
+          }
+          // Cek 2 detik setelah play, terus tiap progress update
+          setTimeout(checkBufferComplete, 2000);
+          heroVideo.addEventListener('progress', function onBuf() {
+            checkBufferComplete();
+            if (progress && progressBar && !progress.classList.contains('active')) {
+              heroVideo.removeEventListener('progress', updateProgress);
+              heroVideo.removeEventListener('progress', onBuf);
+            }
+          });
         })
-        .catch(err => {
-          // ❌ Autoplay diblokir
-          console.log('Autoplay dicegah browser, fallback ke gradient:', err);
+        .catch(function(err) {
+          // ❌ Autoplay diblokir browser
           fallbackHeroToGradient();
         });
     }
   }
   
-  // Kalo video udah cukup loaded, play sekarang
-  if (heroVideo.readyState >= 3) {
-    if (progressBar) progressBar.style.width = '100%';
-    setTimeout(playVideo, 350); // pause biar kelihatan 100% dulu
+  // Coba play sekarang — browser: "gue usahain dulu ya"
+  // Kalo readyState >= 2 (HAVE_CURRENT_DATA), langsung play
+  // Kalo belum, tunggu event 'canplay' (lebih awal dari 'canplaythrough')
+  if (heroVideo.readyState >= 2) {
+    // Video udah punya cukup data — play sekarang
+    tryPlay();
   } else {
-    // Tunggu sampai video siap diputer
-    heroVideo.addEventListener('canplaythrough', () => {
-      if (progressBar) progressBar.style.width = '100%';
-      setTimeout(playVideo, 350);
-    }, { once: true });
+    // Tunggu sampai ada cukup data buat start (streaming: play sambil load)
+    heroVideo.addEventListener('canplay', tryPlay, { once: true });
     
-    // Safety: kalo 15 detik gak siap, coba play aja
-    setTimeout(() => {
-      if (!fallbackHeroToGradient._done && heroVideo.readyState < 3) {
-        console.log('Video loading timeout, coba play aja');
-        playVideo();
+    // Safety: kalo 15 detik masih belum, coba aja
+    setTimeout(function() {
+      if (!fallbackHeroToGradient._done) {
+        tryPlay();
       }
     }, 15000);
   }
@@ -344,11 +283,6 @@ function initConfig() {
   // Reset state
   heroBg.style.backgroundImage = 'none';
   heroBg.classList.remove('video-active');
-  
-  // Mulai cache fetch sejak awal (selama splash) biar paralel
-  if (SITE_CONFIG.school.heroType === 'video' && SITE_CONFIG.school.heroBg) {
-    cacheVideoResponse(SITE_CONFIG.school.heroBg);
-  }
   
   // Video mulai dalam keadaan hidden → fade-in nanti
   if (heroVideo) {
