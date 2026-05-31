@@ -5,6 +5,8 @@ HOME PAGE STYLES - OSIS SMKN 1 LEMBAH MELINTANG
 /* ---- HERO SECTION ---- */
 .hero { min-height: 100svh; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; background: var(--bg-gradient); }
 .hero__bg { position: absolute; inset: 0; background-size: cover; background-position: center; background-repeat: no-repeat; opacity: 0.92; transition: opacity 1s; }
+.hero__video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+.hero__bg.video-active { background-image: none !important; }
 .hero__overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(15,23,42,0.4) 0%, rgba(15,23,42,0.2) 40%, rgba(15,23,42,0.7) 100%); }
 
 /* Animated orbs */

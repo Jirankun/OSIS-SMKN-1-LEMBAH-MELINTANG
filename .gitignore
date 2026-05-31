@@ -7,7 +7,7 @@
 # Environment
 .env
 .env.local
-*.env.*
+.env.*
 
 # Editors
 .vscode/
@@ -15,40 +15,28 @@
 
 # Dependencies
 node_modules/
-.npm/
-bower_components/
+.venv/
+venv/
+__pycache__/
+.mypy_cache/
+.pytest_cache/
 
 # Build artifacts
 dist/
 build/
-*.min.js
-*.min.css
-*.bundle.js
+target/
+coverage/
+htmlcov/
+*.out
+*.exe
+*.dll
+*.so
+*.a
 
 # OS generated files
 .DS_Store
 Thumbs.db
 
-# Python (if applicable)
-__pycache__/
-*.pyc
-*.pyo
-.Python
-*.so
-.coverage
-htmlcov/
-.coverage.*
-.pytest_cache/
-.mypy_cache/
-
-# Compressed files
-*.zip
-*.gz
-*.tar
-*.tgz
-*.bz2
-*.xz
-*.7z
-*.rar
-*.zst
+# Original rules preserved
+*.log
 ```
