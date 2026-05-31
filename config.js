@@ -16,9 +16,9 @@ const SITE_CONFIG = {
     website: "osis",
     logo: "img/asset/logo.webp",
     // Ganti jadi video kalo mau, bre: "img/asset/hero-bg.mp4"
-    heroBg: "img/asset/super.jpeg",
+    heroBg: "img/asset/video.mp4",
     // Tambahin ini: 'image' atau 'video'
-    heroType: "image", 
+    heroType: "video", 
   },
   social: {
     instagram: "https://www.instagram.com/osis_smkn1lembahmelintang/",
