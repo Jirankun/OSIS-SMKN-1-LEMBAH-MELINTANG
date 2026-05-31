@@ -58,9 +58,12 @@ function formatDateIndo(dateString) {
 
 /**
  * Security: Proteksi konten (Anti Select, Anti DragDrop, Anti Tap Lama, Anti Klik Kanan)
+ * Hanya aktif di perangkat touch (mobile/tablet) — desktop tetap normal.
  * Tidak mengganggu interaksi normal seperti klik link, scroll, atau input form.
  */
 function enableContentProtection() {
+    // Hanya aktif di perangkat touch (pointer: coarse = jari, bukan mouse)
+    if (!window.matchMedia('(pointer: coarse)').matches) return;
     // 1. Anti Select Text (CSS & JS)
     document.addEventListener('selectstart', (e) => {
         // Izinkan select pada input dan textarea agar user tetap bisa copy-paste di form

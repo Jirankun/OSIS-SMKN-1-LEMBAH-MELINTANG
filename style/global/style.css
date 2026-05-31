@@ -902,6 +902,171 @@ DEV MODAL (Tentang Developer)
   transition-delay: 0.2s;
 }
 
+/* ============================================
+EXAM POPUP (Ujian OSIS - Lightbox Modal)
+============================================ */
+.exam-popup {
+  position: fixed;
+  inset: 0;
+  z-index: 9600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s linear 0.4s, opacity 0.3s ease;
+}
+.exam-popup.open {
+  visibility: visible;
+  opacity: 1;
+  transition: visibility 0s linear 0s, opacity 0.3s ease;
+}
+
+.exam-popup__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.exam-popup.open .exam-popup__backdrop {
+  opacity: 1;
+}
+
+.exam-popup__container {
+  position: relative;
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(14, 165, 233, 0.1);
+  overflow: hidden;
+  transform: scale(0.92);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.exam-popup.open .exam-popup__container {
+  transform: scale(1);
+}
+.exam-popup.closing .exam-popup__container {
+  transform: scale(0.92);
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+}
+
+/* Colored header strip */
+.exam-popup__container::before {
+  content: '';
+  display: block;
+  height: 5px;
+  background: linear-gradient(90deg, #0ea5e9, #7c3aed, #f59e0b);
+}
+
+.exam-popup__content {
+  padding: 2rem 2rem 1.75rem;
+  text-align: center;
+}
+
+.exam-popup__icon-wrap {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e0f2fe, #ede9fe);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
+}
+[data-theme="dark"] .exam-popup__icon-wrap {
+  background: linear-gradient(135deg, rgba(14,165,233,0.15), rgba(124,58,237,0.15));
+}
+
+.exam-popup__icon {
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+.exam-popup__title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+
+.exam-popup__period {
+  font-size: 0.78rem;
+  color: var(--primary-dark);
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--primary-light), #ede9fe);
+  padding: 0.3rem 0.9rem;
+  border-radius: 100px;
+  display: inline-block;
+  margin-bottom: 1rem;
+  letter-spacing: 0.02em;
+}
+
+.exam-popup__desc {
+  font-size: 0.88rem;
+  color: var(--gray-500);
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+
+.exam-popup__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.exam-popup__btn {
+  background: linear-gradient(135deg, #0ea5e9, #7c3aed);
+  color: #fff;
+  border: none;
+  padding: 0.85rem 1.5rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 15px rgba(14, 165, 233, 0.35);
+  letter-spacing: 0.01em;
+}
+.exam-popup__btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(14, 165, 233, 0.5);
+}
+
+.exam-popup__btn-ghost {
+  background: transparent;
+  color: var(--gray-400);
+  border: none;
+  padding: 0.5rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.exam-popup__btn-ghost:hover {
+  color: var(--gray-600);
+}
+
+@media (max-width: 480px) {
+  .exam-popup__content {
+    padding: 1.5rem;
+  }
+  .exam-popup__icon {
+    font-size: 2.5rem;
+  }
+  .exam-popup__title {
+    font-size: 1.1rem;
+  }
+}
+
 /* Trigger button in footer */
 .dev-trigger {
   background: none;
@@ -931,13 +1096,53 @@ SPLASH SCREEN ANIMATION
   align-items: center;
   justify-content: center;
   z-index: 10000;
-  animation: splashFadeOut 0.6s ease forwards;
-  animation-delay: 2s;
+}
+
+/* Shimmer overlay — sweep cahaya diagonal */
+.splash__shimmer {
+  position: absolute;
+  inset: 0;
+  z-index: 12;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(
+    110deg,
+    transparent 35%,
+    rgba(255,255,255,0.06) 43%,
+    rgba(255,255,255,0.18) 50%,
+    rgba(255,255,255,0.06) 57%,
+    transparent 65%
+  );
+  background-size: 200% 100%;
+  background-position: 200% 0;
+  transition: opacity 0.15s ease;
+}
+.splash-screen.shimmer-active .splash__shimmer {
+  opacity: 1;
+  animation: shimmerSweep 0.5s ease-out forwards;
+}
+@keyframes shimmerSweep {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
 .splash__content {
   text-align: center;
   padding: 2rem;
+  position: relative;
+  z-index: 11;
+}
+
+/* Logo wrapper untuk zoom */
+.splash__logo-wrap {
+  display: inline-block;
+  margin: 0 auto 1.5rem;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+              filter 0.35s ease;
+}
+.splash-screen.zoom-active .splash__logo-wrap {
+  transform: scale(2.8);
+  filter: brightness(1.2);
 }
 
 .splash__logo {
@@ -945,7 +1150,7 @@ SPLASH SCREEN ANIMATION
   height: 140px;
   border-radius: 50%;
   object-fit: contain;
-  margin: 0 auto 1.5rem;
+  display: block;
   filter: drop-shadow(0 0 30px rgba(14,165,233,0.6));
   animation: splashLogoEnter 0.6s ease forwards;
 }
@@ -976,18 +1181,9 @@ SPLASH SCREEN ANIMATION
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-.splash__loader {
-  font-size: 3rem;
-  color: var(--primary);
-  margin-top: 2rem;
-  opacity: 0;
-  animation: splashTitleEnter 0.5s ease forwards;
-  animation-delay: 0.45s;
-}
-
-/* Override fa-spin untuk splash loader agar lebih smooth */
-.splash__loader.fa-spin {
-  animation: spinnerRotate 1.5s linear infinite;
+/* Fade out untuk seluruh splash */
+.splash-screen.fade-active {
+  animation: splashFadeOut 0.8s ease forwards;
 }
 
 /* ---- Reduced Motion ---- */

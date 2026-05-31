@@ -1,0 +1,425 @@
+/* ================================================
+EXAM PAGE STYLES - OSIS SMKN 1 LEMBAH MELINTANG
+Hidden page untuk ujian anggota OSIS
+=============================================== */
+
+/* ---- Exam Page Layout ---- */
+.exam-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--gray-50);
+  font-family: var(--font-body, 'Plus Jakarta Sans', system-ui, sans-serif);
+}
+
+/* Top Bar */
+.exam-topbar {
+  background: var(--gray-900);
+  color: #fff;
+  padding: 0 1rem;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  z-index: 100;
+}
+
+.exam-topbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.exam-topbar__title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.exam-topbar__exit {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.exam-topbar__exit:hover {
+  background: rgba(239, 68, 68, 0.4);
+}
+
+/* Start Screen */
+.exam-start {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.exam-start__card {
+  background: var(--white);
+  border-radius: 20px;
+  padding: 2.5rem;
+  max-width: 480px;
+  width: 100%;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--gray-100);
+}
+
+.exam-start__icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.exam-start__title {
+  font-family: var(--font-display, Georgia, serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: 0.75rem;
+}
+
+.exam-start__desc {
+  color: var(--gray-500);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.exam-start__rules {
+  text-align: left;
+  margin-bottom: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.exam-start__rule {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--gray-600);
+  padding: 0.5rem 0.75rem;
+  background: var(--gray-50);
+  border-radius: 8px;
+}
+
+.exam-start__rule i {
+  color: var(--primary);
+  width: 18px;
+  text-align: center;
+}
+
+.exam-start__btn {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 0.85rem 2rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+}
+
+.exam-start__btn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(14, 165, 233, 0.5);
+}
+
+/* Active Exam (in progress) */
+.exam-active {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.exam-iframe-wrapper {
+  flex: 1;
+  display: flex;
+  position: relative;
+}
+
+.exam-iframe {
+  width: 100%;
+  height: 100%;
+  min-height: calc(100vh - 56px);
+  border: none;
+  background: #fff;
+}
+
+/* Warning Toast */
+.exam-warning-toast {
+  position: fixed;
+  top: 64px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #dc2626;
+  color: #fff;
+  padding: 0.6rem 1.25rem;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 20px rgba(220, 38, 38, 0.4);
+  animation: examWarningSlideIn 0.3s ease;
+}
+
+@keyframes examWarningSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* Violation Overlay */
+.exam-violation {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 500;
+  padding: 1rem;
+}
+
+.exam-violation__card {
+  background: var(--white);
+  border-radius: 20px;
+  padding: 2.5rem;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+  animation: examViolationPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes examViolationPop {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.exam-violation__icon {
+  font-size: 3rem;
+  margin-bottom: 0.75rem;
+}
+
+.exam-violation__title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: 0.5rem;
+}
+
+.exam-violation__text {
+  font-size: 0.95rem;
+  color: var(--gray-600);
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+
+.exam-violation__sub {
+  font-size: 0.82rem;
+  color: var(--gray-400);
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.exam-violation__btn {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.exam-violation__btn:hover {
+  background: var(--primary-dark);
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 640px) {
+  .exam-start__card {
+    padding: 1.5rem;
+  }
+
+  .exam-start__title {
+    font-size: 1.2rem;
+  }
+
+  .exam-violation__card {
+    padding: 1.5rem;
+  }
+}
+
+/* ---- Custom Confirm Modal ---- */
+.exam-confirm {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 600;
+  padding: 1rem;
+}
+
+.exam-confirm__card {
+  background: var(--white);
+  border-radius: 20px;
+  padding: 2rem;
+  max-width: 360px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+  animation: examConfirmPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border: 1px solid var(--gray-100);
+}
+
+@keyframes examConfirmPop {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.exam-confirm__icon {
+  font-size: 2.8rem;
+  margin-bottom: 0.75rem;
+}
+
+.exam-confirm__title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: 0.5rem;
+}
+
+.exam-confirm__text {
+  font-size: 0.9rem;
+  color: var(--gray-500);
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.exam-confirm__actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.exam-confirm__btn {
+  flex: 1;
+  padding: 0.7rem 1rem;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+.exam-confirm__btn--secondary {
+  background: var(--gray-100);
+  color: var(--gray-600);
+}
+
+.exam-confirm__btn--secondary:hover {
+  background: var(--gray-200);
+}
+
+.exam-confirm__btn--danger {
+  background: #dc2626;
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(220, 38, 38, 0.35);
+}
+
+.exam-confirm__btn--danger:hover {
+  background: #b91c1c;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
+}
+
+@media (max-width: 640px) {
+  .exam-confirm__card {
+    padding: 1.5rem;
+  }
+  .exam-confirm__title {
+    font-size: 1.05rem;
+  }
+}
+
+/* ---- Fullscreen adjustments ---- */
+.exam-page:-webkit-full-screen {
+  background: var(--gray-50);
+}
+
+.exam-page:-moz-full-screen {
+  background: var(--gray-50);
+}
+
+.exam-page:fullscreen {
+  background: var(--gray-50);
+}
+
+.exam-page:-webkit-full-screen .exam-iframe {
+  height: calc(100vh - 56px);
+}
+
+.exam-page:-moz-full-screen .exam-iframe {
+  height: calc(100vh - 56px);
+}
+
+.exam-page:fullscreen .exam-iframe {
+  height: calc(100vh - 56px);
+}

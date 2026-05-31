@@ -24,6 +24,8 @@
   <link rel="icon" type="image/ico" href="img/asset/icon.ico">
   <link rel="icon" type="image/png" href="img/asset/icon0.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Player.style Sutro untuk fullscreen video player -->
+  <script type="module" src="https://cdn.jsdelivr.net/npm/player.style/sutro/+esm"></script>
   <link rel="stylesheet" href="style/home/style.css">
   <link rel="stylesheet" href="style/global/style.css">
   <!-- FRESHNESS SIGNAL (BIAR GOOGLE TAU SITE AKTIF) -->
@@ -34,11 +36,13 @@
 
   <!-- SPLASH SCREEN -->
   <div id="splashScreen" class="splash-screen">
+    <div class="splash__shimmer"></div>
     <div class="splash__content">
-      <img src="img/asset/logo.webp" alt="Logo OSIS" class="splash__logo">
+      <div class="splash__logo-wrap">
+        <img src="img/asset/logo.webp" alt="Logo OSIS" class="splash__logo">
+      </div>
       <h1 class="splash__title">OSIS SMKN 1</h1>
       <h2 class="splash__subtitle">LEMBAH MELINTANG</h2>
-      <i class="fa-solid fa-circle-notch splash__loader fa-spin"></i>
     </div>
   </div>
 
@@ -65,12 +69,15 @@
 
   <!-- HERO -->
   <section class="hero" id="home">
+    <!-- Loading progress bar untuk hero video -->
+    <div id="heroProgress" class="hero__progress">
+      <div class="hero__progress-bar"></div>
+    </div>
     <div class="hero__bg" id="heroBg">
           <!-- Video element, bakal di-control via JS -->
       <video 
         id="heroVideo" 
         class="hero__video" 
-        autoplay 
         loop 
         muted 
         playsinline 
@@ -93,6 +100,11 @@
         <a href="page/berita/index.html" class="btn btn-primary"><i class="fa-solid fa-book-open"></i> Jelajahi Berita</a>
         <a href="/page/pengumuman" class="btn btn-outline"><i class="fa-solid fa-bullhorn"></i> Lihat Pengumuman</a>
       </div>
+
+      <!-- Tombol fullscreen video di pojok kanan atas hero -->
+      <button id="heroFullscreenBtn" class="hero__fullscreen-btn" aria-label="Putar video fullscreen">
+        <i class="fa-solid fa-play"></i>
+      </button>
     </div>
     <div class="hero__scroll">
       <div class="hero__scroll-arrow"></div>
@@ -224,6 +236,23 @@
   <i class="fa-solid fa-arrow-up"></i>
 </button>
 
+  <!-- FULLSCREEN VIDEO PLAYER (Sutro) -->
+  <div id="fullscreenPlayer" class="fullscreen-player">
+    <button id="fullscreenClose" class="fullscreen-player__close" aria-label="Tutup player">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <div class="fullscreen-player__container">
+      <media-theme-sutro style="width:100%;height:100%">
+        <video
+          slot="media"
+          id="sutroVideo"
+          playsinline
+          crossorigin="anonymous"
+        ></video>
+      </media-theme-sutro>
+    </div>
+  </div>
+
   <!-- DEV MODAL (Info Developer) -->
 <div id="devModal" class="dev-modal" aria-hidden="true">
   <div class="dev-modal__backdrop" onclick="closeDevModal()"></div>
@@ -280,6 +309,8 @@
   <script src="config.js" defer></script>
   <script src="script/home/script.js" defer></script>
   <script src="script/cookie-toast.js" defer></script>
+  <script src="script/utils/helpers.js" defer></script>
+  <script src="script/exam-toast.js" defer></script>
   <script src="script/utils/theme.js" defer></script>
   <script src="script/analisis.js" defer></script>
 

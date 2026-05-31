@@ -16,8 +16,10 @@ const SITE_CONFIG = {
     website: "osis",
     logo: "img/asset/logo.webp",
     // Ganti jadi video kalo mau, bre: "img/asset/hero-bg.mp4"
+    // Kalau dikosongin ("") → otomatis fallback ke gradient background
     heroBg: "img/asset/video.mp4",
     // Tambahin ini: 'image' atau 'video'
+    // Kalau media gagal dimuat, otomatis fallback ke gradient
     heroType: "video", 
   },
   social: {

@@ -5,8 +5,32 @@ HOME PAGE STYLES - OSIS SMKN 1 LEMBAH MELINTANG
 /* ---- HERO SECTION ---- */
 .hero { min-height: 100svh; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; background: var(--bg-gradient); }
 .hero__bg { position: absolute; inset: 0; background-size: cover; background-position: center; background-repeat: no-repeat; opacity: 0.92; transition: opacity 1s; }
-.hero__video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+.hero__video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; opacity: 0; transition: opacity 0.8s ease; }
+.hero__video.video-visible { opacity: 1; }
 .hero__bg.video-active { background-image: none !important; }
+
+/* ---- Hero Video Loading Progress Bar ---- */
+.hero__progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  z-index: 10;
+  background: rgba(255,255,255,0.06);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.hero__progress.active { opacity: 1; }
+.hero__progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  border-radius: 0 3px 3px 0;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 8px rgba(14, 165, 233, 0.5);
+}
 .hero__overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(15,23,42,0.4) 0%, rgba(15,23,42,0.2) 40%, rgba(15,23,42,0.7) 100%); }
 
 /* Animated orbs */
@@ -25,6 +49,115 @@ HOME PAGE STYLES - OSIS SMKN 1 LEMBAH MELINTANG
 .hero__scroll { position: absolute; bottom: 1.95rem; left: 50%; transform: translateX(-50%); color: var(--gray-400); font-size: 0.70rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; opacity: 0; }
 .hero__scroll-arrow { width: 15px; height: 15px; border-right: 2px solid var(--gray-400); border-bottom: 2px solid var(--gray-400); transform: rotate(45deg); }
 @keyframes bounce { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(8px); } }
+
+/* ---- Fullscreen Video Play Button ---- */
+.hero__fullscreen-btn {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 5;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1.5px solid rgba(255,255,255,0.25);
+  color: #fff;
+  font-size: 1.15rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  opacity: 0;
+  transform: scale(0.8);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+.hero__fullscreen-btn:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+  transform: scale(1.12);
+  box-shadow: 0 0 25px rgba(14,165,233,0.5);
+}
+.hero__fullscreen-btn:active {
+  transform: scale(0.95);
+}
+body.anim-ready .hero__fullscreen-btn {
+  animation: scaleIn 0.5s 0.75s ease both;
+}
+
+/* ---- Fullscreen Player Overlay ---- */
+.fullscreen-player {
+  position: fixed;
+  inset: 0;
+  z-index: 10001;
+  background: rgba(0,0,0,0.94);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0s linear 0.4s;
+}
+.fullscreen-player.active {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.4s ease, visibility 0s linear 0s;
+}
+
+.fullscreen-player__container {
+  width: 100%;
+  max-width: 1000px;
+  max-height: 85vh;
+  min-height: 200px;
+  /* aspect-ratio di-set dinamis via JS sesuai video */
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: 0 0 60px rgba(0,0,0,0.6);
+  transform: scale(0.9);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.fullscreen-player.active .fullscreen-player__container {
+  transform: scale(1);
+}
+
+.fullscreen-player__close {
+  position: fixed;
+  top: 1.25rem;
+  right: 1.25rem;
+  z-index: 10002;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1.5px solid rgba(255,255,255,0.2);
+  color: #fff;
+  font-size: 1.4rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  opacity: 0;
+}
+.fullscreen-player.active .fullscreen-player__close {
+  opacity: 1;
+  transition-delay: 0.25s;
+}
+.fullscreen-player__close:hover {
+  background: var(--danger);
+  border-color: var(--danger);
+  transform: rotate(90deg) scale(1.1);
+}
+
+/* Dark mode adjust */
+[data-theme="dark"] .fullscreen-player {
+  background: rgba(0,0,0,0.96);
+}
 
 /* ---- Splash-triggered hero entrance (staggered) ---- */
 body.anim-ready .hero__badge { animation: fadeUp 0.6s ease both; }
