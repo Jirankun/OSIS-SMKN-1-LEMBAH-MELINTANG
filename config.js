@@ -25,7 +25,7 @@ const SITE_CONFIG = {
   social: {
     instagram: "https://www.instagram.com/osis_smkn1lembahmelintang/",
     youtube: "https://www.youtube.com/@smknlentangofficial",
-    tiktok: "https://www.tiktok.com/@osis_smkn1_lemtang1?_r=1&_t=ZS-96jf58i6t3Y&fbclid=PAb21jcASJRExleHRuA2FlbQIxMQBzcnRjBmFwcF9pZA81NjcwNjczNDMzNTI0MjcAAadsyaPA4js3VmCtN2rP-jL554iy7jUkw1DLnxN5AnUosDnUho_GgxtF-nJM3Q_aem_SVkNPfSfFEzTBO5KrEx-6g",
+    tiktok: "https://www.tiktok.com/@smkn1_lembahmelintang",
     facebook: "https://www.facebook.com/Smkn1LembahMelintang/",
   },
   site: {
@@ -35,7 +35,7 @@ const SITE_CONFIG = {
   },
   exam: {
     // Durasi ujian dalam menit (default 90)
-    duration: 50,
+    duration: 90,
   },
   nav: [
     { label: "Beranda", href: "/", icon: "fa-solid fa-house" },

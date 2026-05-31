@@ -42,7 +42,7 @@
       toast.id = 'cookie-toast';
       toast.className = 'toast toast--cookie';
       toast.innerHTML = 
-        '<span class="toast__text">Situs ini menggunakan GA4</span>' +
+        '<span class="toast__text">Situs ini menggunakan analytics untuk statistik kunjungan</span>' +
         '<button class="toast__close" aria-label="Mengerti">' +
           '<i class="fa-solid fa-check"></i> Mengerti' +
         '</button>' +

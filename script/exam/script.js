@@ -130,6 +130,9 @@
     window.addEventListener('blur', onWindowBlur);
     window.addEventListener('focus', onWindowFocus);
 
+    // Track iframe focus untuk mencegah false positive dari window.blur
+    initIframeFocusTracking();
+
     // Selesai button
     if (finishBtn) {
       finishBtn.addEventListener('click', onFinishExam);
@@ -339,20 +342,57 @@
   }
 
   // --- 6. Anti-Cheat: Window Blur Detection ---
-  // Mendeteksi: notification panel, control center, alt+tab, popup dari iframe
+  // Mendeteksi: notification panel, control center, alt+tab
+  // NOTE: window.blur juga bisa terpicu saat user berinteraksi dengan iframe (Google Form).
+  //       Kita harus bedakan: blur karena pindah ke iframe (bukan pelanggaran) vs blur karena
+  //       user benar-benar meninggalkan halaman (pelanggaran).
+  var _iframeHasFocus = false;
+
+  // Track iframe focus state — ketika user klik di dalam iframe, iframe element mendapat focus
+  function initIframeFocusTracking() {
+    var frame = document.getElementById('examFrame');
+    if (!frame) return;
+
+    frame.addEventListener('focus', function() {
+      _iframeHasFocus = true;
+    });
+
+    frame.addEventListener('blur', function() {
+      _iframeHasFocus = false;
+    });
+  }
+
+  function isIframeFocused() {
+    // Cek via flag event listener
+    if (_iframeHasFocus) return true;
+    // Fallback: cek document.activeElement
+    try {
+      var active = document.activeElement;
+      if (active && (active.id === 'examFrame' || active.tagName === 'IFRAME')) {
+        return true;
+      }
+    } catch(e) {}
+    return false;
+  }
+
   function onWindowBlur() {
     if (!examStarted || timeUp || examCompleted) return;
 
-    // Grace period 1.5 detik — jika user kembali (popup dari Google Form), tidak masalah
+    // Jika blur disebabkan oleh user berinteraksi dengan iframe (Google Form), abaikan
+    if (isIframeFocused()) return;
+
     if (_blurTimer) clearTimeout(_blurTimer);
     _blurTimer = setTimeout(function() {
-      // Masih blurred setelah grace period
-      if (document.hidden) return; // sudah ditangani visibilitychange
+      // Cek ulang — mungkin focus pindah ke iframe selama grace period
+      if (isIframeFocused()) return;
+
+      // Sudah ditangani visibilitychange
+      if (document.hidden) return;
 
       // Notification panel / control center / alt+tab terdeteksi
       showViolation('Jangan membuka panel notifikasi atau meninggalkan halaman ujian!');
 
-      // Jika blur berlangsung > 10 detik total → anggap user pindah ke link lain (Google Form popup)
+      // Jika blur berlangsung > 10 detik total → anggap user pindah ke link lain
       _blurTimer = setTimeout(function() {
         if (examCompleted || timeUp) return;
         if (!document.hidden && !isPageFullscreen()) {
