@@ -296,23 +296,15 @@ function updateOpenGraphTags(title, description, imageUrl) {
   setMeta('og:description', description || SITE_CONFIG.school.tagline);
   setMeta('og:type', 'article');
   
-  // Set OG image: jika imageUrl diberikan, pakai itu. Jika tidak, fallback dari heroBg.
-  // Tapi jika heroBg adalah video, gunakan logo sebagai gantinya (video ga bisa dipreview)
-  let fallbackImage = SITE_CONFIG.school.heroBg;
-  if (fallbackImage && /\.(mp4|webm|mov|avi|mkv)$/i.test(fallbackImage)) {
-    fallbackImage = SITE_CONFIG.school.logo;
-  }
-  const ogImage = imageUrl ? imageUrl : resolveImage(fallbackImage);
-  setMeta('og:image', ogImage);
-  setMeta('og:image:alt', title || 'Preview image');
+  // Gambar preview dihilangkan untuk WhatsApp (tidak ada og:image)
+  
   setMeta('og:url', window.location.href);
   setMeta('og:site_name', SITE_CONFIG.school.osis);
   
-  // Set Twitter Card tags
-  setMeta('twitter:card', 'summary_large_image', 'twitter:card');
+  // Set Twitter Card tags (tanpa image)
+  setMeta('twitter:card', 'summary', 'twitter:card');
   setMeta('twitter:title', title || SITE_CONFIG.school.name, 'twitter:title');
   setMeta('twitter:description', description || SITE_CONFIG.school.tagline, 'twitter:description');
-  setMeta('twitter:image', ogImage, 'twitter:image');
 }
 
 // ================================================
