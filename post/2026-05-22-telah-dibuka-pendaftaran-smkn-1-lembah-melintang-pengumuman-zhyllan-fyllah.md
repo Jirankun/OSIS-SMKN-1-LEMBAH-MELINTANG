@@ -11,22 +11,6 @@ SMKN 1 Lembah Melintang membuka kesempatan bagi lulusan SMP/MTs sederajat untuk 
 
 ![](img/IMG-20260522-WA0006.jpg)
 
-## Profil Sekolah
-
-**Nama Sekolah:** SMK Negeri 1 Lembah Melintang  
-**NPSN:** 10306096  
-**Status:** Negeri  
-**Akreditasi:** B
-
-## Alamat
-
-Jl. Flores No. 172 Ujung Gading, Kecamatan Lembah Melintang, Kabupaten Pasaman Barat, Sumatera Barat 26572.
-
-## Kontak
-
-**Email:** smknsatulembahmelintang@gmail.com  
-**Website:** https://web.smkn1lembahmelintang.sch.id
-
 ## Kompetensi Keahlian
 
 1. Teknik Instalasi Tenaga Listrik (TITL)
@@ -50,17 +34,19 @@ Jl. Flores No. 172 Ujung Gading, Kecamatan Lembah Melintang, Kabupaten Pasaman B
 
 ## Informasi Pendaftaran
 
-Informasi resmi terkait jadwal, persyaratan, dan mekanisme Seleksi Penerimaan Murid Baru (SPMB) dapat dipantau melalui website resmi sekolah:
+Informasi resmi terkait jadwal, persyaratan, dan mekanisme Seleksi Penerimaan Murid Baru (SPMB) dapat dipantau melalui website resmi :
 
-🔗 https://web.smkn1lembahmelintang.sch.id
+🔗 [https://spmb.sumbarprov.go.id](https://web.smkn1lembahmelintang.sch.id)
+
+ 
 
 ## Hubungi Kami
 
 SMKN 1 Lembah Melintang  
 Jl. Flores No. 172 Ujung Gading, Kecamatan Lembah Melintang, Kabupaten Pasaman Barat, Sumatera Barat 26572
 
-📧 smknsatulembahmelintang@gmail.com  
-🌐 https://web.smkn1lembahmelintang.sch.id
+📧 [smknsatulembahmelintang@gmail.com](mailto:smknsatulembahmelintang@gmail.com)  
+🌐 [https://web.smkn1lembahmelintang.sch.id](https://web.smkn1lembahmelintang.sch.id)
 
-**SMKN 1 Lembah Melintang**
+**SMKN 1 Lembah Melintang**  
 *Mewujudkan lulusan yang kompeten, berkarakter, dan siap menghadapi dunia kerja serta perkembangan teknologi.*
