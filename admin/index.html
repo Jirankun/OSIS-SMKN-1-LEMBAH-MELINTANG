@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMS Admin Panel - Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css ">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* CMS Background Pattern */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 35%, rgba(106, 17, 203, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(37, 117, 252, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* CMS Logo & Branding */
+        .cms-brand {
+            position: absolute;
+            top: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            z-index: 10;
+            animation: fadeInDown 0.8s ease;
+        }
+        .cms-brand .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: #fff;
+            display: flex;            align-items: center;
+            gap: 10px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        .cms-brand .logo i {
+            color: #6a11cb;
+            animation: pulse 2s infinite;
+        }
+        .cms-brand .version {
+            color: rgba(255,255,255,0.7);
+            font-size: 12px;
+            margin-top: 4px;
+            letter-spacing: 1px;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translate(-50%, -20px); }
+            to { opacity: 1; transform: translate(-50%, 0); }
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* ================= DESKTOP LAYOUT (Min Width: 769px) ================= */
+        .desktop-container {
+            display: none;
+            position: relative;
+            width: 780px;
+            height: 520px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            z-index: 5;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        @media (min-width: 769px) {
+            .desktop-container { display: block; }
+            .mobile-container { display: none !important; }
+        }
+
+        /* Desktop Form Containers */
+        .form-container {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: 50%;            padding: 0 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.6s ease-in-out;
+        }
+        .sign-in-container { left: 0; z-index: 2; }
+        .sign-up-container {
+            left: 0; opacity: 0; z-index: 1; visibility: hidden;
+            transition: all 0.6s ease-in-out;
+        }
+        .desktop-container.right-panel-active .sign-in-container { 
+            transform: translateX(100%); 
+            opacity: 0; 
+            z-index: 1; 
+        }
+        .desktop-container.right-panel-active .sign-up-container {
+            transform: translateX(100%); 
+            opacity: 1; 
+            z-index: 5; 
+            visibility: visible;
+        }
+
+        /* Desktop Form Elements */
+        form { width: 100%; display: flex; flex-direction: column; align-items: center; }
+        h1 { 
+            font-size: 28px; 
+            font-weight: 700; 
+            margin-bottom: 20px; 
+            color: #1a1a2e;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            border-radius: 2px;
+        }
+        .input-group { position: relative; width: 100%; margin-bottom: 15px; }
+        .input-group input {
+            width: 100%; padding: 14px 45px 14px 18px; 
+            background: rgba(240, 242, 245, 0.8);
+            border: 2px solid transparent;             border-radius: 10px; 
+            font-size: 15px;
+            outline: none; 
+            transition: all 0.3s ease;
+            color: #333;
+        }
+        .input-group input:focus { 
+            background: rgba(232, 236, 241, 0.9); 
+            border-color: #6a11cb;
+            box-shadow: 0 0 0 4px rgba(106, 17, 203, 0.1);
+        }
+        .input-group input::placeholder { color: #999; }
+        .input-group i {
+            position: absolute; right: 18px; top: 50%; transform: translateY(-50%);
+            color: #888; font-size: 18px; pointer-events: none;
+            transition: color 0.3s;
+        }
+        .input-group input:focus + i { color: #6a11cb; }
+        .forgot {
+            align-self: flex-end; color: #6a11cb; font-size: 14px; margin-bottom: 15px;
+            text-decoration: none; transition: 0.3s; font-weight: 500;
+        }
+        .forgot:hover { text-decoration: underline; color: #2575fc; }
+        button {
+            width: 100%; padding: 14px; border-radius: 10px; border: none;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #fff; font-size: 16px; font-weight: 600; cursor: pointer;
+            margin: 10px 0 20px; transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative; overflow: hidden;
+        }
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+        button:hover::before { left: 100%; }
+        button:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(106, 17, 203, 0.4); }
+        button:active { transform: scale(0.98); }
+        p { font-size: 14px; color: #666; margin-bottom: 15px; text-align: center; }
+        .socials { display: flex; gap: 12px; }
+        .socials a {
+            width: 40px; height: 40px; border: 2px solid #ddd; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; color: #666;
+            text-decoration: none; transition: all 0.3s ease;
+            background: rgba(240,242,245,0.5);
+        }
+        .socials a:hover {            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            border-color: transparent; color: #fff; transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(106, 17, 203, 0.3);
+        }
+
+        /* Desktop Overlay Container */
+        .overlay-container {
+            position: absolute; top: 0; left: 50%; width: 50%; height: 100%;
+            overflow: hidden; transition: transform 0.6s ease-in-out; z-index: 100;
+        }
+        .desktop-container.right-panel-active .overlay-container { transform: translateX(-100%); }
+        .overlay {
+            position: relative; left: -100%; height: 100%; width: 200%;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            transition: transform 0.6s ease-in-out;
+        }
+        .desktop-container.right-panel-active .overlay { transform: translateX(50%); }
+        .overlay-panel {
+            position: absolute; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; padding: 0 40px;
+            text-align: center; top: 0; height: 100%; width: 50%; color: #fff;
+            transition: transform 0.6s ease-in-out;
+        }
+        .overlay-left { transform: translateX(-20%); }
+        .desktop-container.right-panel-active .overlay-left { transform: translateX(0); }
+        .overlay-right { right: 0; transform: translateX(0); }
+        .desktop-container.right-panel-active .overlay-right { transform: translateX(20%); }
+        .overlay-panel h1 { color: #fff; margin-bottom: 10px; font-size: 30px; }
+        .overlay-panel p { color: rgba(255, 255, 255, 0.9); margin-bottom: 25px; font-size: 15px; }
+        .ghost {
+            background: transparent; border: 2px solid #fff; color: #fff;
+            width: auto; padding: 12px 40px; margin: 0; font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .ghost:hover {
+            background: #fff; color: #1a1a2e; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* CMS Footer */
+        .cms-footer {
+            position: absolute;
+            bottom: 15px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 11px;
+            color: rgba(102,102,102,0.8);
+            z-index: 10;
+        }        .cms-footer a { color: #6a11cb; text-decoration: none; }
+        .cms-footer a:hover { text-decoration: underline; }
+
+        /* ================= MOBILE LAYOUT (Max Width: 768px) ================= */
+        .mobile-container {
+            display: none;
+            width: 100%;
+            max-width: 420px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            padding: 30px 25px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+            z-index: 5;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        @media (max-width: 768px) {
+            .mobile-container { display: block; }
+            .desktop-container { display: none !important; }
+            .cms-brand { top: 15px; }
+            .cms-brand .logo { font-size: 24px; }
+        }
+
+        .mobile-tabs {
+            display: flex;
+            background: rgba(106, 17, 203, 0.15);
+            border-radius: 50px;
+            padding: 5px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(106, 17, 203, 0.2);
+        }
+        .mobile-tabs button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: transparent;
+            color: #666;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .mobile-tabs button.active {
+            background: #fff;
+            color: #6a11cb;
+            box-shadow: 0 4px 15px rgba(106,17,203,0.2);
+            font-weight: 700;
+        }        .mobile-tabs button::after {
+            content: '';
+            position: absolute;
+            bottom: -2px; left: 50%;
+            transform: translateX(-50%) scaleX(0);
+            width: 60%; height: 2px;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            border-radius: 2px;
+            transition: transform 0.3s ease;
+        }
+        .mobile-tabs button.active::after { transform: translateX(-50%) scaleX(1); }
+
+        .mobile-forms { 
+            position: relative; 
+            width: 100%; 
+            min-height: 440px;
+            overflow: hidden;
+        }
+        
+        .mobile-form {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            opacity: 0;
+            transform: scale(0.95);
+            visibility: hidden;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+        
+        .mobile-form.active {
+            opacity: 1;
+            transform: scale(1);
+            visibility: visible;
+            pointer-events: auto;
+            position: relative;
+        }
+
+        .mobile-form h1 { font-size: 24px; text-align: center; margin-bottom: 20px; }
+        .mobile-form .input-group { margin-bottom: 16px; }
+        .mobile-form .input-group input { padding: 15px 45px 15px 18px; font-size: 14px; }
+        .mobile-form button { margin: 15px 0 10px; padding: 15px; font-size: 15px; }
+        
+        .mobile-form .socials { 
+            display: flex; 
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin-top: 10px;         }
+        .mobile-form .socials a { 
+            width: 42px; 
+            height: 42px; 
+            font-size: 18px; 
+            border-radius: 50%;
+        }
+        .mobile-form p { 
+            text-align: center; 
+            font-size: 13px; 
+            margin: 10px 0 15px; 
+        }
+
+        /* CMS Badge */
+        .cms-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(106,17,203,0.3);
+            animation: float 3s ease-in-out infinite;
+            z-index: 10;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* Loading Animation for Buttons */
+        button.loading {
+            position: relative;
+            color: transparent !important;
+            pointer-events: none;
+        }
+        button.loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Security Notice */
+        .security-notice {
+            text-align: center;
+            font-size: 11px;
+            color: rgba(102,102,102,0.7);
+            margin-top: 10px;
+            padding: 8px 15px;
+            background: rgba(106,17,203,0.05);
+            border-radius: 8px;
+            border-left: 3px solid #6a11cb;
+        }
+        .security-notice i { margin-right: 5px; color: #6a11cb; }
+    </style>
+</head>
+<body>
+
+    <!-- CMS Branding -->
+    <div class="cms-brand">
+        <div class="logo">
+            <i class="fa-solid fa-shield-halved"></i>
+            CMS ADMIN PANEL
+        </div>
+        <div class="version">v2.4.1 • Secure Access</div>
+    </div>
+
+    <!-- CMS Badge -->
+    <div class="cms-badge">
+        <i class="fa-solid fa-lock"></i> ENKRIPSI AKTIF
+    </div>
+
+    <!-- ================= DESKTOP STRUCTURE ================= -->
+    <div class="desktop-container" id="desktopContainer">
+        <!-- Register Form -->
+        <div class="form-container sign-up-container">
+            <form action="#" onsubmit="handleRegister(event)">
+                <h1>Buat Akun Baru</h1>
+                <div class="input-group">
+                    <input type="text" placeholder="Nama Pengguna" required autocomplete="username">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div class="input-group">
+                    <input type="email" placeholder="Alamat Email" required autocomplete="email">
+                    <i class="fa-solid fa-envelope"></i>                </div>
+                <div class="input-group">
+                    <input type="password" placeholder="Kata Sandi" required autocomplete="new-password" minlength="8">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <button type="submit">Daftar Sekarang</button>
+                <p>atau daftar dengan platform sosial</p>
+                <div class="socials">
+                    <a href="#" title="Google"><i class="fa-brands fa-google"></i></a>
+                    <a href="#" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" title="GitHub"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                </div>
+                <div class="security-notice">
+                    <i class="fa-solid fa-circle-check"></i> Data Anda dilindungi enkripsi SSL 256-bit
+                </div>
+            </form>
+        </div>
+
+        <!-- Login Form -->
+        <div class="form-container sign-in-container">
+            <form action="#" onsubmit="handleLogin(event)">
+                <h1>Masuk ke Panel</h1>
+                <div class="input-group">
+                    <input type="text" placeholder="Nama Pengguna" required autocomplete="username">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div class="input-group">
+                    <input type="password" placeholder="Kata Sandi" required autocomplete="current-password">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <a href="#" class="forgot">Lupa Kata Sandi?</a>
+                <button type="submit">Masuk Sekarang</button>
+                <p>atau masuk dengan platform sosial</p>
+                <div class="socials">
+                    <a href="#" title="Google"><i class="fa-brands fa-google"></i></a>
+                    <a href="#" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" title="GitHub"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                </div>
+                <div class="security-notice">
+                    <i class="fa-solid fa-shield"></i> Sistem keamanan multi-layer aktif
+                </div>
+            </form>
+        </div>
+
+        <!-- Overlay Panels -->
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-left">                    <h1>Selamat Datang Kembali!</h1>
+                    <p>Sudah punya akun admin?</p>
+                    <button class="ghost" id="desktopSignIn">Masuk ke Panel</button>
+                </div>
+                <div class="overlay-panel overlay-right">
+                    <h1>Halo, Calon Admin!</h1>
+                    <p>Belum punya akses?</p>
+                    <button class="ghost" id="desktopSignUp">Daftar Sekarang</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- CMS Footer Desktop -->
+        <div class="cms-footer">
+            &copy; 2024 CMS Admin Panel • <a href="#">Kebijakan Privasi</a> • <a href="#">Syarat Layanan</a> • <a href="#">Bantuan</a>
+        </div>
+    </div>
+
+    <!-- ================= MOBILE STRUCTURE ================= -->
+    <div class="mobile-container">
+        <div class="mobile-tabs">
+            <button class="active" data-target="mobileLogin">
+                <i class="fa-solid fa-right-to-bracket"></i> Masuk
+            </button>
+            <button data-target="mobileRegister">
+                <i class="fa-solid fa-user-plus"></i> Daftar
+            </button>
+        </div>
+
+        <div class="mobile-forms">
+            <!-- Mobile Login Form -->
+            <div class="mobile-form active" id="mobileLogin">
+                <h1><i class="fa-solid fa-right-to-bracket"></i> Masuk ke Panel</h1>
+                <div class="input-group">
+                    <input type="text" placeholder="Nama Pengguna" required autocomplete="username">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div class="input-group">
+                    <input type="password" placeholder="Kata Sandi" required autocomplete="current-password">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <a href="#" class="forgot" style="display:block; text-align:right; margin-bottom:15px;">Lupa Kata Sandi?</a>
+                <button type="submit" onclick="handleLogin(event)">Masuk Sekarang</button>
+                <p>atau masuk dengan platform sosial</p>
+                <div class="socials">
+                    <a href="#" title="Google"><i class="fa-brands fa-google"></i></a>
+                    <a href="#" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" title="GitHub"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                </div>                <div class="security-notice">
+                    <i class="fa-solid fa-shield"></i> Koneksi aman terenkripsi
+                </div>
+            </div>
+
+            <!-- Mobile Register Form -->
+            <div class="mobile-form" id="mobileRegister">
+                <h1><i class="fa-solid fa-user-plus"></i> Buat Akun Baru</h1>
+                <div class="input-group">
+                    <input type="text" placeholder="Nama Pengguna" required autocomplete="username">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div class="input-group">
+                    <input type="email" placeholder="Alamat Email" required autocomplete="email">
+                    <i class="fa-solid fa-envelope"></i>
+                </div>
+                <div class="input-group">
+                    <input type="password" placeholder="Kata Sandi" required autocomplete="new-password" minlength="8">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <button type="submit" onclick="handleRegister(event)">Daftar Sekarang</button>
+                <p>atau daftar dengan platform sosial</p>
+                <div class="socials">
+                    <a href="#" title="Google"><i class="fa-brands fa-google"></i></a>
+                    <a href="#" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" title="GitHub"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                </div>
+                <div class="security-notice">
+                    <i class="fa-solid fa-circle-check"></i> Verifikasi email diperlukan
+                </div>
+            </div>
+        </div>
+
+        <!-- CMS Footer Mobile -->
+        <div class="cms-footer" style="position: relative; margin-top: 20px;">
+            &copy; 2024 CMS Admin Panel • <a href="#">Privasi</a> • <a href="#">Bantuan</a>
+        </div>
+    </div>
+
+    <script>
+        // ================= DESKTOP JS =================
+        const desktopContainer = document.getElementById('desktopContainer');
+        const desktopSignUpBtn = document.getElementById('desktopSignUp');
+        const desktopSignInBtn = document.getElementById('desktopSignIn');
+
+        desktopSignUpBtn.addEventListener('click', () => {
+            desktopContainer.classList.add('right-panel-active');
+        });
+        desktopSignInBtn.addEventListener('click', () => {            desktopContainer.classList.remove('right-panel-active');
+        });
+
+        // ================= MOBILE JS =================
+        const mobileTabs = document.querySelectorAll('.mobile-tabs button');
+        const mobileForms = document.querySelectorAll('.mobile-form');
+
+        mobileTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const targetId = tab.getAttribute('data-target');
+                
+                // Remove active from current
+                mobileTabs.forEach(t => t.classList.remove('active'));
+                
+                // Add active to clicked tab
+                tab.classList.add('active');
+                
+                // Switch forms with scale animation
+                mobileForms.forEach(form => {
+                    if (form.id === targetId) {
+                        form.classList.add('active');
+                    } else {
+                        form.classList.remove('active');
+                    }
+                });
+            });
+        });
+
+        // ================= FORM HANDLERS (CMS Style) =================
+        function handleLogin(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+            
+            // Loading animation
+            btn.classList.add('loading');
+            btn.disabled = true;
+            
+            // Simulate CMS login process
+            setTimeout(() => {
+                // Reset button
+                btn.classList.remove('loading');
+                btn.disabled = false;
+                
+                // CMS-style notification (bisa diganti dengan toast library)
+                alert('🔐 Memproses login...\n\n[CMS] Silakan cek kredensial Anda.');
+                
+                // Di production: redirect ke dashboard
+                // window.location.href = '/admin/dashboard';
+            }, 2000);        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            
+            // Loading animation
+            btn.classList.add('loading');
+            btn.disabled = true;
+            
+            // Simulate CMS registration
+            setTimeout(() => {
+                btn.classList.remove('loading');
+                btn.disabled = false;
+                
+                alert('✅ Pendaftaran berhasil!\n\n[CMS] Silakan cek email untuk verifikasi akun.');
+                
+                // Optional: switch to login form on desktop
+                if (window.innerWidth > 768) {
+                    desktopContainer.classList.remove('right-panel-active');
+                }
+            }, 2000);
+        }
+
+        // ================= EXTRA: Keyboard Support =================
+        document.addEventListener('DOMContentLoaded', () => {
+            // Enter key submit support
+            document.querySelectorAll('input').forEach(input => {
+                input.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const form = e.target.closest('form');
+                        if (form) form.requestSubmit();
+                    }
+                });
+            });
+
+            // Responsive: auto-switch on resize (optional UX improvement)
+            let resizeTimer;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    // Force re-check visibility if needed
+                    if (window.innerWidth <= 768) {
+                        desktopContainer.classList.remove('right-panel-active');
+                    }
+                }, 250);
+            });
+        });
+        // ================= SECURITY: Basic Input Sanitization Demo =================
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('blur', function() {
+                // Simple trim to prevent whitespace abuse
+                this.value = this.value.trim();
+            });
+        });
+    </script>
+</body>
+</html>
