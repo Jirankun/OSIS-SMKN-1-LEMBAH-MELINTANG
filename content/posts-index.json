@@ -1,10 +1,12 @@
 [
   {
-    "filename": "2026-05-22-telah-dibuka-pendaftaran-smkn-1-lembah-melintang-pengumuman-zhyllan-fyllah.md",
     "title": "PPDB TAHUN AJARAN 2026/2027",
     "type": "pengumuman",
     "date": "2026-05-21",
-    "author": "Zhyllan Fyllah",
-    "image": "img/IMG-20260522-WA0006.jpg"
+    "author": "Zhyllan (Dev)",
+    "filename": "2026-05-22-telah-dibuka-pendaftaran-smkn-1-lembah-melintang-pengumuman-zhyllan-fyllah.md",
+    "image": "img/IMG-20260522-WA0006.jpg",
+    "syncToGithub": "on",
+    "updatedAt": "2026-06-01T12:09:52.543Z"
   }
 ]
