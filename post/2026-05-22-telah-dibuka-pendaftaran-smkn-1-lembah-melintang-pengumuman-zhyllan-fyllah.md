@@ -15,20 +15,6 @@ Sebagai salah satu sekolah kejuruan negeri di Kabupaten Pasaman Barat, SMKN 1 Le
 
 ---
 
-# Profil Singkat Sekolah
-
-| Informasi | Keterangan |
-|------------|------------|
-| Nama Sekolah | SMK Negeri 1 Lembah Melintang |
-| NPSN | 10306096 |
-| Status | Negeri |
-| Jenjang | Sekolah Menengah Kejuruan (SMK) |
-| Akreditasi | B |
-| Kabupaten | Pasaman Barat |
-| Provinsi | Sumatera Barat |
-
----
-
 # Alamat Sekolah
 
 📍 **SMKN 1 Lembah Melintang**
