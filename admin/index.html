@@ -185,25 +185,59 @@
     </style>
 </head>
 <body>
-    <!-- Login -->
+    <!-- Login & Register -->
     <div class="login-wrap" id="loginView">
         <div class="login-box">
             <div class="brand" style="justify-content:center;margin-bottom:16px">
                 <i class="fa-solid fa-shield-halved"></i> CMS PANEL
             </div>
-            <div class="login-title">Masuk Admin</div>
-            <form id="loginForm">
-                <div class="form-group">
-                    <label class="form-label">Username</label>                    <input type="text" class="form-input" id="loginUser" required autocomplete="username">
+            
+            <!-- Register Form -->
+            <div id="registerFormContainer">
+                <div class="login-title">Daftar Admin Baru</div>
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label class="form-label">Username</label>
+                        <input type="text" class="form-input" id="regUser" required autocomplete="username">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" id="regPass" required autocomplete="new-password" minlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Konfirmasi Password</label>
+                        <input type="password" class="form-input" id="regPassConfirm" required autocomplete="new-password" minlength="6">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width:100%">Daftar</button>
+                </form>
+                <div style="text-align:center;margin-top:12px;font-size:10px;color:var(--text-dim)">
+                    Sudah punya akun? <a href="#" onclick="app.showLogin()" style="color:var(--accent)">Login</a>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Password</label>
-                    <input type="password" class="form-input" id="loginPass" required autocomplete="current-password">
+            </div>
+            
+            <!-- Login Form -->
+            <div id="loginFormContainer" class="hidden">
+                <div class="login-title">Masuk Admin</div>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label class="form-label">Username</label>
+                        <input type="text" class="form-input" id="loginUser" required autocomplete="username">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" id="loginPass" required autocomplete="current-password">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width:100%" id="loginBtn">
+                        <span id="loginBtnText">Masuk</span>
+                        <i class="fa-solid fa-circle-notch fa-spin hidden" id="loginSpinner"></i>
+                    </button>
+                </form>
+                <div style="text-align:center;margin-top:12px;font-size:10px;color:var(--text-dim)">
+                    Belum punya akun? <a href="#" onclick="app.showRegister()" style="color:var(--accent)">Daftar</a>
                 </div>
-                <button type="submit" class="btn btn-primary" style="width:100%">Masuk</button>
-            </form>
-            <div style="text-align:center;margin-top:12px;font-size:10px;color:var(--text-dim)">
-                <i class="fa-solid fa-lock"></i> LocalStorage encrypted
+                <div style="text-align:center;margin-top:8px;font-size:10px;color:var(--text-dim)">
+                    <i class="fa-solid fa-lock"></i> LocalStorage encrypted
+                </div>
             </div>
         </div>
     </div>
@@ -341,13 +375,15 @@
         };
 
         // ================= APP LOGIC =================
-        const app = {            user: null,
+        const app = {
+            user: null,
             data: { gallery: [], posts: [], images: [] },
             
             init() {
                 this.checkAuth();
                 this.bindNav();
                 this.bindLogin();
+                this.bindRegister();
             },
             
             checkAuth() {
@@ -362,20 +398,92 @@
                 }
             },
             
+            showRegister() {
+                document.getElementById('registerFormContainer').classList.remove('hidden');
+                document.getElementById('loginFormContainer').classList.add('hidden');
+            },
+            
+            showLogin() {
+                document.getElementById('registerFormContainer').classList.add('hidden');
+                document.getElementById('loginFormContainer').classList.remove('hidden');
+            },
+            
+            bindRegister() {
+                document.getElementById('registerForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const username = document.getElementById('regUser').value.trim();
+                    const password = document.getElementById('regPass').value;
+                    const passConfirm = document.getElementById('regPassConfirm').value;
+                    
+                    if (!username || !password) {
+                        this.toast('Username dan password wajib diisi', 'error');
+                        return;
+                    }
+                    
+                    if (password.length < 6) {
+                        this.toast('Password minimal 6 karakter', 'error');
+                        return;
+                    }
+                    
+                    if (password !== passConfirm) {
+                        this.toast('Password dan konfirmasi password tidak sama', 'error');
+                        return;
+                    }
+                    
+                    // Simpan ke localStorage
+                    const userData = { username, password: btoa(password), registered: true };
+                    localStorage.setItem('cms_registered_user', JSON.stringify(userData));
+                    
+                    this.toast('Registrasi berhasil! Silakan login', 'success');
+                    
+                    // Arahkan ke form login dengan username terisi
+                    document.getElementById('loginUser').value = username;
+                    this.showLogin();
+                });
+            },
+            
             bindLogin() {
-                document.getElementById('loginForm').addEventListener('submit', (e) => {
+                document.getElementById('loginForm').addEventListener('submit', async (e) => {
                     e.preventDefault();
                     const username = document.getElementById('loginUser').value.trim();
                     const password = document.getElementById('loginPass').value;
                     
-                    // Simple auth (replace with real backend)
-                    if (username && password.length >= 6) {
+                    // Tampilkan loading
+                    const loginBtn = document.getElementById('loginBtn');
+                    const loginBtnText = document.getElementById('loginBtnText');
+                    const loginSpinner = document.getElementById('loginSpinner');
+                    
+                    loginBtn.classList.add('loading');
+                    loginBtnText.textContent = 'Memuat...';
+                    loginSpinner.classList.remove('hidden');
+                    
+                    // Simulasi delay loading
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+                    
+                    // Periksa apakah user terdaftar di localStorage
+                    const savedUser = localStorage.getItem('cms_registered_user');
+                    
+                    let isValid = false;
+                    
+                    if (savedUser) {
+                        const userData = JSON.parse(savedUser);
+                        if (userData.username === username && userData.password === btoa(password)) {
+                            isValid = true;
+                        }
+                    }
+                    
+                    // Reset tombol
+                    loginBtn.classList.remove('loading');
+                    loginBtnText.textContent = 'Masuk';
+                    loginSpinner.classList.add('hidden');
+                    
+                    if (isValid) {
                         this.user = { username, token: btoa(username + ':' + Date.now()) };
                         localStorage.setItem('cms_user', JSON.stringify(this.user));
                         this.checkAuth();
                         this.toast('Login berhasil', 'success');
                     } else {
-                        this.toast('Username/password tidak valid', 'error');
+                        this.toast('Username atau password salah', 'error');
                     }
                 });
             },
