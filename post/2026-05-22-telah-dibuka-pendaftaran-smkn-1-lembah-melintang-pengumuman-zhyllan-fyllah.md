@@ -24,7 +24,6 @@ Jl. Flores No. 172 Ujung Gading, Kecamatan Lembah Melintang, Kabupaten Pasaman B
 
 ## Kontak
 
-**Telepon:** (0753) 74101  
 **Email:** smknsatulembahmelintang@gmail.com  
 **Website:** https://web.smkn1lembahmelintang.sch.id
 
@@ -60,7 +59,6 @@ Informasi resmi terkait jadwal, persyaratan, dan mekanisme Seleksi Penerimaan Mu
 SMKN 1 Lembah Melintang  
 Jl. Flores No. 172 Ujung Gading, Kecamatan Lembah Melintang, Kabupaten Pasaman Barat, Sumatera Barat 26572
 
-☎️ (0753) 74101  
 📧 smknsatulembahmelintang@gmail.com  
 🌐 https://web.smkn1lembahmelintang.sch.id
 
