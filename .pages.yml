@@ -110,7 +110,7 @@ content:
     type: file
     path: content/ujian_tes.json
     fields:
-      - { name: status, label: "Status", type: boolean, required: true }
+      - { name: status, label: "Status", type: boolean, required: false }
       - { name: title, label: "Judul Ujian", type: string, required: true }
       - { name: start_date, label: "Mulai Tanggal", type: date, required: true }
       - { name: end_date, label: "Sampai Tanggal", type: date, required: true }
