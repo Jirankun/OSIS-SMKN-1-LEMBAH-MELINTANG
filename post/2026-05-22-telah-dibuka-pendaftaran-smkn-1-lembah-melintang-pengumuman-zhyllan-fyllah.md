@@ -36,7 +36,7 @@ SMKN 1 Lembah Melintang membuka kesempatan bagi lulusan SMP/MTs sederajat untuk 
 
 Informasi resmi terkait jadwal, persyaratan, dan mekanisme Seleksi Penerimaan Murid Baru (SPMB) dapat dipantau melalui website resmi :
 
-🔗 [https://spmb.sumbarprov.go.id](https://web.smkn1lembahmelintang.sch.id)
+🔗 [https://spmb.sumbarprov.go.id](https://spmb.sumbarprov.go.id)
 
  
 
