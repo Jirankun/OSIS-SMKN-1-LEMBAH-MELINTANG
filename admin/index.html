@@ -194,8 +194,7 @@
             
             <!-- Register Form -->
             <div id="registerFormContainer">
-                <div class="login-title">Daftar Admin Baru</div>
-                <form id="registerForm">
+                <div class="login-title">Daftar Admin Baru</div>                <form id="registerForm">
                     <div class="form-group">
                         <label class="form-label">Username</label>
                         <input type="text" class="form-input" id="regUser" required autocomplete="username">
@@ -211,7 +210,7 @@
                     <button type="submit" class="btn btn-primary" style="width:100%">Daftar</button>
                 </form>
                 <div style="text-align:center;margin-top:12px;font-size:10px;color:var(--text-dim)">
-                    Sudah punya akun? <a href="#" onclick="app.showLogin()" style="color:var(--accent)">Login</a>
+                    Sudah punya akun? <a href="#" onclick="app.showLogin(); return false;" style="color:var(--accent)">Login</a>
                 </div>
             </div>
             
@@ -233,7 +232,7 @@
                     </button>
                 </form>
                 <div style="text-align:center;margin-top:12px;font-size:10px;color:var(--text-dim)">
-                    Belum punya akun? <a href="#" onclick="app.showRegister()" style="color:var(--accent)">Daftar</a>
+                    Belum punya akun? <a href="#" onclick="app.showRegister(); return false;" style="color:var(--accent)">Daftar</a>
                 </div>
                 <div style="text-align:center;margin-top:8px;font-size:10px;color:var(--text-dim)">
                     <i class="fa-solid fa-lock"></i> LocalStorage encrypted
@@ -244,8 +243,7 @@
 
     <!-- Main App -->
     <div id="appView" class="hidden">
-        <header class="header">
-            <div class="brand"><i class="fa-solid fa-shield-halved"></i> CMS PANEL</div>
+        <header class="header">            <div class="brand"><i class="fa-solid fa-shield-halved"></i> CMS PANEL</div>
             <div class="user-bar">
                 <span id="currentUser">Admin</span>
                 <div class="user-avatar" id="userAvatar">A</div>
@@ -277,7 +275,8 @@
                         <div class="stat-card">
                             <i class="fa-solid fa-file-lines stat-icon"></i>
                             <div class="stat-value" id="statPosts">0</div>
-                            <div class="stat-label">Posts Indexed</div>                        </div>
+                            <div class="stat-label">Posts Indexed</div>
+                        </div>
                         <div class="stat-card">
                             <i class="fa-solid fa-image stat-icon"></i>
                             <div class="stat-value" id="statImages">0</div>
@@ -293,8 +292,7 @@
                             <tbody id="recentTable"><tr><td colspan="4" style="text-align:center;color:var(--text-dim)">Memuat...</td></tr></tbody>
                         </table>
                     </div>
-                </div>
-                
+                </div>                
                 <!-- Gallery -->
                 <div id="view-gallery" class="hidden">
                     <div class="section-header">
@@ -326,7 +324,8 @@
                     </div>
                     <div class="grid" id="imageGrid"></div>
                 </div>
-                                <!-- Settings -->
+                
+                <!-- Settings -->
                 <div id="view-settings" class="hidden">
                     <div class="section-header">
                         <div class="section-title"><i class="fa-solid fa-gear"></i> Settings</div>
@@ -342,8 +341,7 @@
                     <button class="btn btn-primary" onclick="app.saveSettings()">Simpan</button>
                 </div>
             </main>
-        </div>
-    </div>
+        </div>    </div>
 
     <!-- Modal -->
     <div class="modal" id="modal">
@@ -378,51 +376,62 @@
         const app = {
             user: null,
             data: { gallery: [], posts: [], images: [] },
+            _eventsBound: false,
             
             init() {
                 this.checkAuth();
-                this.bindNav();
-                this.bindLogin();
-                this.bindRegister();
+                if (!this._eventsBound) {
+                    this.bindNav();
+                    this.bindLogin();
+                    this.bindRegister();
+                    this._eventsBound = true;
+                }
             },
             
             checkAuth() {
                 const saved = localStorage.getItem('cms_user');
-                const registeredUser = localStorage.getItem('cms_registered_user');
-                
+                const registeredUser = localStorage.getItem('cms_registered_user');                
                 if (saved) {
-                    this.user = JSON.parse(saved);
-                    document.getElementById('loginView').classList.add('hidden');
-                    document.getElementById('appView').classList.remove('hidden');
-                    document.getElementById('currentUser').textContent = this.user.username;
-                    document.getElementById('userAvatar').textContent = this.user.username.charAt(0).toUpperCase();
-                    this.loadData();
-                } else {
-                    // Cek apakah sudah ada user terdaftar
-                    if (registeredUser) {
-                        // Sudah pernah register, tampilkan form login
-                        this.showLogin();
-                    } else {
-                        // Belum pernah register, tampilkan form register
-                        this.showRegister();
+                    try {
+                        this.user = JSON.parse(saved);
+                        document.getElementById('loginView').classList.add('hidden');
+                        document.getElementById('appView').classList.remove('hidden');
+                        document.getElementById('currentUser').textContent = this.user.username;
+                        document.getElementById('userAvatar').textContent = this.user.username.charAt(0).toUpperCase();
+                        this.loadData();
+                    } catch(e) {
+                        localStorage.removeItem('cms_user');
+                        this.handleFirstTime(registeredUser);
                     }
+                } else {
+                    this.handleFirstTime(registeredUser);
+                }
+            },
+            
+            handleFirstTime(registeredUser) {
+                if (registeredUser) {
+                    this.showLogin();
+                } else {
+                    this.showRegister();
                 }
             },
             
             showRegister() {
                 document.getElementById('registerFormContainer').classList.remove('hidden');
                 document.getElementById('loginFormContainer').classList.add('hidden');
+                document.getElementById('regPass').value = '';
+                document.getElementById('regPassConfirm').value = '';
             },
             
             showLogin() {
                 document.getElementById('registerFormContainer').classList.add('hidden');
                 document.getElementById('loginFormContainer').classList.remove('hidden');
-                // Kosongkan password field saat beralih ke login
                 document.getElementById('loginPass').value = '';
             },
             
             bindRegister() {
-                document.getElementById('registerForm').addEventListener('submit', (e) => {
+                const form = document.getElementById('registerForm');
+                form.onsubmit = (e) => {
                     e.preventDefault();
                     const username = document.getElementById('regUser').value.trim();
                     const password = document.getElementById('regPass').value;
@@ -430,8 +439,7 @@
                     
                     if (!username || !password) {
                         this.toast('Username dan password wajib diisi', 'error');
-                        return;
-                    }
+                        return;                    }
                     
                     if (password.length < 6) {
                         this.toast('Password minimal 6 karakter', 'error');
@@ -443,30 +451,26 @@
                         return;
                     }
                     
-                    // Simpan ke localStorage
-                    const userData = { username, password: btoa(password), registered: true };
+                    const userData = { username, password: btoa(password), registered: true, createdAt: new Date().toISOString() };
                     localStorage.setItem('cms_registered_user', JSON.stringify(userData));
                     
                     this.toast('Registrasi berhasil! Silakan login', 'success');
                     
-                    // Arahkan ke form login dengan username terisi
                     document.getElementById('loginUser').value = username;
-                    // Beri sedikit delay agar toast terlihat sebelum pindah form
                     setTimeout(() => {
                         this.showLogin();
-                        // Fokus ke password field untuk UX yang lebih baik
                         document.getElementById('loginPass').focus();
                     }, 500);
-                });
+                };
             },
             
             bindLogin() {
-                document.getElementById('loginForm').addEventListener('submit', async (e) => {
+                const form = document.getElementById('loginForm');
+                form.onsubmit = async (e) => {
                     e.preventDefault();
                     const username = document.getElementById('loginUser').value.trim();
                     const password = document.getElementById('loginPass').value;
                     
-                    // Tampilkan loading
                     const loginBtn = document.getElementById('loginBtn');
                     const loginBtnText = document.getElementById('loginBtnText');
                     const loginSpinner = document.getElementById('loginSpinner');
@@ -475,22 +479,21 @@
                     loginBtnText.textContent = 'Memuat...';
                     loginSpinner.classList.remove('hidden');
                     
-                    // Simulasi delay loading
-                    await new Promise(resolve => setTimeout(resolve, 1500));
+                    await new Promise(resolve => setTimeout(resolve, 800));
                     
-                    // Periksa apakah user terdaftar di localStorage
                     const savedUser = localStorage.getItem('cms_registered_user');
-                    
                     let isValid = false;
                     
                     if (savedUser) {
-                        const userData = JSON.parse(savedUser);
-                        if (userData.username === username && userData.password === btoa(password)) {
-                            isValid = true;
+                        try {
+                            const userData = JSON.parse(savedUser);
+                            if (userData.username === username && userData.password === btoa(password)) {
+                                isValid = true;                            }
+                        } catch(e) {
+                            console.error('Parse user error:', e);
                         }
                     }
                     
-                    // Reset tombol
                     loginBtn.classList.remove('loading');
                     loginBtnText.textContent = 'Masuk';
                     loginSpinner.classList.add('hidden');
@@ -498,56 +501,57 @@
                     if (isValid) {
                         this.user = { username, token: btoa(username + ':' + Date.now()) };
                         localStorage.setItem('cms_user', JSON.stringify(this.user));
-                        this.checkAuth();
+                        document.getElementById('loginView').classList.add('hidden');
+                        document.getElementById('appView').classList.remove('hidden');
+                        document.getElementById('currentUser').textContent = username;
+                        document.getElementById('userAvatar').textContent = username.charAt(0).toUpperCase();
+                        this.loadData();
                         this.toast('Login berhasil', 'success');
                     } else {
                         this.toast('Username atau password salah', 'error');
                     }
-                });
+                };
             },
             
             logout() {
                 localStorage.removeItem('cms_user');
-                location.reload();
+                this.user = null;
+                document.getElementById('appView').classList.add('hidden');
+                document.getElementById('loginView').classList.remove('hidden');
+                this.handleFirstTime(localStorage.getItem('cms_registered_user'));
+                this.toast('Berhasil keluar', 'success');
             },
             
             bindNav() {
                 document.querySelectorAll('.nav-item').forEach(item => {
-                    item.addEventListener('click', () => {
+                    item.onclick = () => {
                         document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
                         item.classList.add('active');
-                        const view = item.dataset.view;                        document.querySelectorAll('[id^="view-"]').forEach(v => v.classList.add('hidden'));
+                        const view = item.dataset.view;
+                        document.querySelectorAll('[id^="view-"]').forEach(v => v.classList.add('hidden'));
                         document.getElementById(`view-${view}`).classList.remove('hidden');
                         if (view === 'dashboard') this.loadData();
                         if (view === 'gallery') this.renderGallery();
                         if (view === 'posts') this.renderPosts();
                         if (view === 'images') this.renderImages();
-                    });
+                    };
                 });
             },
-            
-            // ================= DATA FETCHING =================
-            async loadData() {
+                        async loadData() {
                 try {
-                    // Fetch gallery
                     const galRes = await fetch(CONFIG.endpoints.gallery + '?t=' + Date.now());
                     this.data.gallery = galRes.ok ? await galRes.json() : [];
                     
-                    // Fetch posts
                     const postRes = await fetch(CONFIG.endpoints.posts + '?t=' + Date.now());
                     this.data.posts = postRes.ok ? await postRes.json() : [];
                     
-                    // Fetch image list (parse directory listing)
                     this.data.images = await this.fetchImageList();
                     
-                    // Update stats
                     document.getElementById('statGallery').textContent = this.data.gallery.length;
                     document.getElementById('statPosts').textContent = this.data.posts.length;
                     document.getElementById('statImages').textContent = this.data.images.length;
                     
-                    // Recent activity
                     this.renderRecent();
-                    
                 } catch (err) {
                     console.error('Fetch error:', err);
                     this.toast('Gagal memuat data', 'error');
@@ -556,7 +560,6 @@
             
             async fetchImageList() {
                 try {
-                    // Try GitHub API first for raw file list
                     const apiRes = await fetch(`https://api.github.com/repos/Jirankun/OSIS-SMKN-1-LEMBAH-MELINTANG/contents/img?ref=main`);
                     if (apiRes.ok) {
                         const files = await apiRes.json();
@@ -565,7 +568,7 @@
                     }
                 } catch {}
                 
-                // Fallback: try directory listing                try {
+                try {
                     const res = await fetch(CONFIG.endpoints.imgList);
                     const text = await res.text();
                     const matches = text.match(/href="([^"]+\.(jpg|jpeg|png|gif|webp))"/gi) || [];
@@ -576,7 +579,6 @@
                 } catch { return []; }
             },
             
-            // ================= RENDERERS =================
             renderGallery() {
                 const grid = document.getElementById('galleryGrid');
                 if (!this.data.gallery.length) {
@@ -584,8 +586,7 @@
                     return;
                 }
                 grid.innerHTML = this.data.gallery.map((item, i) => `
-                    <div class="card" onclick="app.editGallery(${i})">
-                        <div class="card-img">${item.image ? `<img src="${this.resolvePath(item.image)}" alt="${item.title}" style="width:100%;height:100%;object-fit:cover">` : '<i class="fa-regular fa-image"></i>'}</div>
+                    <div class="card" onclick="app.editGallery(${i})">                        <div class="card-img">${item.image ? `<img src="${this.resolvePath(item.image)}" alt="${item.title}" style="width:100%;height:100%;object-fit:cover">` : '<i class="fa-regular fa-image"></i>'}</div>
                         <div class="card-body">
                             <div class="card-title">${item.title}</div>
                             <div class="card-meta"><span>${item.date}</span></div>
@@ -614,7 +615,8 @@
                             <button class="btn btn-sm" onclick="app.deletePost(${i})"><i class="fa-solid fa-trash"></i></button>
                             <button class="btn btn-sm btn-primary" onclick="app.editPost(${i})"><i class="fa-solid fa-pen"></i></button>
                         </td>
-                    </tr>                `).join('');
+                    </tr>
+                `).join('');
             },
             
             renderImages() {
@@ -633,8 +635,7 @@
                 `).join('');
             },
             
-            renderRecent() {
-                const tbody = document.getElementById('recentTable');
+            renderRecent() {                const tbody = document.getElementById('recentTable');
                 const recent = [...this.data.gallery.slice(0,3).map(i => ({...i, type:'galeri'})), 
                                ...this.data.posts.slice(0,3).map(i => ({...i, type:'post'}))]
                                .sort((a,b) => new Date(b.date) - new Date(a.date)).slice(0,5);
@@ -653,7 +654,6 @@
                 `).join('');
             },
             
-            // ================= MODAL & FORMS =================
             openModal(type, data = null) {
                 const modal = document.getElementById('modal');
                 const title = document.getElementById('modalTitle');
@@ -663,7 +663,8 @@
                 
                 if (type === 'gallery') {
                     body.innerHTML = `
-                        <form id="modalForm">                            <div class="form-group">
+                        <form id="modalForm">
+                            <div class="form-group">
                                 <label class="form-label">Judul</label>
                                 <input type="text" class="form-input" name="title" value="${data?.title || ''}" required>
                             </div>
@@ -683,8 +684,7 @@
                             </div>
                             <div class="flex justify-between">
                                 <button type="button" class="btn" onclick="app.closeModal()">Batal</button>
-                                <button type="submit" class="btn btn-primary">${data ? 'Update' : 'Simpan'}</button>
-                            </div>
+                                <button type="submit" class="btn btn-primary">${data ? 'Update' : 'Simpan'}</button>                            </div>
                         </form>
                     `;
                     document.getElementById('modalForm').onsubmit = (e) => {
@@ -712,7 +712,8 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label">Tanggal</label>                                    <input type="date" class="form-input" name="date" value="${data?.date || new Date().toISOString().split('T')[0]}">
+                                    <label class="form-label">Tanggal</label>
+                                    <input type="date" class="form-input" name="date" value="${data?.date || new Date().toISOString().split('T')[0]}">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -732,8 +733,7 @@
                                 <button type="submit" class="btn btn-primary">${data ? 'Update' : 'Simpan'}</button>
                             </div>
                         </form>
-                    `;
-                    document.getElementById('modalForm').onsubmit = (e) => {
+                    `;                    document.getElementById('modalForm').onsubmit = (e) => {
                         e.preventDefault();
                         const formData = new FormData(e.target);
                         const payload = Object.fromEntries(formData);
@@ -748,7 +748,6 @@
                 document.getElementById('modal').classList.remove('active');
             },
             
-            // ================= CRUD OPERATIONS (POST Requests) =================
             async saveGallery(data, index = null) {
                 try {
                     const method = index !== null ? 'PUT' : 'POST';
@@ -761,7 +760,8 @@
                     });
                     
                     if (res.ok) {
-                        this.closeModal();                        await this.loadData();
+                        this.closeModal();
+                        await this.loadData();
                         this.renderGallery();
                         this.toast(index !== null ? 'Galeri diperbarui' : 'Galeri ditambahkan', 'success');
                     } else {
@@ -769,7 +769,6 @@
                     }
                 } catch (err) {
                     console.error(err);
-                    // Fallback: update local array + localStorage for demo
                     if (index !== null) {
                         this.data.gallery[index] = { ...data, updatedAt: new Date().toISOString() };
                     } else {
@@ -783,8 +782,7 @@
             },
             
             async deleteGallery(index) {
-                if (!confirm('Hapus item galeri ini?')) return;
-                try {
+                if (!confirm('Hapus item galeri ini?')) return;                try {
                     const res = await fetch(`${CONFIG.endpoints.galleryCreate}/${index}`, {
                         method: 'DELETE',
                         headers: { 'Authorization': `Bearer ${this.user?.token}` }
@@ -795,7 +793,6 @@
                         this.toast('Galeri dihapus', 'success');
                     }
                 } catch {
-                    // Fallback local
                     this.data.gallery.splice(index, 1);
                     localStorage.setItem('cms_gallery_backup', JSON.stringify(this.data.gallery));
                     this.renderGallery();
@@ -810,7 +807,8 @@
                     
                     const res = await fetch(endpoint, {
                         method: method,
-                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.user?.token}` },                        body: JSON.stringify({ ...data, updatedAt: new Date().toISOString() })
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.user?.token}` },
+                        body: JSON.stringify({ ...data, updatedAt: new Date().toISOString() })
                     });
                     
                     if (res.ok) {
@@ -823,7 +821,6 @@
                     }
                 } catch (err) {
                     console.error(err);
-                    // Fallback local
                     if (index !== null) {
                         this.data.posts[index] = { ...data, updatedAt: new Date().toISOString() };
                     } else {
@@ -834,8 +831,7 @@
                     this.renderPosts();
                     this.toast('Disimpan (mode offline)', 'success');
                 }
-            },
-            
+            },            
             async deletePost(index) {
                 if (!confirm('Hapus post ini?')) return;
                 try {
@@ -849,7 +845,6 @@
                         this.toast('Post dihapus', 'success');
                     }
                 } catch {
-                    // Fallback local
                     this.data.posts.splice(index, 1);
                     localStorage.setItem('cms_posts_backup', JSON.stringify(this.data.posts));
                     this.renderPosts();
@@ -859,7 +854,8 @@
             
             async uploadImage() {
                 const input = document.createElement('input');
-                input.type = 'file';                input.accept = 'image/*';
+                input.type = 'file';
+                input.accept = 'image/*';
                 input.onchange = async (e) => {
                     const file = e.target.files[0];
                     if (!file) return;
@@ -884,9 +880,7 @@
                     }
                 };
                 input.click();
-            },
-            
-            // ================= UTILS =================
+            },            
             resolvePath(path) {
                 if (!path) return '';
                 if (path.startsWith('http')) return path;
@@ -908,7 +902,8 @@
                 modal.classList.add('active');
             },
             
-            editGallery(index) { this.openModal('gallery', this.data.gallery[index]); },            editPost(index) { this.openModal('post', this.data.posts[index]); },
+            editGallery(index) { this.openModal('gallery', this.data.gallery[index]); },
+            editPost(index) { this.openModal('post', this.data.posts[index]); },
             
             saveSettings() {
                 CONFIG.apiBase = document.getElementById('apiUrl').value;
@@ -920,27 +915,21 @@
             toast(msg, type = 'info') {
                 const toast = document.getElementById('toast');
                 toast.textContent = msg;
-                toast.className = `toast ${type === 'error' ? '' : 'show'}`;
+                toast.className = 'toast show';
                 toast.style.borderColor = type === 'error' ? 'var(--danger)' : type === 'success' ? 'var(--success)' : 'var(--border)';
                 setTimeout(() => toast.classList.remove('show'), 3000);
             }
         };
 
-        // Init
         document.addEventListener('DOMContentLoaded', () => {
-            // Load saved config
             const savedConfig = localStorage.getItem('cms_config');
             if (savedConfig) Object.assign(CONFIG, JSON.parse(savedConfig));
-            
             app.init();
         });
 
-        // Close modal on outside click
         document.getElementById('modal').addEventListener('click', (e) => {
             if (e.target.id === 'modal') app.closeModal();
-        });
-        
-        // Keyboard shortcuts
+        });        
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') app.closeModal();
         });
