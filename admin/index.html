@@ -388,6 +388,8 @@
             
             checkAuth() {
                 const saved = localStorage.getItem('cms_user');
+                const registeredUser = localStorage.getItem('cms_registered_user');
+                
                 if (saved) {
                     this.user = JSON.parse(saved);
                     document.getElementById('loginView').classList.add('hidden');
@@ -395,6 +397,15 @@
                     document.getElementById('currentUser').textContent = this.user.username;
                     document.getElementById('userAvatar').textContent = this.user.username.charAt(0).toUpperCase();
                     this.loadData();
+                } else {
+                    // Cek apakah sudah ada user terdaftar
+                    if (registeredUser) {
+                        // Sudah pernah register, tampilkan form login
+                        this.showLogin();
+                    } else {
+                        // Belum pernah register, tampilkan form register
+                        this.showRegister();
+                    }
                 }
             },
             
