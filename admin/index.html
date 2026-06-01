@@ -417,6 +417,8 @@
             showLogin() {
                 document.getElementById('registerFormContainer').classList.add('hidden');
                 document.getElementById('loginFormContainer').classList.remove('hidden');
+                // Kosongkan password field saat beralih ke login
+                document.getElementById('loginPass').value = '';
             },
             
             bindRegister() {
@@ -449,7 +451,12 @@
                     
                     // Arahkan ke form login dengan username terisi
                     document.getElementById('loginUser').value = username;
-                    this.showLogin();
+                    // Beri sedikit delay agar toast terlihat sebelum pindah form
+                    setTimeout(() => {
+                        this.showLogin();
+                        // Fokus ke password field untuk UX yang lebih baik
+                        document.getElementById('loginPass').focus();
+                    }, 500);
                 });
             },
             
