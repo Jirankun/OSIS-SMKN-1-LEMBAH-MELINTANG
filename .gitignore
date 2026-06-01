@@ -1,5 +1,5 @@
-```
-# Content management
-admin/content/
-admin/post/
-```
+The modified file `admin/index.html` is a source code file and does not require any special ignore rules. Since there are no build artifacts, dependencies, temporary files, or other ignorable items in the changes provided, no additions to the .gitignore file are necessary.
+
+Therefore, the .gitignore content remains unchanged. If it was empty before, it stays empty.
+
+(No output)
