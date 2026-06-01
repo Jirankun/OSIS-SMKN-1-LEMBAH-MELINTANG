@@ -3,17 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CMS Admin Panel - Login</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css ">
+    <title>CMS Admin Panel - Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
 
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
             min-height: 100vh;
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
             padding: 20px;
@@ -21,7 +18,6 @@
             overflow-x: hidden;
         }
 
-        /* CMS Background Pattern */
         body::before {
             content: '';
             position: absolute;
@@ -33,31 +29,28 @@
             z-index: 0;
         }
 
-        /* CMS Logo & Branding */
         .cms-brand {
-            position: absolute;
-            top: 25px;
+            position: fixed;
+            top: 20px;
             left: 50%;
             transform: translateX(-50%);
             text-align: center;
-            z-index: 10;
+            z-index: 1000;
             animation: fadeInDown 0.8s ease;
         }
         .cms-brand .logo {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 700;
             color: #fff;
-            display: flex;            align-items: center;
+            display: flex;
+            align-items: center;
             gap: 10px;
             text-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
-        .cms-brand .logo i {
-            color: #6a11cb;
-            animation: pulse 2s infinite;
-        }
+        .cms-brand .logo i { color: #6a11cb; animation: pulse 2s infinite; }
         .cms-brand .version {
             color: rgba(255,255,255,0.7);
-            font-size: 12px;
+            font-size: 11px;
             margin-top: 4px;
             letter-spacing: 1px;
         }
@@ -71,62 +64,68 @@
             50% { transform: scale(1.1); }
         }
 
-        /* ================= DESKTOP LAYOUT (Min Width: 769px) ================= */
-        .desktop-container {
-            display: none;
+        /* Login Container */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
             position: relative;
-            width: 780px;
-            height: 520px;
+            z-index: 10;
+        }
+
+        .login-box {
+            width: 100%;
+            max-width: 420px;
             background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
+            border-radius: 24px;
+            padding: 40px 30px;
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
-            overflow: hidden;
-            z-index: 5;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255,255,255,0.1);
         }
 
-        @media (min-width: 769px) {
-            .desktop-container { display: block; }
-            .mobile-container { display: none !important; }
-        }
-
-        /* Desktop Form Containers */
-        .form-container {
-            position: absolute;
-            top: 0;
-            height: 100%;
-            width: 50%;            padding: 0 50px;
+        .login-tabs {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.6s ease-in-out;
+            background: rgba(106, 17, 203, 0.15);
+            border-radius: 50px;
+            padding: 5px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(106, 17, 203, 0.2);
         }
-        .sign-in-container { left: 0; z-index: 2; }
-        .sign-up-container {
-            left: 0; opacity: 0; z-index: 1; visibility: hidden;
-            transition: all 0.6s ease-in-out;
+        .login-tabs button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: transparent;
+            color: #666;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 50px;
+            transition: all 0.3s ease;
         }
-        .desktop-container.right-panel-active .sign-in-container { 
-            transform: translateX(100%); 
-            opacity: 0; 
-            z-index: 1; 
-        }
-        .desktop-container.right-panel-active .sign-up-container {
-            transform: translateX(100%); 
-            opacity: 1; 
-            z-index: 5; 
-            visibility: visible;
+        .login-tabs button.active {
+            background: #fff;
+            color: #6a11cb;
+            box-shadow: 0 4px 15px rgba(106,17,203,0.2);
+            font-weight: 700;
         }
 
-        /* Desktop Form Elements */
-        form { width: 100%; display: flex; flex-direction: column; align-items: center; }
+        .login-form { display: none; }
+        .login-form.active { display: block; animation: fadeIn 0.3s ease; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         h1 { 
-            font-size: 28px; 
+            font-size: 24px; 
             font-weight: 700; 
-            margin-bottom: 20px; 
+            margin-bottom: 25px; 
             color: #1a1a2e;
+            text-align: center;
             position: relative;
             padding-bottom: 10px;
         }
@@ -141,11 +140,13 @@
             background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             border-radius: 2px;
         }
-        .input-group { position: relative; width: 100%; margin-bottom: 15px; }
+
+        .input-group { position: relative; width: 100%; margin-bottom: 20px; }
         .input-group input {
-            width: 100%; padding: 14px 45px 14px 18px; 
+            width: 100%; padding: 15px 45px 15px 18px; 
             background: rgba(240, 242, 245, 0.8);
-            border: 2px solid transparent;             border-radius: 10px; 
+            border: 2px solid transparent;
+            border-radius: 10px; 
             font-size: 15px;
             outline: none; 
             transition: all 0.3s ease;
@@ -156,232 +157,29 @@
             border-color: #6a11cb;
             box-shadow: 0 0 0 4px rgba(106, 17, 203, 0.1);
         }
-        .input-group input::placeholder { color: #999; }
         .input-group i {
             position: absolute; right: 18px; top: 50%; transform: translateY(-50%);
             color: #888; font-size: 18px; pointer-events: none;
             transition: color 0.3s;
         }
         .input-group input:focus + i { color: #6a11cb; }
-        .forgot {
-            align-self: flex-end; color: #6a11cb; font-size: 14px; margin-bottom: 15px;
-            text-decoration: none; transition: 0.3s; font-weight: 500;
-        }
-        .forgot:hover { text-decoration: underline; color: #2575fc; }
-        button {
-            width: 100%; padding: 14px; border-radius: 10px; border: none;
+
+        button.submit-btn {
+            width: 100%; padding: 15px; border-radius: 10px; border: none;
             background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             color: #fff; font-size: 16px; font-weight: 600; cursor: pointer;
-            margin: 10px 0 20px; transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             position: relative; overflow: hidden;
         }
-        button::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: left 0.5s;
+        button.submit-btn:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 8px 25px rgba(106, 17, 203, 0.4); 
         }
-        button:hover::before { left: 100%; }
-        button:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(106, 17, 203, 0.4); }
-        button:active { transform: scale(0.98); }
-        p { font-size: 14px; color: #666; margin-bottom: 15px; text-align: center; }
-        .socials { display: flex; gap: 12px; }
-        .socials a {
-            width: 40px; height: 40px; border: 2px solid #ddd; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; color: #666;
-            text-decoration: none; transition: all 0.3s ease;
-            background: rgba(240,242,245,0.5);
-        }
-        .socials a:hover {            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            border-color: transparent; color: #fff; transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(106, 17, 203, 0.3);
-        }
-
-        /* Desktop Overlay Container */
-        .overlay-container {
-            position: absolute; top: 0; left: 50%; width: 50%; height: 100%;
-            overflow: hidden; transition: transform 0.6s ease-in-out; z-index: 100;
-        }
-        .desktop-container.right-panel-active .overlay-container { transform: translateX(-100%); }
-        .overlay {
-            position: relative; left: -100%; height: 100%; width: 200%;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            transition: transform 0.6s ease-in-out;
-        }
-        .desktop-container.right-panel-active .overlay { transform: translateX(50%); }
-        .overlay-panel {
-            position: absolute; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; padding: 0 40px;
-            text-align: center; top: 0; height: 100%; width: 50%; color: #fff;
-            transition: transform 0.6s ease-in-out;
-        }
-        .overlay-left { transform: translateX(-20%); }
-        .desktop-container.right-panel-active .overlay-left { transform: translateX(0); }
-        .overlay-right { right: 0; transform: translateX(0); }
-        .desktop-container.right-panel-active .overlay-right { transform: translateX(20%); }
-        .overlay-panel h1 { color: #fff; margin-bottom: 10px; font-size: 30px; }
-        .overlay-panel p { color: rgba(255, 255, 255, 0.9); margin-bottom: 25px; font-size: 15px; }
-        .ghost {
-            background: transparent; border: 2px solid #fff; color: #fff;
-            width: auto; padding: 12px 40px; margin: 0; font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        .ghost:hover {
-            background: #fff; color: #1a1a2e; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-            transform: translateY(-2px);
-        }
-
-        /* CMS Footer */
-        .cms-footer {
-            position: absolute;
-            bottom: 15px;
-            left: 0;
-            right: 0;
-            text-align: center;
-            font-size: 11px;
-            color: rgba(102,102,102,0.8);
-            z-index: 10;
-        }        .cms-footer a { color: #6a11cb; text-decoration: none; }
-        .cms-footer a:hover { text-decoration: underline; }
-
-        /* ================= MOBILE LAYOUT (Max Width: 768px) ================= */
-        .mobile-container {
-            display: none;
-            width: 100%;
-            max-width: 420px;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 24px;
-            padding: 30px 25px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
-            z-index: 5;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        @media (max-width: 768px) {
-            .mobile-container { display: block; }
-            .desktop-container { display: none !important; }
-            .cms-brand { top: 15px; }
-            .cms-brand .logo { font-size: 24px; }
-        }
-
-        .mobile-tabs {
-            display: flex;
-            background: rgba(106, 17, 203, 0.15);
-            border-radius: 50px;
-            padding: 5px;
-            margin-bottom: 25px;
-            border: 1px solid rgba(106, 17, 203, 0.2);
-        }
-        .mobile-tabs button {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            background: transparent;
-            color: #666;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            border-radius: 50px;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-        .mobile-tabs button.active {
-            background: #fff;
-            color: #6a11cb;
-            box-shadow: 0 4px 15px rgba(106,17,203,0.2);
-            font-weight: 700;
-        }        .mobile-tabs button::after {
-            content: '';
-            position: absolute;
-            bottom: -2px; left: 50%;
-            transform: translateX(-50%) scaleX(0);
-            width: 60%; height: 2px;
-            background: linear-gradient(135deg, #6a11cb, #2575fc);
-            border-radius: 2px;
-            transition: transform 0.3s ease;
-        }
-        .mobile-tabs button.active::after { transform: translateX(-50%) scaleX(1); }
-
-        .mobile-forms { 
-            position: relative; 
-            width: 100%; 
-            min-height: 440px;
-            overflow: hidden;
-        }
-        
-        .mobile-form {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            opacity: 0;
-            transform: scale(0.95);
-            visibility: hidden;
-            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            pointer-events: none;
-        }
-        
-        .mobile-form.active {
-            opacity: 1;
-            transform: scale(1);
-            visibility: visible;
-            pointer-events: auto;
-            position: relative;
-        }
-
-        .mobile-form h1 { font-size: 24px; text-align: center; margin-bottom: 20px; }
-        .mobile-form .input-group { margin-bottom: 16px; }
-        .mobile-form .input-group input { padding: 15px 45px 15px 18px; font-size: 14px; }
-        .mobile-form button { margin: 15px 0 10px; padding: 15px; font-size: 15px; }
-        
-        .mobile-form .socials { 
-            display: flex; 
-            justify-content: center;
-            align-items: center;
-            gap: 12px;
-            margin-top: 10px;         }
-        .mobile-form .socials a { 
-            width: 42px; 
-            height: 42px; 
-            font-size: 18px; 
-            border-radius: 50%;
-        }
-        .mobile-form p { 
-            text-align: center; 
-            font-size: 13px; 
-            margin: 10px 0 15px; 
-        }
-
-        /* CMS Badge */
-        .cms-badge {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #6a11cb, #2575fc);
-            color: white;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            box-shadow: 0 4px 12px rgba(106,17,203,0.3);
-            animation: float 3s ease-in-out infinite;
-            z-index: 10;
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
-
-        /* Loading Animation for Buttons */
-        button.loading {
-            position: relative;
+        button.submit-btn.loading {
             color: transparent !important;
             pointer-events: none;
         }
-        button.loading::after {
+        button.submit-btn.loading::after {
             content: '';
             position: absolute;
             width: 20px;
@@ -390,306 +188,928 @@
             left: 50%;
             transform: translate(-50%, -50%);
             border: 3px solid rgba(255,255,255,0.3);
-            border-top-color: #fff;            border-radius: 50%;
+            border-top-color: #fff;
+            border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
         @keyframes spin {
             to { transform: translate(-50%, -50%) rotate(360deg); }
         }
 
-        /* Security Notice */
         .security-notice {
             text-align: center;
-            font-size: 11px;
+            font-size: 12px;
             color: rgba(102,102,102,0.7);
-            margin-top: 10px;
-            padding: 8px 15px;
+            margin-top: 15px;
+            padding: 10px 15px;
             background: rgba(106,17,203,0.05);
             border-radius: 8px;
             border-left: 3px solid #6a11cb;
         }
         .security-notice i { margin-right: 5px; color: #6a11cb; }
+
+        /* Dashboard Styles */
+        .dashboard-container {
+            display: none;
+            max-width: 1400px;
+            margin: 80px auto 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: rgba(255,255,255,0.1);
+            padding: 20px 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #fff;
+        }
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+        }
+        .logout-btn {
+            padding: 10px 25px;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: #fff;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+        }
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+        }
+        .stat-card.content::before { background: linear-gradient(135deg, #6a11cb, #2575fc); }
+        .stat-card.post::before { background: linear-gradient(135deg, #f093fb, #f5576c); }
+        .stat-card.img::before { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+
+        .stat-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+        .stat-card.content .stat-icon { background: rgba(106, 17, 203, 0.15); color: #6a11cb; }
+        .stat-card.post .stat-icon { background: rgba(240, 147, 251, 0.15); color: #f5576c; }
+        .stat-card.img .stat-icon { background: rgba(79, 172, 254, 0.15); color: #4facfe; }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 5px;
+        }
+        .stat-label {
+            font-size: 16px;
+            color: #666;
+            font-weight: 500;
+        }
+        .stat-detail {
+            font-size: 13px;
+            color: #999;
+            margin-top: 10px;
+        }
+
+        /* Content Grid */
+        .content-section {
+            margin-bottom: 40px;
+        }
+        .section-title {
+            color: #fff;
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-title i { color: #6a11cb; }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .content-item {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .content-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+        .content-item img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        .content-item h3 {
+            font-size: 16px;
+            color: #1a1a2e;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .content-item p {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .content-item .meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #999;
+        }
+        .content-item .view-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.3s ease;
+        }
+        .content-item:hover .view-btn {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            backdrop-filter: blur(5px);
+        }
+        .modal-overlay.active { display: flex; animation: fadeIn 0.3s ease; }
+
+        .modal-content {
+            background: #fff;
+            border-radius: 20px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 30px;
+            border-bottom: 1px solid #eee;
+        }
+        .modal-header h2 {
+            font-size: 22px;
+            color: #1a1a2e;
+        }
+        .modal-close {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(106, 17, 203, 0.1);
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            color: #6a11cb;
+            transition: all 0.3s ease;
+        }
+        .modal-close:hover {
+            background: #6a11cb;
+            color: #fff;
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+        .modal-body img {
+            width: 100%;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        .modal-body h3 {
+            font-size: 20px;
+            color: #1a1a2e;
+            margin-bottom: 15px;
+        }
+        .modal-body p {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+        .modal-meta {
+            display: flex;
+            gap: 20px;
+            padding: 15px;
+            background: rgba(106, 17, 203, 0.05);
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .modal-meta span {
+            font-size: 13px;
+            color: #666;
+        }
+        .modal-meta i {
+            color: #6a11cb;
+            margin-right: 5px;
+        }
+
+        /* Post Items */
+        .post-item {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .post-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+        .post-item h3 {
+            font-size: 16px;
+            color: #1a1a2e;
+            margin-bottom: 10px;
+        }
+        .post-item .post-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 12px;
+            color: #999;
+        }
+        .post-item .badge {
+            padding: 4px 12px;
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: #fff;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* Image Gallery */
+        .img-item {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        .img-item:hover {
+            transform: scale(1.03);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+        .img-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        .img-item .img-name {
+            font-size: 13px;
+            color: #666;
+            margin-top: 10px;
+            text-align: center;
+            word-break: break-all;
+        }
+
+        .cms-badge {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(106,17,203,0.3);
+            z-index: 1000;
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 50px;
+        }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(106, 17, 203, 0.2);
+            border-top-color: #6a11cb;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            .cms-brand {
+                position: relative;
+                top: 0;
+                left: 0;
+                transform: none;
+                margin-bottom: 20px;
+            }
+            .dashboard-container {
+                margin-top: 20px;
+            }
+            .cms-badge {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin-bottom: 20px;
+            }
+        }
     </style>
 </head>
 <body>
-
     <!-- CMS Branding -->
     <div class="cms-brand">
         <div class="logo">
             <i class="fa-solid fa-shield-halved"></i>
             CMS ADMIN PANEL
         </div>
-        <div class="version">v2.4.1 • Secure Access</div>
+        <div class="version">v3.0.0 • Dashboard System</div>
     </div>
 
     <!-- CMS Badge -->
     <div class="cms-badge">
-        <i class="fa-solid fa-lock"></i> ENKRIPSI AKTIF
+        <i class="fa-solid fa-lock"></i> SECURE MODE
     </div>
 
-    <!-- ================= DESKTOP STRUCTURE ================= -->
-    <div class="desktop-container" id="desktopContainer">
-        <!-- Register Form -->
-        <div class="form-container sign-up-container">
-            <form action="#" onsubmit="handleRegister(event)">
+    <!-- Login Container -->
+    <div class="login-container" id="loginContainer">
+        <div class="login-box">
+            <div class="login-tabs">
+                <button class="active" data-target="loginForm">
+                    <i class="fa-solid fa-right-to-bracket"></i> Masuk
+                </button>
+                <button data-target="registerForm">
+                    <i class="fa-solid fa-user-plus"></i> Daftar
+                </button>
+            </div>
+
+            <!-- Login Form -->
+            <form class="login-form active" id="loginForm" onsubmit="handleLogin(event)">
+                <h1>Selamat Datang</h1>
+                <div class="input-group">
+                    <input type="text" id="loginUsername" placeholder="Nama Pengguna" required autocomplete="username">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="loginPassword" placeholder="Kata Sandi" required autocomplete="current-password">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <button type="submit" class="submit-btn">Masuk Sekarang</button>
+                <div class="security-notice">
+                    <i class="fa-solid fa-shield"></i> Login menggunakan LocalStorage terenkripsi
+                </div>
+            </form>
+
+            <!-- Register Form -->
+            <form class="login-form" id="registerForm" onsubmit="handleRegister(event)">
                 <h1>Buat Akun Baru</h1>
                 <div class="input-group">
-                    <input type="text" placeholder="Nama Pengguna" required autocomplete="username">
+                    <input type="text" id="regUsername" placeholder="Nama Pengguna" required autocomplete="username">
                     <i class="fa-solid fa-user"></i>
                 </div>
                 <div class="input-group">
-                    <input type="email" placeholder="Alamat Email" required autocomplete="email">
-                    <i class="fa-solid fa-envelope"></i>                </div>
-                <div class="input-group">
-                    <input type="password" placeholder="Kata Sandi" required autocomplete="new-password" minlength="8">
-                    <i class="fa-solid fa-lock"></i>
-                </div>
-                <button type="submit">Daftar Sekarang</button>
-                <p>atau daftar dengan platform sosial</p>
-                <div class="socials">
-                    <a href="#" title="Google"><i class="fa-brands fa-google"></i></a>
-                    <a href="#" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-                    <a href="#" title="GitHub"><i class="fa-brands fa-github"></i></a>
-                    <a href="#" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-                </div>
-                <div class="security-notice">
-                    <i class="fa-solid fa-circle-check"></i> Data Anda dilindungi enkripsi SSL 256-bit
-                </div>
-            </form>
-        </div>
-
-        <!-- Login Form -->
-        <div class="form-container sign-in-container">
-            <form action="#" onsubmit="handleLogin(event)">
-                <h1>Masuk ke Panel</h1>
-                <div class="input-group">
-                    <input type="text" placeholder="Nama Pengguna" required autocomplete="username">
-                    <i class="fa-solid fa-user"></i>
-                </div>
-                <div class="input-group">
-                    <input type="password" placeholder="Kata Sandi" required autocomplete="current-password">
-                    <i class="fa-solid fa-lock"></i>
-                </div>
-                <a href="#" class="forgot">Lupa Kata Sandi?</a>
-                <button type="submit">Masuk Sekarang</button>
-                <p>atau masuk dengan platform sosial</p>
-                <div class="socials">
-                    <a href="#" title="Google"><i class="fa-brands fa-google"></i></a>
-                    <a href="#" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-                    <a href="#" title="GitHub"><i class="fa-brands fa-github"></i></a>
-                    <a href="#" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-                </div>
-                <div class="security-notice">
-                    <i class="fa-solid fa-shield"></i> Sistem keamanan multi-layer aktif
-                </div>
-            </form>
-        </div>
-
-        <!-- Overlay Panels -->
-        <div class="overlay-container">
-            <div class="overlay">
-                <div class="overlay-panel overlay-left">                    <h1>Selamat Datang Kembali!</h1>
-                    <p>Sudah punya akun admin?</p>
-                    <button class="ghost" id="desktopSignIn">Masuk ke Panel</button>
-                </div>
-                <div class="overlay-panel overlay-right">
-                    <h1>Halo, Calon Admin!</h1>
-                    <p>Belum punya akses?</p>
-                    <button class="ghost" id="desktopSignUp">Daftar Sekarang</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- CMS Footer Desktop -->
-        <div class="cms-footer">
-            &copy; 2024 CMS Admin Panel • <a href="#">Kebijakan Privasi</a> • <a href="#">Syarat Layanan</a> • <a href="#">Bantuan</a>
-        </div>
-    </div>
-
-    <!-- ================= MOBILE STRUCTURE ================= -->
-    <div class="mobile-container">
-        <div class="mobile-tabs">
-            <button class="active" data-target="mobileLogin">
-                <i class="fa-solid fa-right-to-bracket"></i> Masuk
-            </button>
-            <button data-target="mobileRegister">
-                <i class="fa-solid fa-user-plus"></i> Daftar
-            </button>
-        </div>
-
-        <div class="mobile-forms">
-            <!-- Mobile Login Form -->
-            <div class="mobile-form active" id="mobileLogin">
-                <h1><i class="fa-solid fa-right-to-bracket"></i> Masuk ke Panel</h1>
-                <div class="input-group">
-                    <input type="text" placeholder="Nama Pengguna" required autocomplete="username">
-                    <i class="fa-solid fa-user"></i>
-                </div>
-                <div class="input-group">
-                    <input type="password" placeholder="Kata Sandi" required autocomplete="current-password">
-                    <i class="fa-solid fa-lock"></i>
-                </div>
-                <a href="#" class="forgot" style="display:block; text-align:right; margin-bottom:15px;">Lupa Kata Sandi?</a>
-                <button type="submit" onclick="handleLogin(event)">Masuk Sekarang</button>
-                <p>atau masuk dengan platform sosial</p>
-                <div class="socials">
-                    <a href="#" title="Google"><i class="fa-brands fa-google"></i></a>
-                    <a href="#" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-                    <a href="#" title="GitHub"><i class="fa-brands fa-github"></i></a>
-                    <a href="#" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-                </div>                <div class="security-notice">
-                    <i class="fa-solid fa-shield"></i> Koneksi aman terenkripsi
-                </div>
-            </div>
-
-            <!-- Mobile Register Form -->
-            <div class="mobile-form" id="mobileRegister">
-                <h1><i class="fa-solid fa-user-plus"></i> Buat Akun Baru</h1>
-                <div class="input-group">
-                    <input type="text" placeholder="Nama Pengguna" required autocomplete="username">
-                    <i class="fa-solid fa-user"></i>
-                </div>
-                <div class="input-group">
-                    <input type="email" placeholder="Alamat Email" required autocomplete="email">
+                    <input type="email" id="regEmail" placeholder="Alamat Email" required autocomplete="email">
                     <i class="fa-solid fa-envelope"></i>
                 </div>
                 <div class="input-group">
-                    <input type="password" placeholder="Kata Sandi" required autocomplete="new-password" minlength="8">
+                    <input type="password" id="regPassword" placeholder="Kata Sandi" required autocomplete="new-password" minlength="6">
                     <i class="fa-solid fa-lock"></i>
                 </div>
-                <button type="submit" onclick="handleRegister(event)">Daftar Sekarang</button>
-                <p>atau daftar dengan platform sosial</p>
-                <div class="socials">
-                    <a href="#" title="Google"><i class="fa-brands fa-google"></i></a>
-                    <a href="#" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-                    <a href="#" title="GitHub"><i class="fa-brands fa-github"></i></a>
-                    <a href="#" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-                </div>
+                <button type="submit" class="submit-btn">Daftar Sekarang</button>
                 <div class="security-notice">
-                    <i class="fa-solid fa-circle-check"></i> Verifikasi email diperlukan
+                    <i class="fa-solid fa-circle-check"></i> Data tersimpan lokal di browser Anda
                 </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard Container -->
+    <div class="dashboard-container" id="dashboardContainer">
+        <div class="dashboard-header">
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">A</div>
+                <div>
+                    <div style="font-weight: 600;" id="userName">Admin</div>
+                    <div style="font-size: 12px; opacity: 0.8;">Administrator</div>
+                </div>
+            </div>
+            <button class="logout-btn" onclick="handleLogout()">
+                <i class="fa-solid fa-right-from-bracket"></i> Keluar
+            </button>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card content">
+                <div class="stat-icon"><i class="fa-solid fa-folder-open"></i></div>
+                <div class="stat-number" id="contentCount">0</div>
+                <div class="stat-label">File Content</div>
+                <div class="stat-detail" id="contentDetail">Memuat...</div>
+            </div>
+            <div class="stat-card post">
+                <div class="stat-icon"><i class="fa-solid fa-file-lines"></i></div>
+                <div class="stat-number" id="postCount">0</div>
+                <div class="stat-label">File Post</div>
+                <div class="stat-detail" id="postDetail">Memuat...</div>
+            </div>
+            <div class="stat-card img">
+                <div class="stat-icon"><i class="fa-solid fa-images"></i></div>
+                <div class="stat-number" id="imgCount">0</div>
+                <div class="stat-label">File Gambar</div>
+                <div class="stat-detail" id="imgDetail">Memuat...</div>
             </div>
         </div>
 
-        <!-- CMS Footer Mobile -->
-        <div class="cms-footer" style="position: relative; margin-top: 20px;">
-            &copy; 2024 CMS Admin Panel • <a href="#">Privasi</a> • <a href="#">Bantuan</a>
+        <!-- Content Section -->
+        <div class="content-section">
+            <div class="section-title">
+                <i class="fa-solid fa-folder-open"></i>
+                <span>Content Files</span>
+            </div>
+            <div class="content-grid" id="contentGrid">
+                <div class="loading-spinner"><div class="spinner"></div></div>
+            </div>
+        </div>
+
+        <!-- Post Section -->
+        <div class="content-section">
+            <div class="section-title">
+                <i class="fa-solid fa-file-lines"></i>
+                <span>Post Files</span>
+            </div>
+            <div class="content-grid" id="postGrid">
+                <div class="loading-spinner"><div class="spinner"></div></div>
+            </div>
+        </div>
+
+        <!-- Image Section -->
+        <div class="content-section">
+            <div class="section-title">
+                <i class="fa-solid fa-images"></i>
+                <span>Image Gallery</span>
+            </div>
+            <div class="content-grid" id="imgGrid">
+                <div class="loading-spinner"><div class="spinner"></div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Content View -->
+    <div class="modal-overlay" id="contentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Detail Konten</h2>
+                <button class="modal-close" onclick="closeModal()"><i class="fa-solid fa-times"></i></button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Content will be injected here -->
+            </div>
         </div>
     </div>
 
     <script>
-        // ================= DESKTOP JS =================
-        const desktopContainer = document.getElementById('desktopContainer');
-        const desktopSignUpBtn = document.getElementById('desktopSignUp');
-        const desktopSignInBtn = document.getElementById('desktopSignIn');
+        // ================= AUTHENTICATION SYSTEM =================
+        const USERS_KEY = 'cms_admin_users';
+        const CURRENT_USER_KEY = 'cms_current_user';
 
-        desktopSignUpBtn.addEventListener('click', () => {
-            desktopContainer.classList.add('right-panel-active');
-        });
-        desktopSignInBtn.addEventListener('click', () => {            desktopContainer.classList.remove('right-panel-active');
-        });
-
-        // ================= MOBILE JS =================
-        const mobileTabs = document.querySelectorAll('.mobile-tabs button');
-        const mobileForms = document.querySelectorAll('.mobile-form');
-
-        mobileTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const targetId = tab.getAttribute('data-target');
-                
-                // Remove active from current
-                mobileTabs.forEach(t => t.classList.remove('active'));
-                
-                // Add active to clicked tab
-                tab.classList.add('active');
-                
-                // Switch forms with scale animation
-                mobileForms.forEach(form => {
-                    if (form.id === targetId) {
-                        form.classList.add('active');
-                    } else {
-                        form.classList.remove('active');
-                    }
-                });
-            });
-        });
-
-        // ================= FORM HANDLERS (CMS Style) =================
-        function handleLogin(e) {
-            e.preventDefault();
-            const btn = e.target.querySelector('button[type="submit"]');
-            const originalText = btn.innerHTML;
-            
-            // Loading animation
-            btn.classList.add('loading');
-            btn.disabled = true;
-            
-            // Simulate CMS login process
-            setTimeout(() => {
-                // Reset button
-                btn.classList.remove('loading');
-                btn.disabled = false;
-                
-                // CMS-style notification (bisa diganti dengan toast library)
-                alert('🔐 Memproses login...\n\n[CMS] Silakan cek kredensial Anda.');
-                
-                // Di production: redirect ke dashboard
-                // window.location.href = '/admin/dashboard';
-            }, 2000);        }
-
-        function handleRegister(e) {
-            e.preventDefault();
-            const btn = e.target.querySelector('button[type="submit"]');
-            
-            // Loading animation
-            btn.classList.add('loading');
-            btn.disabled = true;
-            
-            // Simulate CMS registration
-            setTimeout(() => {
-                btn.classList.remove('loading');
-                btn.disabled = false;
-                
-                alert('✅ Pendaftaran berhasil!\n\n[CMS] Silakan cek email untuk verifikasi akun.');
-                
-                // Optional: switch to login form on desktop
-                if (window.innerWidth > 768) {
-                    desktopContainer.classList.remove('right-panel-active');
-                }
-            }, 2000);
+        function getUsers() {
+            const users = localStorage.getItem(USERS_KEY);
+            return users ? JSON.parse(users) : [];
         }
 
-        // ================= EXTRA: Keyboard Support =================
-        document.addEventListener('DOMContentLoaded', () => {
-            // Enter key submit support
-            document.querySelectorAll('input').forEach(input => {
-                input.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        const form = e.target.closest('form');
-                        if (form) form.requestSubmit();
-                    }
-                });
-            });
+        function saveUsers(users) {
+            localStorage.setItem(USERS_KEY, JSON.stringify(users));
+        }
 
-            // Responsive: auto-switch on resize (optional UX improvement)
-            let resizeTimer;
-            window.addEventListener('resize', () => {
-                clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(() => {
-                    // Force re-check visibility if needed
-                    if (window.innerWidth <= 768) {
-                        desktopContainer.classList.remove('right-panel-active');
-                    }
-                }, 250);
+        function getCurrentUser() {
+            return localStorage.getItem(CURRENT_USER_KEY);
+        }
+
+        function setCurrentUser(username) {
+            localStorage.setItem(CURRENT_USER_KEY, username);
+        }
+
+        function clearCurrentUser() {
+            localStorage.removeItem(CURRENT_USER_KEY);
+        }
+
+        // Tab Switching
+        document.querySelectorAll('.login-tabs button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.login-tabs button').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                document.querySelectorAll('.login-form').forEach(f => f.classList.remove('active'));
+                document.getElementById(btn.dataset.target).classList.add('active');
             });
         });
-        // ================= SECURITY: Basic Input Sanitization Demo =================
-        document.querySelectorAll('input').forEach(input => {
-            input.addEventListener('blur', function() {
-                // Simple trim to prevent whitespace abuse
-                this.value = this.value.trim();
+
+        // Handle Login
+        function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const btn = e.target.querySelector('.submit-btn');
+
+            btn.classList.add('loading');
+            btn.disabled = true;
+
+            setTimeout(() => {
+                const users = getUsers();
+                const user = users.find(u => u.username === username && u.password === password);
+
+                if (user) {
+                    setCurrentUser(username);
+                    showDashboard();
+                } else {
+                    alert('❌ Username atau password salah!\n\n[CMS] Silakan cek kembali kredensial Anda.');
+                }
+
+                btn.classList.remove('loading');
+                btn.disabled = false;
+            }, 1500);
+        }
+
+        // Handle Register
+        function handleRegister(e) {
+            e.preventDefault();
+            const username = document.getElementById('regUsername').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const btn = e.target.querySelector('.submit-btn');
+
+            btn.classList.add('loading');
+            btn.disabled = true;
+
+            setTimeout(() => {
+                const users = getUsers();
+                
+                if (users.find(u => u.username === username)) {
+                    alert('❌ Username sudah terdaftar!\n\n[CMS] Silakan gunakan username lain.');
+                    btn.classList.remove('loading');
+                    btn.disabled = false;
+                    return;
+                }
+
+                users.push({ username, email, password, registeredAt: new Date().toISOString() });
+                saveUsers(users);
+                setCurrentUser(username);
+
+                alert('✅ Pendaftaran berhasil!\n\n[CMS] Akun Anda telah dibuat. Silakan login.');
+                
+                // Switch to login form
+                document.querySelectorAll('.login-tabs button')[0].click();
+                document.getElementById('loginUsername').value = username;
+                
+                btn.classList.remove('loading');
+                btn.disabled = false;
+            }, 1500);
+        }
+
+        // Handle Logout
+        function handleLogout() {
+            if (confirm('Apakah Anda yakin ingin keluar?')) {
+                clearCurrentUser();
+                showLogin();
+            }
+        }
+
+        // Show Dashboard
+        function showDashboard() {
+            const username = getCurrentUser();
+            if (!username) {
+                showLogin();
+                return;
+            }
+
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('dashboardContainer').style.display = 'block';
+            document.getElementById('userName').textContent = username;
+            document.getElementById('userAvatar').textContent = username.charAt(0).toUpperCase();
+
+            loadDashboardData();
+        }
+
+        // Show Login
+        function showLogin() {
+            document.getElementById('loginContainer').style.display = 'flex';
+            document.getElementById('dashboardContainer').style.display = 'none';
+        }
+
+        // Check auth on load
+        document.addEventListener('DOMContentLoaded', () => {
+            if (getCurrentUser()) {
+                showDashboard();
+            }
+        });
+
+        // ================= DASHBOARD DATA LOADING =================
+        async function loadDashboardData() {
+            try {
+                // Load content files
+                const contentResponse = await fetch('../content/posts-index.json');
+                const contentData = await contentResponse.json();
+                
+                // Load gallery
+                const galleryResponse = await fetch('../content/galeri.json');
+                const galleryData = await galleryResponse.json();
+
+                // Count posts (markdown files)
+                const postResponse = await fetch('../post/');
+                const postText = await postResponse.text();
+                const postFiles = (postText.match(/\.md"/g) || []).length;
+
+                // Count images
+                const imgResponse = await fetch('../img/');
+                const imgText = await imgResponse.text();
+                const imgFiles = (imgText.match(/\.(jpg|jpeg|png|gif|webp)"/gi) || []).length;
+
+                // Update stats
+                document.getElementById('contentCount').textContent = galleryData.length;
+                document.getElementById('contentDetail').textContent = `${galleryData.length} item galeri`;
+                
+                document.getElementById('postCount').textContent = postFiles || contentData.length;
+                document.getElementById('postDetail').textContent = `${contentData.length} posts indexed`;
+                
+                document.getElementById('imgCount').textContent = imgFiles;
+                document.getElementById('imgDetail').textContent = `${imgFiles} gambar ditemukan`;
+
+                // Render content grid (gallery)
+                renderContentGrid(galleryData);
+                
+                // Render post grid
+                renderPostGrid(contentData);
+                
+                // Render image grid (we'll list common images)
+                renderImgGrid(imgFiles);
+
+            } catch (error) {
+                console.error('Error loading data:', error);
+                document.getElementById('contentDetail').textContent = 'Gagal memuat data';
+                document.getElementById('postDetail').textContent = 'Gagal memuat data';
+                document.getElementById('imgDetail').textContent = 'Gagal memuat data';
+            }
+        }
+
+        function renderContentGrid(data) {
+            const grid = document.getElementById('contentGrid');
+            grid.innerHTML = '';
+
+            data.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'content-item';
+                card.onclick = () => openContentModal(item, 'gallery');
+                
+                card.innerHTML = `
+                    <img src="../${item.image}" alt="${item.title}" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 300 200%22><rect fill=%22%23ddd%22 width=%22300%22 height=%22200%22/><text fill=%22%23999%22 x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22>No Image</text></svg>'">
+                    <div class="view-btn"><i class="fa-solid fa-eye"></i></div>
+                    <h3>${item.title}</h3>
+                    <p>${item.description}</p>
+                    <div class="meta">
+                        <span><i class="fa-regular fa-calendar"></i> ${item.date}</span>
+                        <span>Galeri</span>
+                    </div>
+                `;
+                grid.appendChild(card);
             });
+        }
+
+        function renderPostGrid(data) {
+            const grid = document.getElementById('postGrid');
+            grid.innerHTML = '';
+
+            data.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'post-item';
+                card.onclick = () => openContentModal(item, 'post');
+                
+                card.innerHTML = `
+                    <h3>${item.title}</h3>
+                    <div class="post-meta">
+                        <span class="badge">${item.type}</span>
+                        <span><i class="fa-regular fa-calendar"></i> ${item.date}</span>
+                        <span><i class="fa-regular fa-user"></i> ${item.author}</span>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function renderImgGrid(count) {
+            const grid = document.getElementById('imgGrid');
+            grid.innerHTML = '';
+
+            // List of known images from the folder
+            const knownImages = [
+                'IMG-20260513-WA0003-1.jpg',
+                'IMG-20260513-WA0017.jpg',
+                'IMG-20260513-WA0031.jpg',
+                'IMG-20260518-WA0001.jpg',
+                'IMG-20260518-WA0009.jpg',
+                'IMG-20260518-WA0021.jpg',
+                'IMG-20260518-WA0026.jpg',
+                'IMG-20260518-WA0035.jpg',
+                'IMG-20260518-WA0036.jpg',
+                'IMG-20260518-WA0052.jpg',
+                'IMG-20260518-WA0072.jpg',
+                'IMG-20260520-WA0007(1).jpg',
+                'IMG-20260522-WA0006.jpg',
+                'IMG-20260525-WA0002.jpg',
+                'IMG-20260525-WA0041.jpg',
+                'IMG-20260525-WA0061.jpg',
+                'IMG-20260525-WA0107.jpg',
+                'IMG_20260523_113838-1.jpg',
+                'IMG_20260525_121813.jpg',
+                'IMG_20260525_122029.jpg',
+                'IMG_20260528_160352.png'
+            ];
+
+            knownImages.forEach((imgName) => {
+                const card = document.createElement('div');
+                card.className = 'img-item';
+                card.onclick = () => openImageModal(imgName);
+                
+                card.innerHTML = `
+                    <img src="../img/${imgName}" alt="${imgName}" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 300 200%22><rect fill=%22%23ddd%22 width=%22300%22 height=%22200%22/><text fill=%22%23999%22 x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22>No Preview</text></svg>'">
+                    <div class="img-name">${imgName}</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // ================= MODAL FUNCTIONS =================
+        function openContentModal(item, type) {
+            const modal = document.getElementById('contentModal');
+            const title = document.getElementById('modalTitle');
+            const body = document.getElementById('modalBody');
+
+            if (type === 'gallery') {
+                title.textContent = item.title;
+                body.innerHTML = `
+                    <img src="../${item.image}" alt="${item.title}">
+                    <h3>${item.title}</h3>
+                    <p>${item.description}</p>
+                    <div class="modal-meta">
+                        <span><i class="fa-regular fa-calendar"></i> ${item.date}</span>
+                        <span><i class="fa-solid fa-folder"></i> Type: Galeri</span>
+                    </div>
+                `;
+            } else if (type === 'post') {
+                title.textContent = item.title;
+                body.innerHTML = `
+                    <img src="../${item.image}" alt="${item.title}" style="max-height: 300px; object-fit: contain;">
+                    <h3>${item.title}</h3>
+                    <p><strong>Author:</strong> ${item.author}</p>
+                    <p><strong>Type:</strong> ${item.type}</p>
+                    <div class="modal-meta">
+                        <span><i class="fa-regular fa-calendar"></i> ${item.date}</span>
+                        <span><i class="fa-solid fa-file-lines"></i> File: ${item.filename}</span>
+                    </div>
+                `;
+            }
+
+            modal.classList.add('active');
+        }
+
+        function openImageModal(imgName) {
+            const modal = document.getElementById('contentModal');
+            const title = document.getElementById('modalTitle');
+            const body = document.getElementById('modalBody');
+
+            title.textContent = 'Preview Gambar';
+            body.innerHTML = `
+                <img src="../img/${imgName}" alt="${imgName}">
+                <h3>${imgName}</h3>
+                <div class="modal-meta">
+                    <span><i class="fa-solid fa-image"></i> Location: /img/</span>
+                    <span><i class="fa-solid fa-ruler"></i> Original Size</span>
+                </div>
+            `;
+
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('contentModal').classList.remove('active');
+        }
+
+        // Close modal on outside click
+        document.getElementById('contentModal').addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal-overlay')) {
+                closeModal();
+            }
+        });
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
         });
     </script>
 </body>
