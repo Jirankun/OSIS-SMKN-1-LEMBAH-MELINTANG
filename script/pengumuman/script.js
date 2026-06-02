@@ -12,6 +12,33 @@ var _pengumumanPageSize = 12;
   }
 })();
 
+// Helper: Resolve image path from page/pengumuman/ depth
+function resolvePageImage(path) {
+  if (!path) return null;
+  if (path.startsWith('http') || path.startsWith('//') || path.startsWith('/') || path.startsWith('.')) {
+    return path;
+  }
+  return `../../${path}`;
+}
+
+// Helper: Resolve image path to absolute URL for OG tags (from page/pengumuman/ depth)
+function resolveImageForOG(path) {
+  if (!path) return null;
+  if (path.startsWith('http') || path.startsWith('//')) {
+    return path;
+  }
+  const baseUrl = window.location.origin;
+  // Handle relative paths like ../../img/...
+  if (path.startsWith('../../')) {
+    return baseUrl + '/' + path.replace('../../', '');
+  }
+  // Handle paths like img/...
+  if (path.startsWith('img/')) {
+    return baseUrl + '/' + path;
+  }
+  return baseUrl + '/' + path;
+}
+
 // Init
 document.addEventListener('DOMContentLoaded', async () => {
   
@@ -281,15 +308,16 @@ async function loadMarkdownContent(filename) {
           <span style="display:flex;align-items:center;gap:0.4rem"><i class="fa-regular fa-calendar" style="color:var(--accent)"></i>${formatDateID(frontmatter.date)}</span>
           <span style="display:flex;align-items:center;gap:0.4rem"><i class="fa-solid fa-user" style="color:var(--accent)"></i>${frontmatter.author || 'Admin'}</span>
         </div>
+        ${frontmatter.image ? `<img src="${resolvePageImage(frontmatter.image)}" alt="${frontmatter.title}" style="width:100%;max-height:400px;object-fit:cover;border-radius:var(--radius);margin-top:1rem;box-shadow:var(--shadow)" onerror="this.style.display='none'">` : ''}
       </div>
       <div class="pengumuman-body">${htmlContent}</div>
     `;
     
-    // ✅ Update Open Graph tags dynamically dengan judul dan deskripsi dari MD
-    // Image null = ambil dari config.js (SITE_CONFIG.school.heroBg)
+    // ✅ Update Open Graph tags dynamically dengan judul, deskripsi, DAN GAMBAR dari MD
     const ogDescription = frontmatter.description || body.substring(0, 160).replace(/[#*`]/g, '').trim();
+    const ogImage = frontmatter.image ? resolveImageForOG(frontmatter.image) : null;
     if (typeof updateOpenGraphTags === 'function') {
-      updateOpenGraphTags(frontmatter.title, ogDescription, null);
+      updateOpenGraphTags(frontmatter.title, ogDescription, ogImage);
     }
     
     // Init lightbox untuk gambar di konten
