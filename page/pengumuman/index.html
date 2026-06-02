@@ -48,9 +48,6 @@
         return baseUrl + "/" + path;
       }
       
-      // Nilai OG Image dari config.js (heroBg)
-      const CONFIG_HERO_BG = 'img/asset/super.jpeg';
-      
       const params = new URLSearchParams(window.location.search);
       const fileParam = params.get('file');
 
@@ -75,9 +72,30 @@
             const descRaw = text.replace(/---[\s\S]*?---/, '').replace(/[#*`\[\]]/g, '').substring(0, 160).trim();
             const description = descRaw || frontmatter.description || 'Baca pengumuman lengkap dari OSIS SMKN 1 Lembah Melintang.';
             
+            // ✅ Resolve gambar ke absolute URL untuk OG tags
+            let ogImage = null;
+            if (frontmatter.image) {
+              const baseUrl = window.location.origin;
+              if (frontmatter.image.startsWith('http') || frontmatter.image.startsWith('//')) {
+                ogImage = frontmatter.image;
+              } else if (frontmatter.image.startsWith('/')) {
+                ogImage = baseUrl + frontmatter.image;
+              } else {
+                // Relative path dari page/pengumuman/: img/... -> /img/...
+                ogImage = baseUrl + '/' + frontmatter.image;
+              }
+            }
+            
+            // Extract date for structured data
+            const pubDate = frontmatter.date || new Date().toISOString().split('T')[0];
+            const authorName = frontmatter.author || 'Admin OSIS';
+            
+            // Build canonical URL for this article
+            const canonicalUrl = window.location.href.split('?')[0] + '?file=' + encodeURIComponent(safeFile);
+            
             // Update Meta Tags menggunakan fungsi dari config.js jika tersedia
             if (typeof updateOpenGraphTags === 'function') {
-              updateOpenGraphTags(title, description, null); // null = tidak ada gambar
+              updateOpenGraphTags(title, description, ogImage);
             } else {
               // Fallback inline jika config.js belum load
               const setMeta = (property, content, name = null) => {
@@ -94,13 +112,69 @@
               setMeta('og:title', title);
               setMeta('og:description', description);
               setMeta('og:type', 'article');
-              setMeta('og:url', window.location.href);
-              setMeta('twitter:card', 'summary', 'twitter:card');
+              setMeta('og:url', canonicalUrl);
+              // Set og:image jika ada
+              if (ogImage) {
+                setMeta('og:image', ogImage);
+                setMeta('og:image:alt', title);
+                setMeta('twitter:card', 'summary_large_image', 'twitter:card');
+                setMeta('twitter:image', ogImage, 'twitter:image');
+              } else {
+                setMeta('twitter:card', 'summary', 'twitter:card');
+              }
               setMeta('twitter:title', title, 'twitter:title');
               setMeta('twitter:description', description, 'twitter:description');
             }
             
+            // ✅ TAMBAHKAN CANONICAL URL UNTUK SEO
+            let canonicalLink = document.querySelector('link[rel="canonical"]');
+            if (!canonicalLink) {
+              canonicalLink = document.createElement('link');
+              canonicalLink.setAttribute('rel', 'canonical');
+              document.head.appendChild(canonicalLink);
+            }
+            canonicalLink.setAttribute('href', canonicalUrl);
             
+            // ✅ TAMBAHKAN STRUCTURED DATA (JSON-LD) UNTUK SEARCH ENGINE
+            const structuredData = {
+              "@context": "https://schema.org",
+              "@type": "NewsArticle",
+              "headline": title,
+              "description": description,
+              "datePublished": pubDate,
+              "dateModified": pubDate,
+              "author": {
+                "@type": "Person",
+                "name": authorName
+              },
+              "publisher": {
+                "@type": "Organization",
+                "name": "OSIS SMKN 1 LEMBAH MELINTANG",
+                "logo": {
+                  "@type": "ImageObject",
+                  "url": resolveImage('img/asset/logo.webp')
+                }
+              },
+              "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": canonicalUrl
+              },
+              "url": canonicalUrl
+            };
+            
+            // Hapus structured data lama jika ada
+            const oldScript = document.getElementById('news-article-schema');
+            if (oldScript) oldScript.remove();
+            
+            // Inject structured data baru
+            const schemaScript = document.createElement('script');
+            schemaScript.type = 'application/ld+json';
+            schemaScript.id = 'news-article-schema';
+            schemaScript.textContent = JSON.stringify(structuredData);
+            document.head.appendChild(schemaScript);
+            
+            // ✅ UPDATE TITLE TAG BROWSER
+            document.title = title + ' - Pengumuman OSIS SMKN 1 LEMBAH MELINTANG';
           })
           .catch(err => {});
       }
