@@ -22,6 +22,24 @@ function resolvePageImage(path) {
   return `../../${path}`;
 }
 
+// Helper: Resolve image path to absolute URL for OG tags (from page/berita/ depth)
+function resolveImageForOG(path) {
+  if (!path) return null;
+  if (path.startsWith('http') || path.startsWith('//')) {
+    return path;
+  }
+  const baseUrl = window.location.origin;
+  // Handle relative paths like ../../img/...
+  if (path.startsWith('../../')) {
+    return baseUrl + '/' + path.replace('../../', '');
+  }
+  // Handle paths like img/...
+  if (path.startsWith('img/')) {
+    return baseUrl + '/' + path;
+  }
+  return baseUrl + '/' + path;
+}
+
 // Init
 document.addEventListener('DOMContentLoaded', async () => {
   
@@ -303,7 +321,7 @@ async function loadMarkdownContent(filename) {
     // Render layout
     contentEl.innerHTML = `
       <div style="border-bottom:2px solid var(--gray-100);padding-bottom:1.5rem;margin-bottom:2rem">
-        <h1 style="font-family:var(--font-display);font-size:1.8rem;color:var(--gray-900);margin-bottom:0.75rem;line-height:1.3">${frontmatter.title || 'Tanpa Judul'}</h1>
+        <h2 style="font-family:var(--font-display);font-size:1.8rem;color:var(--gray-900);margin-bottom:0.75rem;line-height:1.3">${frontmatter.title || 'Tanpa Judul'}</h2>
         <div style="display:flex;gap:1.5rem;flex-wrap:wrap;color:var(--gray-500);font-size:0.85rem">
           <span style="display:flex;align-items:center;gap:0.4rem"><i class="fa-regular fa-calendar" style="color:var(--primary)"></i>${formatDateID(frontmatter.date)}</span>
           <span style="display:flex;align-items:center;gap:0.4rem"><i class="fa-solid fa-user" style="color:var(--primary)"></i>${frontmatter.author || 'Admin'}</span>
@@ -313,12 +331,66 @@ async function loadMarkdownContent(filename) {
       <div class="markdown-body">${htmlContent}</div>
     `;
     
-    // ✅ Update Open Graph tags dynamically dengan judul dan deskripsi dari MD
-    // Image null = ambil dari config.js (SITE_CONFIG.school.heroBg)
+    // ✅ Update Open Graph tags dynamically dengan judul, deskripsi, DAN GAMBAR dari MD
     const ogDescription = frontmatter.description || body.substring(0, 160).replace(/[#*`]/g, '').trim();
+    const ogImage = frontmatter.image ? resolveImageForOG(frontmatter.image) : null; // Resolve gambar ke absolute URL
     if (typeof updateOpenGraphTags === 'function') {
-      updateOpenGraphTags(frontmatter.title, ogDescription, null);
+      updateOpenGraphTags(frontmatter.title, ogDescription, ogImage);
     }
+    
+    // ✅ TAMBAHKAN CANONICAL URL & STRUCTURED DATA SAAT KONTEN DIMUAT
+    // Ini backup jika script di head belum selesai load
+    const pubDate = frontmatter.date || new Date().toISOString().split('T')[0];
+    const authorName = frontmatter.author || 'Admin OSIS';
+    const canonicalUrl = window.location.href.split('?')[0] + '?file=' + encodeURIComponent(filename);
+    
+    // Tambah canonical link jika belum ada
+    let canonicalLink = document.querySelector('link[rel="canonical"]');
+    if (!canonicalLink) {
+      canonicalLink = document.createElement('link');
+      canonicalLink.setAttribute('rel', 'canonical');
+      document.head.appendChild(canonicalLink);
+    }
+    canonicalLink.setAttribute('href', canonicalUrl);
+    
+    // Structured data untuk SEO
+    const structuredData = {
+      "@context": "https://schema.org",
+      "@type": "NewsArticle",
+      "headline": frontmatter.title || 'Tanpa Judul',
+      "description": ogDescription,
+      "datePublished": pubDate,
+      "dateModified": pubDate,
+      "author": {
+        "@type": "Person",
+        "name": authorName
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "OSIS SMKN 1 LEMBAH MELINTANG",
+        "logo": {
+          "@type": "ImageObject",
+          "url": resolvePageImage('img/asset/logo.webp')
+        }
+      },
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": canonicalUrl
+      },
+      "url": canonicalUrl
+    };
+    
+    const oldScript = document.getElementById('news-article-schema');
+    if (oldScript) oldScript.remove();
+    
+    const schemaScript = document.createElement('script');
+    schemaScript.type = 'application/ld+json';
+    schemaScript.id = 'news-article-schema';
+    schemaScript.textContent = JSON.stringify(structuredData);
+    document.head.appendChild(schemaScript);
+    
+    // Update title browser
+    document.title = (frontmatter.title || 'Berita') + ' - Berita OSIS SMKN 1 LEMBAH MELINTANG';
     
     // Init lightbox untuk gambar di konten
     initContentLightbox();

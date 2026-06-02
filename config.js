@@ -347,18 +347,54 @@ function updateOpenGraphTags(title, description, imageUrl) {
     el.setAttribute('content', content);
   };
 
+  // Resolve image path to absolute URL
+  const resolveImageUrl = (path) => {
+    if (!path) return null;
+    if (path.startsWith('http') || path.startsWith('//')) {
+      return path;
+    }
+    const baseUrl = window.location.origin;
+    if (path.startsWith('/')) {
+      return baseUrl + path;
+    }
+    // Relative path from page/berita/
+    if (path.startsWith('../../')) {
+      return baseUrl + '/' + path.replace('../../', '');
+    }
+    return baseUrl + '/' + path;
+  };
+
   // Set basic OG tags
   setMeta('og:title', title || SITE_CONFIG.school.name);
   setMeta('og:description', description || SITE_CONFIG.school.tagline);
   setMeta('og:type', 'article');
   
-  // Gambar preview dihilangkan untuk WhatsApp (tidak ada og:image)
+  // ✅ Set og:image jika ada imageUrl
+  if (imageUrl) {
+    const resolvedImg = resolveImageUrl(imageUrl);
+    setMeta('og:image', resolvedImg);
+    setMeta('og:image:alt', title || 'Preview Berita OSIS SMKN 1 LEMBAH MELINTANG');
+    
+    // Twitter Card dengan gambar
+    setMeta('twitter:card', 'summary_large_image', 'twitter:card');
+    setMeta('twitter:image', resolvedImg, 'twitter:image');
+  } else {
+    // Fallback ke heroBg dari config jika tidak ada gambar spesifik
+    const defaultImg = resolveImageUrl(SITE_CONFIG.school.heroBg);
+    setMeta('og:image', defaultImg);
+    setMeta('og:image:alt', SITE_CONFIG.school.osis);
+    
+    // Twitter Card tanpa gambar (summary only)
+    setMeta('twitter:card', 'summary', 'twitter:card');
+    // Hapus twitter:image jika ada
+    const twImg = document.querySelector('meta[name="twitter:image"]');
+    if (twImg) twImg.remove();
+  }
   
   setMeta('og:url', window.location.href);
   setMeta('og:site_name', SITE_CONFIG.school.osis);
   
-  // Set Twitter Card tags (tanpa image)
-  setMeta('twitter:card', 'summary', 'twitter:card');
+  // Set Twitter Card tags
   setMeta('twitter:title', title || SITE_CONFIG.school.name, 'twitter:title');
   setMeta('twitter:description', description || SITE_CONFIG.school.tagline, 'twitter:description');
 }
