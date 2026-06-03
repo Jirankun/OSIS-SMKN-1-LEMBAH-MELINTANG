@@ -40,5 +40,14 @@
     "date": "2026-05-25",
     "description": "Foto bersama semua pengurus OSIS baru yang terpilih untuk masuk dalam video iklan",
     "image": "img/IMG-20260525-WA0107.jpg"
+  },
+  {
+    "title": "Upacara Hari lahir pancasila",
+    "description": "Upacara hari lahir pancasila yang di selenggarakan oleh OSIS SMKN 1 LEMBAH MELINTANG",
+    "date": "2026-06-02",
+    "image": "img/motion_photo_19023913590458113.jpg",
+    "syncToGithub": "on",
+    "updatedAt": "2026-06-03T00:29:28.642Z",
+    "id": 1780446568642
   }
 ]
