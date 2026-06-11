@@ -43,11 +43,14 @@
   },
   {
     "title": "Upacara Hari lahir pancasila",
-    "description": "Upacara hari lahir pancasila yang di selenggarakan oleh OSIS SMKN 1 LEMBAH MELINTANG",
     "date": "2026-06-02",
-    "image": "img/motion_photo_19023913590458113.jpg",
-    "syncToGithub": "on",
-    "updatedAt": "2026-06-03T00:29:28.642Z",
-    "id": 1780446568642
+    "description": "Upacara hari lahir pancasila yang di selenggarakan oleh OSIS SMKN 1 LEMBAH MELINTANG",
+    "image": "img/motion_photo_19023913590458113.jpg"
+  },
+  {
+    "title": "Foto bersama anggota OSIS dan pembina OSIS SMKN 1 Lembah Melintang",
+    "date": "2026-06-11",
+    "description": "Foto bersama anggota OSIS dan pembina OSIS setelah pada acara class meeting",
+    "image": "img/IMG-20260611-WA0009.jpg"
   }
 ]
