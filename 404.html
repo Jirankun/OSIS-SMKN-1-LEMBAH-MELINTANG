@@ -1,521 +1,130 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TETRIS BANGSAT - MOBILE EDITION</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
-        }
-        html, body {
-            background: #0a0a0a;
-            color: #fff;
-            font-family: 'Courier New', monospace;
-            height: 100%;
-            overflow: hidden;
-            touch-action: manipulation;
-        }
-        body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px;
-            background-image: radial-gradient(circle, #1a1a1a 0%, #000 100%);
-        }
-        h1 {
-            color: #ff0055;
-            text-shadow: 0 0 10px #ff0055, 0 0 20px #ff0055;
-            font-size: 20px;
-            letter-spacing: 3px;
-            margin-bottom: 5px;
-        }
-        .top-bar {
-            display: flex;
-            justify-content: space-around;
-            width: 100%;
-            max-width: 360px;
-            gap: 10px;
-            margin-bottom: 8px;
-        }
-        .stat-box {
-            background: #111;
-            border: 2px solid #ff0055;            padding: 6px 12px;
-            text-align: center;
-            flex: 1;
-            border-radius: 4px;
-            box-shadow: 0 0 10px rgba(255,0,85,0.3);
-        }
-        .stat-box h3 {
-            font-size: 10px;
-            color: #00ffcc;
-            text-shadow: 0 0 5px #00ffcc;
-            margin-bottom: 2px;
-        }
-        .stat-box p {
-            font-size: 16px;
-            font-weight: bold;
-            color: #fff;
-            text-shadow: 0 0 5px #fff;
-        }
-        .game-wrapper {
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        canvas {
-            background: #000;
-            border: 3px solid #ff0055;
-            box-shadow: 0 0 20px rgba(255,0,85,0.6), inset 0 0 10px rgba(0,0,0,0.8);
-            display: block;
-            max-width: 100%;
-            max-height: 55vh;
-        }
-        #game-over-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #ff0055;
-            font-size: 28px;
-            font-weight: bold;
-            text-shadow: 0 0 20px #ff0055;
-            display: none;
-            text-align: center;
-            background: rgba(0,0,0,0.85);
-            padding: 20px;
-            border: 2px solid #ff0055;
-            border-radius: 8px;
-            z-index: 10;
-        }
-        #game-over-text small {            display: block;
-            font-size: 14px;
-            color: #fff;
-            margin-top: 10px;
-        }
-        .controls {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-template-rows: repeat(2, 1fr);
-            gap: 10px;
-            width: 100%;
-            max-width: 360px;
-            margin-top: 10px;
-        }
-        .btn {
-            background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
-            color: #fff;
-            border: 2px solid #ff0055;
-            font-size: 24px;
-            font-weight: bold;
-            padding: 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            box-shadow: 0 4px 0 #550020, 0 0 10px rgba(255,0,85,0.3);
-            transition: all 0.1s;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .btn:active, .btn.pressed {
-            transform: translateY(3px);
-            box-shadow: 0 1px 0 #550020, 0 0 5px rgba(255,0,85,0.5);
-            background: linear-gradient(145deg, #ff0055, #aa0033);
-        }
-        .btn-left { grid-column: 1; grid-row: 2; }
-        .btn-down { grid-column: 2; grid-row: 2; }
-        .btn-right { grid-column: 3; grid-row: 2; }
-        .btn-rotate { grid-column: 1; grid-row: 1; }
-        .btn-drop { 
-            grid-column: 3; grid-row: 1;
-            background: linear-gradient(145deg, #ff0055, #aa0033);
-            color: #fff;
-            font-size: 16px;
-        }
-        .btn-reset {
-            grid-column: 2; grid-row: 1;
-            background: linear-gradient(145deg, #00ffcc, #00aa88);
-            color: #000;
-            font-size: 14px;
-        }    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 - Halaman Tidak Ditemukan</title>
+
+<style>
+:root{
+    --bg:#ffffff;
+    --text:#111827;
+    --muted:#6b7280;
+    --border:#e5e7eb;
+    --button:#111827;
+    --button-hover:#000000;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    padding:24px;
+}
+
+.container{
+    width:100%;
+    max-width:560px;
+    text-align:center;
+}
+
+.code{
+    font-size:6rem;
+    font-weight:700;
+    line-height:1;
+    margin-bottom:12px;
+    letter-spacing:-2px;
+}
+
+h1{
+    font-size:1.75rem;
+    font-weight:600;
+    margin-bottom:12px;
+}
+
+p{
+    color:var(--muted);
+    line-height:1.7;
+    margin-bottom:32px;
+}
+
+.actions{
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+.btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:12px 20px;
+    border-radius:8px;
+    text-decoration:none;
+    font-size:14px;
+    font-weight:500;
+    transition:0.2s ease;
+}
+
+.btn-primary{
+    background:var(--button);
+    color:#fff;
+}
+
+.btn-primary:hover{
+    background:var(--button-hover);
+}
+
+.btn-secondary{
+    background:#fff;
+    color:var(--text);
+    border:1px solid var(--border);
+}
+
+.btn-secondary:hover{
+    background:#f9fafb;
+}
+
+@media (max-width:768px){
+    .code{
+        font-size:4.5rem;
+    }
+
+    h1{
+        font-size:1.5rem;
+    }
+}
+</style>
 </head>
 <body>
-    <h1>TETRIS BANGSAT</h1>
-    
-    <div class="top-bar">
-        <div class="stat-box">
-            <h3>SKOR</h3>
-            <p id="score">0</p>
-        </div>
-        <div class="stat-box">
-            <h3>LEVEL</h3>
-            <p id="level">1</p>
-        </div>
-        <div class="stat-box">
-            <h3>LINES</h3>
-            <p id="lines">0</p>
-        </div>
+
+<main class="container">
+    <div class="code">404</div>
+
+    <h1>Halaman Tidak Ditemukan</h1>
+
+    <p>
+        Maaf, halaman yang Anda cari tidak dapat ditemukan.
+        Mungkin halaman telah dipindahkan, dihapus, atau alamat yang
+        Anda masukkan tidak benar.
+    </p>
+
+    <div class="actions">
+        <a href="/" class="btn btn-primary">Kembali ke Beranda</a>
+        <a href="javascript:history.back()" class="btn btn-secondary">Halaman Sebelumnya</a>
     </div>
+</main>
 
-    <div class="game-wrapper">
-        <canvas id="game" width="300" height="600"></canvas>
-        <div id="game-over-text">
-            GAME OVER ASU!
-            <small>Tekan RESET biar bisa main lagi</small>
-        </div>
-    </div>
-
-    <div class="controls">
-        <button class="btn btn-rotate" id="btn-rotate">↻</button>
-        <button class="btn btn-reset" id="btn-reset">RESET</button>
-        <button class="btn btn-drop" id="btn-drop">DROP</button>
-        <button class="btn btn-left" id="btn-left">◀</button>
-        <button class="btn btn-down" id="btn-down">▼</button>
-        <button class="btn btn-right" id="btn-right">▶</button>
-    </div>
-
-    <script>
-        const canvas = document.getElementById('game');
-        const ctx = canvas.getContext('2d');
-        const COLS = 10;
-        const ROWS = 20;
-        const BLOCK = 30;
-        canvas.width = COLS * BLOCK;
-        canvas.height = ROWS * BLOCK;
-
-        const COLORS = [
-            '#00f0f0', '#f0f000', '#a000f0', '#00f000',
-            '#f00000', '#0000f0', '#f0a000'
-        ];
-        const SHAPES = [
-            { shape: [[1,1,1,1]], color: 0 }, 
-            { shape: [[1,1],[1,1]], color: 1 }, 
-            { shape: [[0,1,0],[1,1,1]], color: 2 }, 
-            { shape: [[0,1,1],[1,1,0]], color: 3 }, 
-            { shape: [[1,1,0],[0,1,1]], color: 4 }, 
-            { shape: [[1,0,0],[1,1,1]], color: 5 }, 
-            { shape: [[0,0,1],[1,1,1]], color: 6 }  
-        ];
-
-        let board = [];
-        let currentPiece = null;
-        let dropCounter = 0;
-        let dropInterval = 800;
-        let lastTime = 0;
-        let score = 0;
-        let level = 1;
-        let lines = 0;
-        let gameOver = false;
-        let animationId = null;
-
-        function initBoard() {
-            board = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
-        }
-
-        function createPiece() {
-            const type = SHAPES[Math.floor(Math.random() * SHAPES.length)];
-            return {
-                shape: type.shape.map(row => [...row]),
-                color: type.color,
-                x: Math.floor(COLS / 2) - Math.floor(type.shape[0].length / 2),
-                y: 0
-            };
-        }
-
-        function collide(board, piece) {
-            for (let y = 0; y < piece.shape.length; y++) {
-                for (let x = 0; x < piece.shape[y].length; x++) {
-                    if (piece.shape[y][x]) {
-                        let boardX = piece.x + x;
-                        let boardY = piece.y + y;
-                        if (boardX < 0 || boardX >= COLS || boardY >= ROWS) return true;
-                        if (boardY >= 0 && board[boardY][boardX]) return true;
-                    }
-                }
-            }
-            return false;
-        }
-        function merge(board, piece) {
-            piece.shape.forEach((row, y) => {
-                row.forEach((value, x) => {
-                    if (value) {
-                        board[piece.y + y][piece.x + x] = piece.color + 1;
-                    }
-                });
-            });
-        }
-
-        function rotate(matrix) {
-            const rows = matrix.length, cols = matrix[0].length;
-            const result = [];
-            for (let c = 0; c < cols; c++) {
-                result[c] = [];
-                for (let r = rows - 1; r >= 0; r--) {
-                    result[c].push(matrix[r][c]);
-                }
-            }
-            return result;
-        }
-
-        function sweep() {
-            let linesCleared = 0;
-            outer: for (let y = ROWS - 1; y >= 0; y--) {
-                for (let x = 0; x < COLS; x++) {
-                    if (!board[y][x]) continue outer;
-                }
-                board.splice(y, 1);
-                board.unshift(Array(COLS).fill(0));
-                linesCleared++;
-                y++; 
-            }
-            if (linesCleared > 0) {
-                lines += linesCleared;
-                score += linesCleared * 100 * level;
-                level = Math.floor(lines / 10) + 1;
-                dropInterval = Math.max(100, 800 - (level - 1) * 70);
-                updateUI();
-                // Vibrasi biar ada feel (kalau HP support)
-                if (navigator.vibrate) navigator.vibrate(30);
-            }
-        }
-
-        function playerDrop() {
-            if (gameOver) return;
-            currentPiece.y++;
-            if (collide(board, currentPiece)) {
-                currentPiece.y--;
-                merge(board, currentPiece);                sweep();
-                currentPiece = createPiece();
-                if (collide(board, currentPiece)) {
-                    gameOver = true;
-                    document.getElementById('game-over-text').style.display = 'block';
-                    if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
-                }
-            }
-            dropCounter = 0;
-        }
-
-        function playerMove(dir) {
-            if (gameOver) return;
-            currentPiece.x += dir;
-            if (collide(board, currentPiece)) {
-                currentPiece.x -= dir;
-            }
-        }
-
-        function playerRotate() {
-            if (gameOver) return;
-            const oldShape = currentPiece.shape;
-            currentPiece.shape = rotate(currentPiece.shape);
-            let offset = 1;
-            while (collide(board, currentPiece)) {
-                currentPiece.x += offset;
-                offset = -(offset + (offset > 0 ? 1 : -1));
-                if (offset > currentPiece.shape[0].length) {
-                    currentPiece.shape = oldShape;
-                    return;
-                }
-            }
-            if (navigator.vibrate) navigator.vibrate(10);
-        }
-
-        function hardDrop() {
-            if (gameOver) return;
-            while(!collide(board, currentPiece)) {
-                currentPiece.y++;
-            }
-            currentPiece.y--;
-            merge(board, currentPiece);
-            sweep();
-            currentPiece = createPiece();
-            if (collide(board, currentPiece)) {
-                gameOver = true;
-                document.getElementById('game-over-text').style.display = 'block';
-                if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
-            }
-            dropCounter = 0;        }
-
-        function resetGame() {
-            initBoard();
-            score = 0;
-            level = 1;
-            lines = 0;
-            dropInterval = 800;
-            gameOver = false;
-            currentPiece = createPiece();
-            document.getElementById('game-over-text').style.display = 'none';
-            updateUI();
-            lastTime = 0;
-            dropCounter = 0;
-            if (animationId) cancelAnimationFrame(animationId);
-            animationId = requestAnimationFrame(update);
-        }
-
-        function updateUI() {
-            document.getElementById('score').innerText = score;
-            document.getElementById('level').innerText = level;
-            document.getElementById('lines').innerText = lines;
-        }
-
-        function draw() {
-            ctx.fillStyle = '#050505';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            ctx.strokeStyle = '#1a1a1a';
-            ctx.lineWidth = 1;
-            for (let x = 0; x <= COLS; x++) {
-                ctx.beginPath();
-                ctx.moveTo(x * BLOCK, 0);
-                ctx.lineTo(x * BLOCK, canvas.height);
-                ctx.stroke();
-            }
-            for (let y = 0; y <= ROWS; y++) {
-                ctx.beginPath();
-                ctx.moveTo(0, y * BLOCK);
-                ctx.lineTo(canvas.width, y * BLOCK);
-                ctx.stroke();
-            }
-
-            drawMatrix(board, 0, 0);
-            if (currentPiece && !gameOver) {
-                // Gambar shadow (ghost piece) biar gampang
-                drawGhost();
-                drawMatrix(currentPiece.shape, currentPiece.x, currentPiece.y, currentPiece.color);
-            }
-        }
-        function drawGhost() {
-            let ghostY = currentPiece.y;
-            const ghostPiece = { ...currentPiece, shape: currentPiece.shape, x: currentPiece.x, y: ghostY };
-            while (!collide(board, ghostPiece)) {
-                ghostPiece.y++;
-            }
-            ghostPiece.y--;
-            ctx.globalAlpha = 0.25;
-            drawMatrix(ghostPiece.shape, ghostPiece.x, ghostPiece.y, currentPiece.color);
-            ctx.globalAlpha = 1;
-        }
-
-        function drawMatrix(matrix, offsetX, offsetY, pieceColor = null) {
-            matrix.forEach((row, y) => {
-                row.forEach((value, x) => {
-                    if (value) {
-                        const colorIndex = pieceColor !== null ? pieceColor : (value - 1);
-                        const color = COLORS[colorIndex];
-                        
-                        ctx.fillStyle = color;
-                        ctx.fillRect((x + offsetX) * BLOCK, (y + offsetY) * BLOCK, BLOCK, BLOCK);
-                        
-                        ctx.fillStyle = 'rgba(255,255,255,0.3)';
-                        ctx.fillRect((x + offsetX) * BLOCK, (y + offsetY) * BLOCK, BLOCK, 4);
-                        ctx.fillRect((x + offsetX) * BLOCK, (y + offsetY) * BLOCK, 4, BLOCK);
-                        
-                        ctx.fillStyle = 'rgba(0,0,0,0.4)';
-                        ctx.fillRect((x + offsetX) * BLOCK, (y + offsetY + 1) * BLOCK - 4, BLOCK, 4);
-                        ctx.fillRect((x + offsetX + 1) * BLOCK - 4, (y + offsetY) * BLOCK, 4, BLOCK);
-
-                        ctx.strokeStyle = '#000';
-                        ctx.lineWidth = 2;
-                        ctx.strokeRect((x + offsetX) * BLOCK, (y + offsetY) * BLOCK, BLOCK, BLOCK);
-                    }
-                });
-            });
-        }
-
-        function update(time = 0) {
-            if (gameOver) {
-                draw();
-                return;
-            }
-            const deltaTime = time - lastTime;
-            lastTime = time;
-            dropCounter += deltaTime;
-            
-            if (dropCounter > dropInterval) {
-                playerDrop();            }
-            
-            draw();
-            animationId = requestAnimationFrame(update);
-        }
-
-        // KONTROL TOUCH / KLIK
-        function bindHold(btnId, action, repeatDelay = 150) {
-            const btn = document.getElementById(btnId);
-            let holdInterval = null;
-            let holdTimeout = null;
-
-            const start = (e) => {
-                e.preventDefault();
-                btn.classList.add('pressed');
-                action();
-                holdTimeout = setTimeout(() => {
-                    holdInterval = setInterval(action, repeatDelay);
-                }, 200);
-            };
-
-            const end = (e) => {
-                if (e) e.preventDefault();
-                btn.classList.remove('pressed');
-                clearTimeout(holdTimeout);
-                clearInterval(holdInterval);
-                holdInterval = null;
-            };
-
-            btn.addEventListener('touchstart', start, { passive: false });
-            btn.addEventListener('touchend', end);
-            btn.addEventListener('touchcancel', end);
-            btn.addEventListener('mousedown', start);
-            btn.addEventListener('mouseup', end);
-            btn.addEventListener('mouseleave', end);
-        }
-
-        function bindSingle(btnId, action) {
-            const btn = document.getElementById(btnId);
-            const handler = (e) => {
-                e.preventDefault();
-                btn.classList.add('pressed');
-                action();
-                setTimeout(() => btn.classList.remove('pressed'), 100);
-            };
-            btn.addEventListener('touchstart', handler, { passive: false });
-            btn.addEventListener('mousedown', handler);
-        }
-
-        bindHold('btn-left', () => playerMove(-1), 120);        bindHold('btn-right', () => playerMove(1), 120);
-        bindHold('btn-down', () => playerDrop(), 80);
-        bindSingle('btn-rotate', playerRotate);
-        bindSingle('btn-drop', hardDrop);
-        bindSingle('btn-reset', resetGame);
-
-        // Keyboard juga tetep support (buat desktop/PC)
-        document.addEventListener('keydown', event => {
-            if (event.key === 'r' || event.key === 'R') resetGame();
-            if (gameOver) return;
-            if (event.key === 'ArrowLeft') playerMove(-1);
-            else if (event.key === 'ArrowRight') playerMove(1);
-            else if (event.key === 'ArrowDown') playerDrop();
-            else if (event.key === 'ArrowUp') playerRotate();
-            else if (event.key === ' ') {
-                event.preventDefault();
-                hardDrop();
-            }
-        });
-
-        // Cegah zoom / scroll pas main di mobile
-        document.addEventListener('gesturestart', e => e.preventDefault());
-        document.addEventListener('touchmove', e => {
-            if (e.touches.length > 1) e.preventDefault();
-        }, { passive: false });
-
-        // Start game
-        resetGame();
-    </script>
 </body>
 </html>
