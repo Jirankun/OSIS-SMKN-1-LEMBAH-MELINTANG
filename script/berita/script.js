@@ -111,7 +111,15 @@ async function loadBeritaIndex() {
     let posts = Array.isArray(rawData) ? rawData : [rawData];
     
     allBerita = posts
-      .filter(p => p.type?.toLowerCase() === 'berita' && p.filename && p.date)
+      .filter(p => {
+        // Filter by type 'berita' - cek field type di frontmatter
+        const isBerita = p.type?.toLowerCase() === 'berita';
+        // Pastikan filename ada dan valid
+        const hasFilename = p.filename && typeof p.filename === 'string';
+        // Pastikan date ada
+        const hasDate = p.date;
+        return isBerita && hasFilename && hasDate;
+      })
       .sort((a, b) => new Date(b.date) - new Date(a.date));
     
     if (!allBerita.length) {
