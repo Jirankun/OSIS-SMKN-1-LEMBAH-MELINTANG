@@ -79,7 +79,8 @@ function loadAsyncContent() {
 document.addEventListener('DOMContentLoaded', () => {
   // Cek dan bersihkan URL jika ada parameter ?file= yang tidak valid
   cleanInvalidFileUrl();
-  initSplashScreen();
+  // initSplashScreen(); // DISABLED - Splash screen dimatikan
+  loadAsyncContent(); // Langsung load content tanpa splash
   renderNavbar();
   initConfig();
   renderFooter(4);

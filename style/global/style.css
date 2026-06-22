@@ -550,9 +550,9 @@ ANIMATION SYSTEM (GLOBAL)
 @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
 @keyframes float { 0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); } 50% { transform: translate(15px, -15px) scale(1.03) rotate(2deg); } }
-@keyframes splashFadeOut { 0% { opacity: 1; visibility: visible; } 100% { opacity: 0; visibility: hidden; } }
-@keyframes splashLogoEnter { 0% { opacity: 0; transform: scale(0.8) rotate(-10deg); } 70% { opacity: 1; transform: scale(1.05) rotate(5deg); } 100% { opacity: 1; transform: scale(1) rotate(0deg); } }
-@keyframes splashTitleEnter { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
+/* @keyframes splashFadeOut { 0% { opacity: 1; visibility: visible; } 100% { opacity: 0; visibility: hidden; } } */ /* DISABLED */
+/* @keyframes splashLogoEnter { 0% { opacity: 0; transform: scale(0.8) rotate(-10deg); } 70% { opacity: 1; transform: scale(1.05) rotate(5deg); } 100% { opacity: 1; transform: scale(1) rotate(0deg); } } */ /* DISABLED */
+/* @keyframes splashTitleEnter { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } } */ /* DISABLED */
 
 /* ---- Entrance Animation Classes (GPU accelerated) ---- */
 .fade-up { animation: fadeUp 0.5s ease both; }
@@ -1290,8 +1290,9 @@ EXAM POPUP (Ujian OSIS - Lightbox Modal)
 }
 
 /* ============================================
-SPLASH SCREEN ANIMATION
+SPLASH SCREEN ANIMATION (DISABLED - Fitur dimatikan)
 ============================================ */
+/*
 .splash-screen {
   position: fixed;
   inset: 0;
@@ -1302,7 +1303,7 @@ SPLASH SCREEN ANIMATION
   z-index: 10000;
 }
 
-/* Shimmer overlay — sweep cahaya diagonal */
+// Shimmer overlay — sweep cahaya diagonal
 .splash__shimmer {
   position: absolute;
   inset: 0;
@@ -1337,7 +1338,7 @@ SPLASH SCREEN ANIMATION
   z-index: 11;
 }
 
-/* Logo wrapper untuk zoom */
+// Logo wrapper untuk zoom
 .splash__logo-wrap {
   display: inline-block;
   margin: 0 auto 1.5rem;
@@ -1385,10 +1386,11 @@ SPLASH SCREEN ANIMATION
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-/* Fade out untuk seluruh splash */
+// Fade out untuk seluruh splash
 .splash-screen.fade-active {
   animation: splashFadeOut 0.8s ease forwards;
 }
+*/
 
 /* ============================================
 REDUCED MOTION — Hormati preferensi aksesibilitas
@@ -1406,7 +1408,8 @@ Semua animasi & transisi dimatikan untuk:
   .hero__orb, .hero__scroll-arrow, .btn-primary::after {
     animation: none !important;
   }
-  /* Splash: langsung selesai */
+  /* Splash: langsung selesai (DISABLED - splash screen sudah dimatikan) */
+  /*
   .splash-screen, .splash__logo, .splash__title, .splash__subtitle,
   .splash__shimmer, .splash__logo-wrap {
     animation: none !important;
@@ -1414,4 +1417,5 @@ Semua animasi & transisi dimatikan untuk:
     opacity: 1 !important;
     transform: none !important;
   }
+  */
 }
