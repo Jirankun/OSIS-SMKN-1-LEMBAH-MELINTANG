@@ -5,6 +5,10 @@ date: 2026-06-12
 author: Zhyllan Fyllah
 image: img/Screenshot_20260622_190735.jpg
 ---
+> Di transkrip dari Instagram kami,silahkan lihat videonya di :
+>
+> [https://www.instagram.com/reel/DZfVJbYTGx3/?igsh=MTBscXdrM2x0eGhyNA==](https://www.instagram.com/reel/DZfVJbYTGx3/?igsh=MTBscXdrM2x0eGhyNA==)
+
 **SMKN 1 Lembah Melintang, 12 Juni 2026** – Suasana SMKN 1 Lembah Melintang tampak lebih meriah dan penuh semangat. Setelah menyelesaikan ujian semester, seluruh siswa mengikuti kegiatan **Class Meeting Semester Genap Tahun 2026** yang resmi dibuka dan berlangsung dengan penuh antusias.
 
 Kegiatan ini menjadi ajang bagi para siswa untuk menyalurkan bakat, meningkatkan kekompakan, serta mempererat hubungan antar kelas dan jurusan melalui berbagai perlombaan yang telah disiapkan oleh panitia.
@@ -28,6 +32,5 @@ Salah seorang siswa menyampaikan bahwa class meeting kali ini sangat menarik kar
 Dengan semangat sportivitas dan kebersamaan yang ditunjukkan oleh seluruh peserta, diharapkan kegiatan class meeting ini dapat menjadi pengalaman yang berkesan serta memperkuat hubungan antar warga sekolah.
 
 **Reporter:** Nur Azizah
-
-**Kameramen:** Muhammad Yuda Setriawan 
+**Kameramen:** Muhammad Yuda Setriawan   
 **Tanggal:** 12 Juni 2026
