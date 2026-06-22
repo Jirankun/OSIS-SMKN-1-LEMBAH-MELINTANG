@@ -3,6 +3,7 @@ title: Class Meeting Semester Genap 2026 Resmi Dimulai di SMKN 1 Lembah Melintan
 type: berita
 date: 2026-06-12
 author: Zhyllan Fyllah
+image: img/Screenshot_20260622_190735.jpg
 ---
 **SMKN 1 Lembah Melintang, 12 Juni 2026** – Suasana SMKN 1 Lembah Melintang tampak lebih meriah dan penuh semangat. Setelah menyelesaikan ujian semester, seluruh siswa mengikuti kegiatan **Class Meeting Semester Genap Tahun 2026** yang resmi dibuka dan berlangsung dengan penuh antusias.
 
@@ -27,6 +28,6 @@ Salah seorang siswa menyampaikan bahwa class meeting kali ini sangat menarik kar
 Dengan semangat sportivitas dan kebersamaan yang ditunjukkan oleh seluruh peserta, diharapkan kegiatan class meeting ini dapat menjadi pengalaman yang berkesan serta memperkuat hubungan antar warga sekolah.
 
 **Reporter:** Nur Azizah
-  
+
 **Kameramen:** Muhammad Yuda Setriawan 
 **Tanggal:** 12 Juni 2026
