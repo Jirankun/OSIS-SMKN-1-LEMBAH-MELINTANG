@@ -32,5 +32,5 @@ Salah seorang siswa menyampaikan bahwa class meeting kali ini sangat menarik kar
 Dengan semangat sportivitas dan kebersamaan yang ditunjukkan oleh seluruh peserta, diharapkan kegiatan class meeting ini dapat menjadi pengalaman yang berkesan serta memperkuat hubungan antar warga sekolah.
 
 **Reporter:** Nur Azizah
-**Kameramen:** Muhammad Yuda Setriawan   
+**Kameramen:** Muhammad Yuda Setriawan  
 **Tanggal:** 12 Juni 2026
