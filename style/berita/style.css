@@ -31,12 +31,18 @@ a, button, .berita-item, .btn, [role="button"], input, select, textarea {
   min-height: 400px;
   line-height: 1.8;
   color: var(--gray-700);
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 .berita-content h1, .berita-content h2, .berita-content h3 {
   font-family: var(--font-display);
   color: var(--gray-900);
   margin: 1.5rem 0 0.75rem;
   line-height: 1.3;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 .berita-content h1 { font-size: 1.8rem; }
 .berita-content h2 { font-size: 1.4rem; }
@@ -238,6 +244,9 @@ a, button, .berita-item, .btn, [role="button"], input, select, textarea {
   line-height: 1.8;
   color: var(--gray-700);
   font-size: 0.95rem;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 .markdown-body p { margin-bottom: 1rem; }
 .markdown-body h1, .markdown-body h2, .markdown-body h3 {
@@ -245,8 +254,11 @@ a, button, .berita-item, .btn, [role="button"], input, select, textarea {
   color: var(--gray-900);
   margin: 1.5rem 0 0.75rem;
   line-height: 1.3;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
-.markdown-body a { color: var(--primary); font-weight: 600; text-decoration: none; }
+.markdown-body a { color: var(--primary); font-weight: 600; text-decoration: none; overflow-wrap: break-word; }
 .markdown-body a:hover { text-decoration: underline; }
 .markdown-body blockquote {
   border-left: 4px solid var(--primary);
@@ -254,12 +266,16 @@ a, button, .berita-item, .btn, [role="button"], input, select, textarea {
   margin: 1rem 0;
   color: var(--gray-500);
   font-style: italic;
+  max-width: 100%;
+  overflow-wrap: break-word;
 }
 .markdown-body code {
   background: var(--gray-100);
   padding: 0.2rem 0.4rem;
   border-radius: 4px;
   font-size: 0.85em;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 .markdown-body pre {
   background: var(--gray-900);
@@ -268,6 +284,7 @@ a, button, .berita-item, .btn, [role="button"], input, select, textarea {
   border-radius: var(--radius);
   overflow-x: auto;
   margin: 1rem 0;
+  max-width: 100%;
 }
 .markdown-body pre code { background: none; padding: 0; color: inherit; }
 
@@ -321,6 +338,8 @@ a, button, .berita-item, .btn, [role="button"], input, select, textarea {
   border: 1px solid var(--gray-200);
   box-shadow: var(--shadow-sm);
   -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+  width: 100%;
 }
 .table-wrapper::-webkit-scrollbar { height: 6px; }
 .table-wrapper::-webkit-scrollbar-track { background: var(--gray-100); }
@@ -328,9 +347,17 @@ a, button, .berita-item, .btn, [role="button"], input, select, textarea {
 
 .markdown-body table {
   width: 100%;
+  max-width: 100%;
   border-collapse: collapse;
   font-size: 0.9rem;
   min-width: 480px; /* Force scroll on small screens */
+  display: block;
+  overflow: hidden;
+}
+@media (min-width: 768px) {
+  .markdown-body table {
+    display: table;
+  }
 }
 .markdown-body thead {
   background-color: #f2f2f2;
@@ -342,11 +369,16 @@ a, button, .berita-item, .btn, [role="button"], input, select, textarea {
   text-align: left;
   word-break: break-word;
   overflow-wrap: break-word;
+  max-width: 300px;
+  white-space: normal;
 }
 .markdown-body th {
   font-weight: 700;
   color: var(--gray-900);
   background-color: #f2f2f2;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
 }
 .markdown-body tr:nth-child(even) {
   background-color: #fafafa;
@@ -361,6 +393,8 @@ a, button, .berita-item, .btn, [role="button"], input, select, textarea {
   margin: 1rem 0;
   padding-left: 2rem;
   list-style-position: outside;
+  max-width: 100%;
+  overflow-wrap: break-word;
 }
 
 .markdown-body ol {
@@ -374,6 +408,8 @@ a, button, .berita-item, .btn, [role="button"], input, select, textarea {
 .markdown-body li {
   margin-bottom: 0.5rem;
   line-height: 1.6;
+  max-width: 100%;
+  overflow-wrap: break-word;
 }
 
 /* Nested lists */
@@ -383,7 +419,104 @@ a, button, .berita-item, .btn, [role="button"], input, select, textarea {
   margin-bottom: 0.5rem;
 }
 
+/* ✅ Blockquote - Mencegah melebar */
+.markdown-body blockquote {
+  border-left: 4px solid var(--primary);
+  padding-left: 1rem;
+  margin: 1rem 0;
+  color: var(--gray-500);
+  font-style: italic;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  box-sizing: border-box;
+}
+
+/* ✅ Code blocks - Mencegah melebar */
+.markdown-body code {
+  background: var(--gray-100);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.85em;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+  white-space: pre-wrap;
+}
+.markdown-body pre {
+  background: var(--gray-900);
+  color: var(--gray-100);
+  padding: 1rem;
+  border-radius: var(--radius);
+  overflow-x: auto;
+  margin: 1rem 0;
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+.markdown-body pre code { 
+  background: none; 
+  padding: 0; 
+  color: inherit; 
+  white-space: pre;
+  word-break: normal;
+}
+
+/* ✅ Video wrapper dalam tabel atau container lain */
+.markdown-body .video-wrapper,
 .video-wrapper {
-  min-width: 300px;
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  height: 0;
+  overflow: hidden;
+  max-width: 100%;
+  margin: 2rem 0;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  background-color: #000;
+  width: 100%;
+  box-sizing: border-box;
+}
+.markdown-body .video-wrapper iframe,
+.video-wrapper iframe {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  border: 0;
+  border-radius: 12px;
+  max-width: 100%;
+}
+
+/* ✅ Image wrapper */
+.markdown-body .img-wrapper,
+.img-wrapper {
+  text-align: center;
+  margin: 2rem 0;
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+.markdown-body .img-wrapper img,
+.img-wrapper img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  transition: transform 0.3s ease;
+  width: auto;
+}
+
+/* Mobile adjustment */
+@media (max-width: 899px) {
+  .markdown-body { font-size: 0.9rem; }
+  .markdown-body table { min-width: 100%; }
+  .markdown-body th,
+  .markdown-body td {
+    padding: 0.5rem;
+    font-size: 0.85rem;
+  }
+  .img-wrapper, .video-wrapper { margin: 1.5rem 0; }
 }
 
