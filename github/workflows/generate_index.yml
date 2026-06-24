@@ -1,0 +1,46 @@
+name: Generate Posts Index
+
+on:
+  push:
+    paths:
+      - 'Github/post/*.md'
+      - 'Github/content/posts-index.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate-index:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Github
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      
+      - name: Run generate script
+        run: |
+          echo "Working directory: $(pwd)"
+          echo "Checking file existence..."
+          ls -la generate_index.py
+          python3 generate_index.py
+      
+      - name: Commit and push if changed
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add Github/content/posts-index.json
+          if ! git diff --staged --quiet; then
+            git commit -m "Auto-update: posts-index.json [skip ci]"
+            # Pull latest changes and rebase before pushing to avoid conflicts
+            git pull --rebase origin main
+            git push
+          fi
