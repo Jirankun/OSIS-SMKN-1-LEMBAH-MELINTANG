@@ -9,6 +9,8 @@ image: img/IMG-20260522-WA0006.jpg
 
 SMKN 1 Lembah Melintang membuka kesempatan bagi lulusan SMP/MTs sederajat untuk bergabung dan mengembangkan kompetensi di bidang teknologi dan industri.
 
+![](img/IMG-20260522-WA0006.jpg)
+
 ## Kompetensi Keahlian
 
 1. Teknik Instalasi Tenaga Listrik (TITL)
@@ -36,7 +38,7 @@ Informasi resmi terkait jadwal, persyaratan, dan mekanisme Seleksi Penerimaan Mu
 
 🔗 [https://spmb.sumbarprov.go.id](https://spmb.sumbarprov.go.id)
 
-
+ 
 
 ## Hubungi Kami
 
