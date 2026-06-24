@@ -1,0 +1,26 @@
+[
+  {
+    "title": "info terbaru",
+    "message": "ada info terbaru hari ini,jadi silahkan periksa",
+    "type": "info",
+    "active": true,
+    "show_from": "2026-05-28",
+    "show_until": "2026-05-30",
+    "has_action": true,
+    "link": "https://tkj1.pages.dev",
+    "link_text": "periksa",
+    "version": 1
+  },
+  {
+    "title": "Ujian sebentar lagi",
+    "message": "ujian akan dimulai sebentar lagi,jadi mulailah membaca",
+    "type": "warning",
+    "active": false,
+    "show_from": "2026-05-28",
+    "show_until": "2026-05-31",
+    "has_action": true,
+    "link": "https://link.lanjut.co",
+    "link_text": "lanjut",
+    "version": 1
+  }
+]
