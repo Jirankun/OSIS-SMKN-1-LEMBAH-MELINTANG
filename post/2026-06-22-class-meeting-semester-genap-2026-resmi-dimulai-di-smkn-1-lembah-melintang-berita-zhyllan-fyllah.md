@@ -3,7 +3,7 @@ title: Class Meeting Semester Genap 2026 Resmi Dimulai di SMKN 1 Lembah Melintan
 type: berita
 date: 2026-06-12
 author: Zhyllan Fyllah
-image: img/Screenshot_20260622_190735.jpg
+image: img/IMG-20260611-WA0047.jpg
 ---
 > Di transkrip dari Instagram kami,silahkan lihat videonya di :
 >
