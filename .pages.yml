@@ -105,11 +105,11 @@ content:
     path: content/ujian_tes.json
     fields:
       - { name: status, label: "Status", type: boolean, required: false, description: "Jika dinyalakan, Popup ujian akan muncul di home."}
-      - { name: title, label: "Judul Ujian", type: string, required: true }
-      - { name: start_date, label: "Mulai Tanggal", type: date, required: true }
-      - { name: end_date, label: "Sampai Tanggal", type: date, required: true }
+      - { name: title, label: "Judul Ujian", type: string, required: false }
+      - { name: start_date, label: "Mulai Tanggal", type: date, required: false }
+      - { name: end_date, label: "Sampai Tanggal", type: date, required: false }
       - name: link
         label: "Link Google Form"
         type: string
-        required: true
+        required: false
         description: "Masukkan link Google Form untuk ujian ini."
