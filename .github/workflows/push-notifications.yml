@@ -1,0 +1,52 @@
+# ================================================
+# GitHub Actions — Push Notification on Content Update
+# Trigger: saat content/posts-index.json atau content/galeri.json berubah
+# Deteksi item baru via git diff -> push notification ke subscriber
+# ================================================
+name: Push Notification on Content Update
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'content/posts-index.json'
+      - 'content/galeri.json'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Send notification for ALL content'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  detect-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Detect new posts
+        run: python3 detect-new-posts.py
+        env:
+          FORCE: ${{ inputs.force || 'false' }}
+
+      - name: Detect new gallery
+        run: python3 detect-new-galeri.py
+        env:
+          FORCE: ${{ inputs.force || 'false' }}
+
+      - name: Send push for new posts
+        run: python3 send-push.py
+        env:
+          MODE: posts
+          WORKER_URL: ${{ secrets.PUSH_WORKER_URL }}
+          API_KEY: ${{ secrets.PUSH_API_KEY }}
+
+      - name: Send push for new gallery
+        run: python3 send-push.py
+        env:
+          MODE: galeri
+          WORKER_URL: ${{ secrets.PUSH_WORKER_URL }}
+          API_KEY: ${{ secrets.PUSH_API_KEY }}
