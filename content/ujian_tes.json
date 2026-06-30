@@ -1,7 +1,6 @@
 {
-  "status": true,
+  "status": false,
   "title": "Tes fitur ujian saja",
   "start_date": "2026-06-30",
-  "end_date": "2026-07-01",
-  "link": "https://tkj1.pages.dev"
+  "end_date": "2026-07-01"
 }
