@@ -5,6 +5,12 @@ date: 2026-06-30
 author: Zhyllan Fyllah
 image: img/Screenshot_20260630_080942.jpg
 ---
+> Di transkrip dari Instagram kami,silahkan lihat videonya di :
+>
+>
+>
+> https://www.instagram.com/reel/DZ7PHbjTv2P/?igsh=bGxlbTRzNmNuYWE4
+
 **SMKN 1 Lembah Melintang, 23 Juni 2026** – Pelaksanaan **Sistem Penerimaan Murid Baru (SPMB)** di SMKN 1 Lembah Melintang mendapat antusiasme yang tinggi dari masyarakat. Hal tersebut terlihat dari banyaknya calon murid baru yang mengikuti proses pendaftaran untuk bergabung pada tahun ajaran 2026/2027.
 
 Dalam kesempatan tersebut, tim liputan mewawancarai **Kepala SMKN 1 Lembah Melintang, Bapak Edi Supanri, S.Pd., M.Pd.T.**, mengenai komitmen sekolah dalam menyambut peserta didik baru melalui jalur SPMB tahun ini.
