@@ -1,5 +1,15 @@
 [
   {
+    "filename": "2026-06-30-test-fitur-tabel-berita-zhyllan-fyllah-dev.md",
+    "title": "Test Fitur Tabel",
+    "type": "berita",
+    "date": "2026-06-30",
+    "author": "Zhyllan Fyllah (dev)",
+    "image": "",
+    "description": "| Makan | Minum | Status | | ----- | ----- | -------- | | Ya | Ya | Sudah | | Tidak | Ya | Keduanya |",
+    "body": "| Makan | Minum | Status |\n| ----- | ----- | -------- |\n| Ya | Ya | Sudah |\n| Tidak | Ya | Keduanya |"
+  },
+  {
     "filename": "2026-06-30-proses-spmb-smkn-1-lembah-melintang-berlangsung-tertib-berita-zhyllan-fyllah.md",
     "title": "Proses SPMB SMKN 1 Lembah Melintang Berlangsung Tertib",
     "type": "berita",
