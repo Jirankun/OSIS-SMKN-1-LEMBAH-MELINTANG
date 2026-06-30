@@ -5,6 +5,10 @@ date: 2026-06-30
 author: Zhyllan Fyllah
 image: img/Screenshot_20260630_075446.jpg
 ---
+> *Di transkrip dari Instagram kami,silahkan lihat videonya di :*
+>
+> ***[https://www.instagram.com/reel/DZ4u8hSzlDV/?igsh=cXZwZXMyNjdqZnh0](https://www.instagram.com/reel/DZ4u8hSzlDV/?igsh=cXZwZXMyNjdqZnh0)***
+
 **SMKN 1 Lembah Melintang, 30 Juni 2026** – Proses **Sistem Penerimaan Murid Baru (SPMB)** di SMKN 1 Lembah Melintang berlangsung dengan tertib dan lancar. Sejak pagi, calon murid baru bersama orang tua tampak antusias mengikuti setiap tahapan pendaftaran yang telah disiapkan oleh panitia.
 
 Pelaksanaan SPMB tidak hanya menjadi proses administrasi penerimaan peserta didik baru, tetapi juga menjadi momen bagi calon murid untuk mulai mengenal lingkungan sekolah, program keahlian, serta menjalin pertemanan dengan peserta lainnya.
