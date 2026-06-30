@@ -11,7 +11,7 @@ Pelaksanaan SPMB tidak hanya menjadi proses administrasi penerimaan peserta didi
 
 Dalam kesempatan tersebut, tim liputan mewawancarai salah satu calon murid baru, **Ahmad Luki Febriansyah** dari SMP Negeri 1 Sungai Aur. Ia mengaku merasa senang mengikuti seluruh rangkaian proses SPMB di SMKN 1 Lembah Melintang.
 
-*"Seru, karena prosesnya rapi dan di sini saya mendapat teman-teman baru dari berbagai sekolah,"* ujar Luki.
+*"Seru sih kak, karena prosesnya rapi dan di sini saya mendapat teman-teman baru yang berbeda dari yang lain,"* ujar Luki.
 
 Luki juga menyampaikan bahwa dirinya memilih program keahlian **Teknik Pemesinan** dan **Teknik Ketenagalistrikan** sebagai langkah awal untuk mengembangkan kemampuan sesuai minatnya.
 
