@@ -3,6 +3,7 @@ title: Proses SPMB SMKN 1 Lembah Melintang Berlangsung Tertib
 type: berita
 date: 2026-06-30
 author: Zhyllan Fyllah
+image: img/Screenshot_20260630_075446.jpg
 ---
 **SMKN 1 Lembah Melintang, 30 Juni 2026** – Proses **Sistem Penerimaan Murid Baru (SPMB)** di SMKN 1 Lembah Melintang berlangsung dengan tertib dan lancar. Sejak pagi, calon murid baru bersama orang tua tampak antusias mengikuti setiap tahapan pendaftaran yang telah disiapkan oleh panitia.
 
