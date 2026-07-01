@@ -1,5 +1,15 @@
 [
   {
+    "filename": "2026-07-01-tes-fitur-notifikasi-berita-zhyllan-fyllah-dev.md",
+    "title": "Tes fitur notifikasi",
+    "type": "berita",
+    "date": "2026-07-01",
+    "author": "Zhyllan Fyllah (dev)",
+    "image": "",
+    "description": "Kali ini,saya hanya tes fitur notifikasi,dan tes tabel dengan video YouTube di dalamnya | Video | Sesuai | No | |...",
+    "body": "Kali ini,saya hanya tes fitur notifikasi,dan tes tabel dengan video YouTube di dalamnya\n\n\n\n\n| Video | Sesuai | No |\n| ------------------------------------------------------------------------------------------ | ------ | --- |\n| [https://www.youtube.com/watch?v=YlzJLNkUbUA](https://www.youtube.com/watch?v=YlzJLNkUbUA) | Ya | 1 |\n| [https://www.youtube.com/watch?v=Zy1hfl3NQOc](https://www.youtube.com/watch?v=Zy1hfl3NQOc) | Ya | 2 |"
+  },
+  {
     "filename": "2026-06-30-proses-spmb-smkn-1-lembah-melintang-berlangsung-tertib-berita-zhyllan-fyllah.md",
     "title": "Proses SPMB SMKN 1 Lembah Melintang Berlangsung Tertib",
     "type": "berita",
