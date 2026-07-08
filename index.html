@@ -52,7 +52,6 @@
     </script>
     
     <style>
-        /* LOCK SCROLL BIAR BERASA NATIVE APP ANJIR */
         html, body {
             overflow: hidden;
             height: 100vh;
@@ -92,14 +91,13 @@
             background: #0f172a;
             width: 100%;
             max-width: 400px;
-            aspect-ratio: 1 / 1;
         }
         
         canvas {
             cursor: grab;
             touch-action: none;
             width: 100%;
-            height: 100%;
+            height: auto;
             display: block;
         }
         
@@ -107,28 +105,12 @@
             cursor: grabbing;
         }
         
-        /* CUSTOM DRAWER STYLES */
-        .drawer-overlay {
-            transition: opacity 0.3s ease;
-        }
+        .drawer-overlay { transition: opacity 0.3s ease; }
+        .drawer-content { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .drawer-open .drawer-overlay { opacity: 1; pointer-events: auto; }
+        .drawer-open .drawer-content { transform: translateY(0); }
         
-        .drawer-content {
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .drawer-open .drawer-overlay {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        
-        .drawer-open .drawer-content {
-            transform: translateY(0);
-        }
-        
-        /* CUSTOM CAMERA UI */
-        #cameraModal {
-            transition: opacity 0.3s ease;
-        }
+        #cameraModal { transition: opacity 0.3s ease; }
         
         #cameraFeed {
             object-fit: cover;
@@ -178,7 +160,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* DISABLED BUTTON STATE */
         .btn-disabled {
             opacity: 0.5;
             cursor: not-allowed;
@@ -188,10 +169,8 @@
 </head>
 
 <body class="text-white">
-    <!-- Main Content -->
     <main class="w-full max-w-md px-4 py-6 flex flex-col items-center justify-between h-full">
         
-        <!-- Title -->
         <div class="text-center mb-4">
             <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-1">
                 SMKN 1 LEMBAH MELINTANG
@@ -199,7 +178,6 @@
             <p class="text-xs text-gray-400">Selamat Datang</p>
         </div>
 
-        <!-- Canvas Preview -->
         <div class="glass-effect rounded-2xl p-3 w-full">
             <div class="canvas-wrapper bg-slate-900 mx-auto">
                 <canvas id="canvas"></canvas>
@@ -215,22 +193,22 @@
             </p>
         </div>
 
-        <!-- Action Buttons -->
         <div class="w-full mt-4 space-y-3 mb-6">
-            <!-- Tombol Buat/Ubah Foto -->
             <button id="mainActionBtn" class="w-full py-4 px-6 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 shadow-lg active:scale-95">
                 <i class="fas fa-magic"></i>
                 <span id="mainBtnText">Buat Twibbon Saya</span>
             </button>
 
-            <!-- Tombol Download (BARU BRE!) -->
             <button id="downloadBtn" class="w-full py-4 px-6 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 shadow-lg active:scale-95 btn-disabled" disabled>
                 <i class="fas fa-download"></i>
                 <span>Unduh Twibbon</span>
             </button>
+
+            <p class="text-center text-xs text-gray-500 pt-1">
+                Dev.Tim <a href="https://zhyllanos.pages.dev/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 font-medium transition-colors duration-200">Jurnalistik OSIS</a>
+            </p>
         </div>
 
-        <!-- Footer -->
         <footer class="text-center pb-2">
             <p class="text-gray-600 text-xs">
                 Developed by <strong class="text-blue-400">Zhyllan Fyllah (Jirankun)</strong>
@@ -238,10 +216,8 @@
         </footer>
     </main>
 
-    <!-- HIDDEN FILE INPUT -->
     <input type="file" id="fileInput" accept="image/*" class="hidden">
 
-    <!-- CUSTOM BOTTOM DRAWER -->
     <div id="actionDrawer" class="fixed inset-0 z-50 hidden">
         <div class="drawer-overlay absolute inset-0 bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none" onclick="closeDrawer()"></div>
         <div class="drawer-content absolute bottom-0 left-0 right-0 bg-slate-800 rounded-t-3xl p-6 transform translate-y-full border-t border-white/10 shadow-2xl">
@@ -268,15 +244,12 @@
         </div>
     </div>
 
-    <!-- CUSTOM CAMERA UI -->
     <div id="cameraModal" class="fixed inset-0 z-[60] hidden bg-black opacity-0 pointer-events-none">
         <div class="relative w-full h-full">
             <video id="cameraFeed" autoplay playsinline class="w-full h-full"></video>
             
-            <!-- Flash Effect -->
             <div id="flashEffect" class="absolute inset-0 bg-white opacity-0 pointer-events-none"></div>
             
-            <!-- Top Bar -->
             <div class="absolute top-0 left-0 right-0 p-4 flex justify-between items-center bg-gradient-to-b from-black/70 to-transparent">
                 <button id="closeCamera" class="w-10 h-10 rounded-full bg-black/50 backdrop-blur flex items-center justify-center text-white text-xl active:scale-90 transition">
                     <i class="fas fa-times"></i>
@@ -285,17 +258,14 @@
                 <div class="w-10"></div>
             </div>
             
-            <!-- Bottom Controls -->
             <div class="absolute bottom-0 left-0 right-0 p-8 flex justify-center items-center bg-gradient-to-t from-black/70 to-transparent">
                 <button id="shutterBtn" class="shutter-btn active:scale-90"></button>
             </div>
         </div>
     </div>
 
-    <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     
-    <!-- Main JavaScript -->
     <script>
         // Variabel Global
         const canvas = document.getElementById('canvas');
@@ -308,6 +278,12 @@
         let isDragging = false;
         let hasImage = false;
 
+        // === OPTIMASI PERFORMANCE BRE! ===
+        let previewImage = null;      // Versi foto yang udah di-resize (buat drag smooth)
+        let twibbonCache = null;      // Offscreen canvas buat twibbon (render sekali)
+        let rafId = null;             // RequestAnimationFrame ID (throttling)
+        const MAX_PREVIEW_DIM = 2000; // Max dimensi preview (cukup buat kualitas download)
+
         // Camera Variables
         let cameraStream = null;
         const videoElement = document.getElementById('cameraFeed');
@@ -317,14 +293,12 @@
         const downloadBtn = document.getElementById('downloadBtn');
         const mainBtnText = document.getElementById('mainBtnText');
 
-        // Loading Overlay
         function showLoading(show) {
             const overlay = document.getElementById('loadingOverlay');
             if (show) overlay.classList.remove('hidden');
             else overlay.classList.add('hidden');
         }
 
-        // Update UI State (Enable/Disable Download Button)
         function updateUIState() {
             if (hasImage) {
                 downloadBtn.disabled = false;
@@ -337,9 +311,44 @@
             }
         }
 
+        // === PRE-SCALE FOTO USER (BIAR GAK BERAT PAS DRAG) ===
+        function createPreviewImage(src, callback) {
+            const tempImg = new Image();
+            tempImg.onload = function() {
+                let w = tempImg.width;
+                let h = tempImg.height;
+                
+                // Kalau foto lebih gede dari MAX_PREVIEW_DIM, scale down
+                if (w > MAX_PREVIEW_DIM || h > MAX_PREVIEW_DIM) {
+                    const ratio = Math.min(MAX_PREVIEW_DIM / w, MAX_PREVIEW_DIM / h);
+                    w = Math.round(w * ratio);
+                    h = Math.round(h * ratio);
+                }
+                
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = w;
+                tempCanvas.height = h;
+                const tempCtx = tempCanvas.getContext('2d');
+                tempCtx.drawImage(tempImg, 0, 0, w, h);
+                
+                previewImage = new Image();
+                previewImage.onload = function() {
+                    callback();
+                };
+                previewImage.src = tempCanvas.toDataURL('image/png');
+            };
+            tempImg.src = src;
+        }
+
         // Load Twibbon Frame
         twibbon.src = 'twibbon.png';
         twibbon.onload = function() {
+            // === CACHE TWIBBON DI OFFSCREEN CANVAS (RENDER SEKALI AJA) ===
+            twibbonCache = document.createElement('canvas');
+            twibbonCache.width = twibbon.width;
+            twibbonCache.height = twibbon.height;
+            twibbonCache.getContext('2d').drawImage(twibbon, 0, 0);
+            
             resizeCanvas();
             draw();
         };
@@ -354,7 +363,6 @@
             });
         };
 
-        // DRAWER FUNCTIONS
         function openDrawer() {
             const drawer = document.getElementById('actionDrawer');
             drawer.classList.remove('hidden');
@@ -370,10 +378,8 @@
             }, 300);
         }
 
-        // Main Action Button
         document.getElementById('mainActionBtn').addEventListener('click', openDrawer);
 
-        // Pick Photo
         document.getElementById('btnPickPhoto').addEventListener('click', () => {
             closeDrawer();
             setTimeout(() => {
@@ -381,7 +387,6 @@
             }, 300);
         });
 
-        // File Input Handler
         document.getElementById('fileInput').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
@@ -397,11 +402,9 @@
                 processImage(event.target.result);
             };
             reader.readAsDataURL(file);
-            // Reset input value so same file can be selected again
             this.value = '';
         });
 
-        // CAMERA PERMISSION CHECK & OPEN
         async function checkAndOpenCamera() {
             closeDrawer();
             
@@ -512,25 +515,28 @@
         document.getElementById('closeCamera').addEventListener('click', closeCamera);
         document.getElementById('shutterBtn').addEventListener('click', capturePhoto);
 
-        // Process Image
+        // === PROCESS IMAGE DENGAN PRE-SCALE ===
         function processImage(src) {
             showLoading(true);
             image.src = src;
             image.onload = function() {
                 hasImage = true;
-                reset();
-                draw();
-                showLoading(false);
-                updateUIState(); // Update tombol download
                 
-                Swal.fire({
-                    icon: 'success', title: 'Foto Berhasil!', text: 'Geser & cubit untuk mengatur',
-                    timer: 1500, showConfirmButton: false, background: 'rgba(30, 41, 59, 0.95)', color: '#fff'
+                // Buat preview image yang udah di-resize (buat drag smooth)
+                createPreviewImage(src, function() {
+                    reset();
+                    draw();
+                    showLoading(false);
+                    updateUIState();
+                    
+                    Swal.fire({
+                        icon: 'success', title: 'Foto Berhasil!', text: 'Geser & cubit untuk mengatur',
+                        timer: 1500, showConfirmButton: false, background: 'rgba(30, 41, 59, 0.95)', color: '#fff'
+                    });
                 });
             };
         }
 
-        // DOWNLOAD FUNCTION (BARU BRE!)
         downloadBtn.addEventListener('click', function() {
             if (!hasImage) {
                 Swal.fire({
@@ -542,7 +548,6 @@
 
             showLoading(true);
             
-            // Kasih delay dikit biar loading keliatan
             setTimeout(() => {
                 try {
                     const dataURL = canvas.toDataURL('image/png');
@@ -566,10 +571,9 @@
             }, 500);
         });
 
-        // Reset Posisi
         function reset() { scale = 1; position = { x: 0, y: 0 }; }
 
-        // Draw Function
+        // === DRAW FUNCTION (OPTIMIZED) ===
         function draw() {
             const cw = canvas.width;
             const ch = canvas.height;
@@ -577,16 +581,19 @@
             ctx.fillStyle = '#0f172a';
             ctx.fillRect(0, 0, cw, ch);
 
-            if (hasImage && image.src && image.src !== window.location.href) {
-                const iw = image.width;
-                const ih = image.height;
+            // PAKAI previewImage (udah di-resize) BUAT DRAG, BUKAN image ASLI
+            const imgToDraw = previewImage && previewImage.complete && previewImage.naturalWidth > 0 ? previewImage : image;
+
+            if (hasImage && imgToDraw && imgToDraw.complete && imgToDraw.naturalWidth > 0) {
+                const iw = imgToDraw.width;
+                const ih = imgToDraw.height;
                 const scaleFactor = Math.min(cw / iw, ch / ih);
                 
                 ctx.save();
                 ctx.translate(cw / 2, ch / 2);
                 ctx.scale(scaleFactor * scale, scaleFactor * scale);
                 ctx.translate(-iw / 2 + position.x / (scaleFactor * scale), -ih / 2 + position.y / (scaleFactor * scale));
-                ctx.drawImage(image, 0, 0);
+                ctx.drawImage(imgToDraw, 0, 0);
                 ctx.restore();
             } else {
                 ctx.fillStyle = '#1e293b';
@@ -600,17 +607,30 @@
                 ctx.fillStyle = '#64748b';
                 ctx.fillText('klik tombol "Buat Twibon Saya"', cw / 2, ch / 2 + 20);
             }
-            ctx.drawImage(twibbon, 0, 0, cw, ch);
+            
+            // PAKAI twibbonCache (offscreen) BUAT CEPET
+            if (twibbonCache) {
+                ctx.drawImage(twibbonCache, 0, 0, cw, ch);
+            } else {
+                ctx.drawImage(twibbon, 0, 0, cw, ch);
+            }
         }
 
-        // Resize Canvas
+        // === RAF THROTTLING (BIAR GAK SPAM REDRAW) ===
+        function requestDraw() {
+            if (rafId) return;
+            rafId = requestAnimationFrame(() => {
+                rafId = null;
+                draw();
+            });
+        }
+
         function resizeCanvas() {
             canvas.width = twibbon.width;
             canvas.height = twibbon.height;
             draw();
         }
 
-        // Touch & Mouse Events
         function getEventPos(evt) {
             const rect = canvas.getBoundingClientRect();
             const scaleX = canvas.width / rect.width;
@@ -634,10 +654,14 @@
             const pos = getEventPos(evt);
             position.x = pos.x - dragStart.x;
             position.y = pos.y - dragStart.y;
-            draw();
+            requestDraw(); // PAKAI RAF THROTTLING
         }
 
-        function endDrag() { isDragging = false; dragStart = null; }
+        function endDrag() { 
+            isDragging = false; 
+            dragStart = null; 
+            draw(); // Final redraw biar crisp
+        }
 
         canvas.addEventListener('mousedown', startDrag);
         canvas.addEventListener('mousemove', doDrag);
@@ -647,7 +671,6 @@
         canvas.addEventListener('touchmove', doDrag, { passive: false });
         canvas.addEventListener('touchend', endDrag);
 
-        // Hammer.js untuk Pinch-to-Zoom
         const hammer = new Hammer(canvas);
         hammer.get('pinch').set({ enable: true });
         let initialScale = 1;
@@ -656,10 +679,9 @@
             if (!hasImage) return;
             evt.preventDefault();
             scale = Math.max(0.1, Math.min(3, initialScale * evt.scale));
-            draw();
+            requestDraw(); // PAKAI RAF THROTTLING
         });
 
-        // Initialize
         resizeCanvas();
         updateUIState();
     </script>
