@@ -267,6 +267,9 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     
     <script>
+        // === KONFIGURASI DUAL-CANVAS BRE! ===
+        const MAX_PREVIEW_DIM = 1080; // Max dimensi canvas preview (aman buat drag)
+        
         // Variabel Global
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
@@ -278,11 +281,11 @@
         let isDragging = false;
         let hasImage = false;
 
-        // === OPTIMASI PERFORMANCE BRE! ===
-        let previewImage = null;      // Versi foto yang udah di-resize (buat drag smooth)
-        let twibbonCache = null;      // Offscreen canvas buat twibbon (render sekali)
-        let rafId = null;             // RequestAnimationFrame ID (throttling)
-        const MAX_PREVIEW_DIM = 2000; // Max dimensi preview (cukup buat kualitas download)
+        // === OPTIMASI PERFORMANCE ===
+        let previewImage = null;       // Foto user yang di-resize (buat preview)
+        let twibbonCache = null;       // Offscreen canvas twibbon (preview size)
+        let rafId = null;              // RAF throttling
+        let previewScale = 1;          // Rasio preview vs full resolution
 
         // Camera Variables
         let cameraStream = null;
@@ -311,16 +314,17 @@
             }
         }
 
-        // === PRE-SCALE FOTO USER (BIAR GAK BERAT PAS DRAG) ===
+        // === PRE-SCALE FOTO USER ===
         function createPreviewImage(src, callback) {
             const tempImg = new Image();
             tempImg.onload = function() {
                 let w = tempImg.width;
                 let h = tempImg.height;
                 
-                // Kalau foto lebih gede dari MAX_PREVIEW_DIM, scale down
-                if (w > MAX_PREVIEW_DIM || h > MAX_PREVIEW_DIM) {
-                    const ratio = Math.min(MAX_PREVIEW_DIM / w, MAX_PREVIEW_DIM / h);
+                // Scale down ke max 2000px (cukup buat zoom 3x di preview 1080px)
+                const MAX_IMG_DIM = 2000;
+                if (w > MAX_IMG_DIM || h > MAX_IMG_DIM) {
+                    const ratio = Math.min(MAX_IMG_DIM / w, MAX_IMG_DIM / h);
                     w = Math.round(w * ratio);
                     h = Math.round(h * ratio);
                 }
@@ -343,13 +347,20 @@
         // Load Twibbon Frame
         twibbon.src = 'twibbon.png';
         twibbon.onload = function() {
-            // === CACHE TWIBBON DI OFFSCREEN CANVAS (RENDER SEKALI AJA) ===
-            twibbonCache = document.createElement('canvas');
-            twibbonCache.width = twibbon.width;
-            twibbonCache.height = twibbon.height;
-            twibbonCache.getContext('2d').drawImage(twibbon, 0, 0);
+            // === HITUNG PREVIEW SCALE (MAINTAIN ASPECT RATIO) ===
+            const maxDim = Math.max(twibbon.width, twibbon.height);
+            previewScale = Math.min(1, MAX_PREVIEW_DIM / maxDim);
             
-            resizeCanvas();
+            // Set canvas preview ke ukuran yang di-scale down (proporsional!)
+            canvas.width = Math.round(twibbon.width * previewScale);
+            canvas.height = Math.round(twibbon.height * previewScale);
+            
+            // Cache twibbon di offscreen canvas (preview size)
+            twibbonCache = document.createElement('canvas');
+            twibbonCache.width = canvas.width;
+            twibbonCache.height = canvas.height;
+            twibbonCache.getContext('2d').drawImage(twibbon, 0, 0, canvas.width, canvas.height);
+            
             draw();
         };
         twibbon.onerror = function() {
@@ -515,14 +526,12 @@
         document.getElementById('closeCamera').addEventListener('click', closeCamera);
         document.getElementById('shutterBtn').addEventListener('click', capturePhoto);
 
-        // === PROCESS IMAGE DENGAN PRE-SCALE ===
         function processImage(src) {
             showLoading(true);
             image.src = src;
             image.onload = function() {
                 hasImage = true;
                 
-                // Buat preview image yang udah di-resize (buat drag smooth)
                 createPreviewImage(src, function() {
                     reset();
                     draw();
@@ -537,6 +546,7 @@
             };
         }
 
+        // === DOWNLOAD: RENDER DI RESOLUSI PENUH (3375x4219) ===
         downloadBtn.addEventListener('click', function() {
             if (!hasImage) {
                 Swal.fire({
@@ -550,7 +560,15 @@
             
             setTimeout(() => {
                 try {
-                    const dataURL = canvas.toDataURL('image/png');
+                    // Buat canvas full-resolution (hidden)
+                    const fullCanvas = document.createElement('canvas');
+                    fullCanvas.width = twibbon.width;
+                    fullCanvas.height = twibbon.height;
+                    
+                    // Render ke full canvas dengan resolusi penuh
+                    renderToCanvas(fullCanvas, true);
+                    
+                    const dataURL = fullCanvas.toDataURL('image/png');
                     const link = document.createElement('a');
                     link.download = 'Twibbon-SMKN1-LM.png';
                     link.href = dataURL;
@@ -573,62 +591,68 @@
 
         function reset() { scale = 1; position = { x: 0, y: 0 }; }
 
-        // === DRAW FUNCTION (OPTIMIZED) ===
-        function draw() {
-            const cw = canvas.width;
-            const ch = canvas.height;
+        // === UNIVERSAL RENDER FUNCTION (Buat preview & download) ===
+        function renderToCanvas(targetCanvas, useFullRes) {
+            const tCtx = targetCanvas.getContext('2d');
+            const cw = targetCanvas.width;
+            const ch = targetCanvas.height;
 
-            ctx.fillStyle = '#0f172a';
-            ctx.fillRect(0, 0, cw, ch);
+            // Background
+            tCtx.fillStyle = '#0f172a';
+            tCtx.fillRect(0, 0, cw, ch);
 
-            // PAKAI previewImage (udah di-resize) BUAT DRAG, BUKAN image ASLI
-            const imgToDraw = previewImage && previewImage.complete && previewImage.naturalWidth > 0 ? previewImage : image;
+            // Pilih gambar: full-res (image) buat download, preview buat drag
+            const imgToDraw = useFullRes ? image : (previewImage && previewImage.complete ? previewImage : image);
 
             if (hasImage && imgToDraw && imgToDraw.complete && imgToDraw.naturalWidth > 0) {
                 const iw = imgToDraw.width;
                 const ih = imgToDraw.height;
                 const scaleFactor = Math.min(cw / iw, ch / ih);
                 
-                ctx.save();
-                ctx.translate(cw / 2, ch / 2);
-                ctx.scale(scaleFactor * scale, scaleFactor * scale);
-                ctx.translate(-iw / 2 + position.x / (scaleFactor * scale), -ih / 2 + position.y / (scaleFactor * scale));
-                ctx.drawImage(imgToDraw, 0, 0);
-                ctx.restore();
+                // Scale position dari preview coords ke target coords
+                const posScale = cw / canvas.width;
+                const scaledPosX = position.x * posScale;
+                const scaledPosY = position.y * posScale;
+                
+                tCtx.save();
+                tCtx.translate(cw / 2, ch / 2);
+                tCtx.scale(scaleFactor * scale, scaleFactor * scale);
+                tCtx.translate(-iw / 2 + scaledPosX / (scaleFactor * scale), -ih / 2 + scaledPosY / (scaleFactor * scale));
+                tCtx.drawImage(imgToDraw, 0, 0);
+                tCtx.restore();
             } else {
-                ctx.fillStyle = '#1e293b';
-                ctx.fillRect(0, 0, cw, ch);
-                ctx.fillStyle = '#475569';
-                ctx.font = 'bold 18px Poppins';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText('Hasil akan muncul di sini', cw / 2, ch / 2 - 20);
-                ctx.font = '14px Poppins';
-                ctx.fillStyle = '#64748b';
-                ctx.fillText('klik tombol "Buat Twibon Saya"', cw / 2, ch / 2 + 20);
+                tCtx.fillStyle = '#1e293b';
+                tCtx.fillRect(0, 0, cw, ch);
+                tCtx.fillStyle = '#475569';
+                tCtx.font = 'bold 18px Poppins';
+                tCtx.textAlign = 'center';
+                tCtx.textBaseline = 'middle';
+                tCtx.fillText('Hasil akan muncul di sini', cw / 2, ch / 2 - 20);
+                tCtx.font = '14px Poppins';
+                tCtx.fillStyle = '#64748b';
+                tCtx.fillText('klik tombol "Buat Twibon Saya"', cw / 2, ch / 2 + 20);
             }
             
-            // PAKAI twibbonCache (offscreen) BUAT CEPET
-            if (twibbonCache) {
-                ctx.drawImage(twibbonCache, 0, 0, cw, ch);
-            } else {
-                ctx.drawImage(twibbon, 0, 0, cw, ch);
+            // Draw twibbon
+            if (useFullRes && twibbon && twibbon.complete) {
+                tCtx.drawImage(twibbon, 0, 0, cw, ch);
+            } else if (twibbonCache) {
+                tCtx.drawImage(twibbonCache, 0, 0, cw, ch);
             }
         }
 
-        // === RAF THROTTLING (BIAR GAK SPAM REDRAW) ===
+        // Draw function untuk preview canvas
+        function draw() {
+            renderToCanvas(canvas, false);
+        }
+
+        // RAF Throttling
         function requestDraw() {
             if (rafId) return;
             rafId = requestAnimationFrame(() => {
                 rafId = null;
                 draw();
             });
-        }
-
-        function resizeCanvas() {
-            canvas.width = twibbon.width;
-            canvas.height = twibbon.height;
-            draw();
         }
 
         function getEventPos(evt) {
@@ -654,13 +678,13 @@
             const pos = getEventPos(evt);
             position.x = pos.x - dragStart.x;
             position.y = pos.y - dragStart.y;
-            requestDraw(); // PAKAI RAF THROTTLING
+            requestDraw();
         }
 
         function endDrag() { 
             isDragging = false; 
             dragStart = null; 
-            draw(); // Final redraw biar crisp
+            draw();
         }
 
         canvas.addEventListener('mousedown', startDrag);
@@ -679,10 +703,10 @@
             if (!hasImage) return;
             evt.preventDefault();
             scale = Math.max(0.1, Math.min(3, initialScale * evt.scale));
-            requestDraw(); // PAKAI RAF THROTTLING
+            requestDraw();
         });
 
-        resizeCanvas();
+        // Initialize
         updateUIState();
     </script>
 </body>
