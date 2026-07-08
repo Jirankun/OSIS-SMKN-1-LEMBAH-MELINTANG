@@ -2,34 +2,48 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Twibbon Maker Pro - By Jirang</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Twibbon SMKN 1 LEMBAH MELINTANG</title>
+    <meta name="description" content="Aplikasi Twibbon SMKN 1 Lembah Melintang">
+    <meta name="author" content="Zhyllan Fyllah (Jirankun)">
     
-    <!-- TAILWIND CSS VIA CDN (FRAMEWORK PALING MODERN BRE) -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- GOOGLE FONTS BUAT TYPOGRAPHY SLEEK -->
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- CUSTOM CONFIG TAILWIND -->
+    <!-- Hammer.js untuk Touch Gestures -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+    
+    <!-- SweetAlert2 untuk Alert yang Cantik -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
-                        'inter': ['Inter', 'sans-serif'],
+                        'poppins': ['Poppins', 'sans-serif'],
                     },
                     animation: {
-                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'gradient': 'gradient 8s ease infinite',
+                        'gradient': 'gradient 15s ease infinite',
+                        'float': 'float 3s ease-in-out infinite',
                     },
                     keyframes: {
                         gradient: {
                             '0%, 100%': { 'background-position': '0% 50%' },
                             '50%': { 'background-position': '100% 50%' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' },
                         }
                     }
                 }
@@ -38,70 +52,75 @@
     </script>
     
     <style>
-        /* CUSTOM CSS BUAT EFEK GLASSMORPHISM & ANIMASI */
+        * {
+            font-family: 'Poppins', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(-45deg, #0f172a, #1e293b, #334155, #1e293b);
+            background: linear-gradient(-45deg, #0f172a, #1e1b4b, #312e81, #1e293b);
             background-size: 400% 400%;
             animation: gradient 15s ease infinite;
+            min-height: 100vh;
         }
         
         .glass-effect {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        .canvas-container {
-            position: relative;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            transition: all 0.3s ease;
+        .glass-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
         
-        .canvas-container:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.6);
+        .canvas-wrapper {
+            position: relative;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
         }
         
         canvas {
             cursor: grab;
-            transition: opacity 0.3s ease;
+            touch-action: none;
+            max-width: 100%;
+            height: auto;
         }
         
         canvas:active {
             cursor: grabbing;
         }
         
-        .btn-glow {
+        .btn-primary-custom {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+        }
+        
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.5);
+        }
+        
+        .btn-primary-custom:active {
+            transform: translateY(0);
+        }
+        
+        .btn-success-custom {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             transition: all 0.3s ease;
         }
         
-        .btn-glow::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s ease;
-        }
-        
-        .btn-glow:hover::before {
-            left: 100%;
-        }
-        
-        .joystick-btn {
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-        }
-        
-        .joystick-btn:active {
-            transform: scale(0.9);
-            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
+        .btn-success-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.5);
         }
         
         .file-input-wrapper {
@@ -121,31 +140,69 @@
             cursor: pointer;
         }
         
-        /* SCROLLBAR CUSTOM */
-        ::-webkit-scrollbar {
-            width: 8px;
+        .control-btn {
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
         }
         
-        ::-webkit-scrollbar-track {
-            background: #1e293b;
+        .control-btn:hover {
+            transform: scale(1.1);
         }
         
-        ::-webkit-scrollbar-thumb {
-            background: #475569;
-            border-radius: 4px;
+        .control-btn:active {
+            transform: scale(0.95);
         }
         
-        ::-webkit-scrollbar-thumb:hover {
-            background: #64748b;
+        .zoom-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            outline: none;
         }
         
-        /* LOADING SPINNER */
-        .loader {
-            border: 3px solid rgba(255, 255, 255, 0.1);
-            border-top: 3px solid #3b82f6;
+        .zoom-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(59, 130, 246, 0.5);
+        }
+        
+        .zoom-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 10px rgba(59, 130, 246, 0.5);
+        }
+        
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
             animation: spin 1s linear infinite;
         }
         
@@ -153,197 +210,238 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        
+        .brand-logo {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @media (max-width: 640px) {
+            .canvas-wrapper {
+                max-width: 100%;
+            }
+        }
     </style>
 </head>
 
-<body class="dark min-h-screen text-white">
-    
-    <!-- HEADER -->
+<body class="text-white">
+    <!-- Header -->
     <header class="glass-effect sticky top-0 z-50 shadow-lg">
         <div class="container mx-auto px-4 py-4">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-xl font-bold">
-                        T
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-3 brand-logo">
+                    <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                        <i class="fas fa-image text-2xl"></i>
                     </div>
-                    <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-                        Twibbon Maker Pro
-                    </h1>
+                    <div>
+                        <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                            Twibbon SMKN 1 LEMBAH MELINTANG
+                        </h1>
+                        <p class="text-xs text-gray-400">Aplikasi Pembuat Twibbon Profesional</p>
+                    </div>
                 </div>
-                <div class="text-sm text-gray-400 hidden md:block">
-                    Made with ❤️ by <span class="text-blue-400 font-semibold">Jirang</span>
+                <div class="text-sm text-gray-400 flex items-center gap-2">
+                    <i class="fas fa-code"></i>
+                    <span>Dikembangkan oleh <strong class="text-blue-400">Zhyllan Fyllah (Jirankun)</strong></span>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- MAIN CONTENT -->
+    <!-- Main Content -->
     <main class="container mx-auto px-4 py-8">
         <div class="max-w-6xl mx-auto">
             
-            <!-- HERO SECTION -->
-            <div class="text-center mb-12">
-                <h2 class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-                    Buat Twibbon Keren Lu Disini!
+            <!-- Info Card -->
+            <div class="glass-card rounded-2xl p-6 mb-8 text-center">
+                <h2 class="text-3xl font-bold mb-3 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                    Selamat Datang di Twibbon Maker
                 </h2>
-                <p class="text-gray-400 text-lg">
-                    Upload foto, atur posisi, terus download hasilnya. Gampang banget jir!
+                <p class="text-gray-300 text-sm md:text-base">
+                    Unggah foto Anda, sesuaikan posisi dan ukuran, kemudian unduh hasil twibbon dengan mudah.
+                    <br>Dukungan gesture pinch-to-zoom untuk pengalaman yang lebih baik.
                 </p>
             </div>
 
-            <!-- GRID LAYOUT -->
             <div class="grid lg:grid-cols-2 gap-8">
                 
-                <!-- KIRI: CANVAS PREVIEW -->
-                <div class="space-y-6">
-                    <div class="glass-effect rounded-2xl p-6">
+                <!-- Canvas Preview -->
+                <div class="space-y-4">
+                    <div class="glass-card rounded-2xl p-6">
                         <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">
-                            <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                            </svg>
-                            Preview Twibbon
+                            <i class="fas fa-eye text-blue-400"></i>
+                            Pratinjau Twibbon
                         </h3>
                         
-                        <div class="canvas-container rounded-xl overflow-hidden bg-slate-900/50 aspect-square flex items-center justify-center">
-                            <canvas id="canvas" class="max-w-full max-h-full"></canvas>
-                            <div id="loadingOverlay" class="absolute inset-0 bg-slate-900/80 flex items-center justify-center hidden">
+                        <div class="canvas-wrapper bg-slate-900/50 aspect-square flex items-center justify-center">
+                            <canvas id="canvas"></canvas>
+                            <div id="loadingOverlay" class="loading-overlay hidden">
                                 <div class="text-center">
-                                    <div class="loader mx-auto mb-3"></div>
-                                    <p class="text-gray-400">Loading...</p>
+                                    <div class="spinner mx-auto mb-3"></div>
+                                    <p class="text-gray-400">Memuat...</p>
                                 </div>
                             </div>
                         </div>
                         
-                        <p class="text-sm text-gray-500 mt-3 text-center">
-                            💡 Tip: Drag foto di canvas buat geser posisi
-                        </p>
+                        <div class="mt-4 flex items-center justify-center gap-4 text-sm text-gray-400">
+                            <span class="flex items-center gap-2">
+                                <i class="fas fa-hand-pointer text-blue-400"></i>
+                                Geser untuk memindahkan
+                            </span>
+                            <span class="hidden md:inline">|</span>
+                            <span class="flex items-center gap-2">
+                                <i class="fas fa-compress-arrows-alt text-purple-400"></i>
+                                Cubit untuk zoom
+                            </span>
+                        </div>
                     </div>
                 </div>
 
-                <!-- KANAN: KONTROL PANEL -->
-                <div class="space-y-6">
+                <!-- Control Panel -->
+                <div class="space-y-4">
                     
-                    <!-- UPLOAD SECTION -->
-                    <div class="glass-effect rounded-2xl p-6">
+                    <!-- Upload Section -->
+                    <div class="glass-card rounded-2xl p-6">
                         <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">
-                            <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                            </svg>
-                            Upload Foto
+                            <i class="fas fa-upload text-green-400"></i>
+                            Unggah Foto
                         </h3>
                         
                         <div class="file-input-wrapper">
-                            <button class="w-full py-4 px-6 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 btn-glow">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                                </svg>
-                                Pilih Foto dari Device
+                            <button class="w-full py-4 px-6 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 shadow-lg">
+                                <i class="fas fa-folder-open"></i>
+                                <span>Pilih Foto dari Perangkat</span>
                             </button>
-                            <input type="file" id="imageUpload" accept="image/*" class="cursor-pointer">
+                            <input type="file" id="imageUpload" accept="image/*">
                         </div>
                         
-                        <p id="fileName" class="text-sm text-gray-500 mt-3 text-center">Belum ada foto yang dipilih</p>
+                        <p id="fileName" class="text-sm text-gray-500 mt-3 text-center">
+                            <i class="fas fa-info-circle"></i> Belum ada foto yang dipilih
+                        </p>
                     </div>
 
-                    <!-- ZOOM CONTROL -->
-                    <div class="glass-effect rounded-2xl p-6">
+                    <!-- Zoom Control -->
+                    <div class="glass-card rounded-2xl p-6">
                         <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">
-                            <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path>
-                            </svg>
+                            <i class="fas fa-search-plus text-purple-400"></i>
                             Atur Ukuran (Zoom)
                         </h3>
                         
                         <div class="space-y-3">
                             <input type="range" id="zoomControl" min="0.1" max="3" value="1" step="0.01" 
-                                class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-purple-500">
+                                class="zoom-slider">
                             <div class="flex justify-between text-sm text-gray-400">
                                 <span>0.1x</span>
-                                <span id="zoomValue" class="text-purple-400 font-semibold">1.00x</span>
+                                <span id="zoomValue" class="text-purple-400 font-bold text-lg">1.00x</span>
                                 <span>3.0x</span>
                             </div>
                         </div>
+                        
+                        <div class="mt-4 flex gap-2">
+                            <button id="zoomOut" class="flex-1 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition control-btn">
+                                <i class="fas fa-minus"></i> Kecilkan
+                            </button>
+                            <button id="zoomIn" class="flex-1 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition control-btn">
+                                <i class="fas fa-plus"></i> Besarkan
+                            </button>
+                        </div>
                     </div>
 
-                    <!-- JOYSTICK CONTROL -->
-                    <div class="glass-effect rounded-2xl p-6">
+                    <!-- Position Control -->
+                    <div class="glass-card rounded-2xl p-6">
                         <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">
-                            <svg class="w-6 h-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"></path>
-                            </svg>
-                            Geser Posisi Foto
+                            <i class="fas fa-arrows-alt text-orange-400"></i>
+                            Atur Posisi Foto
                         </h3>
                         
-                        <div class="flex justify-center">
-                            <div class="grid grid-cols-3 gap-2 w-48 h-48 bg-slate-800/50 rounded-full p-4">
-                                <!-- UP -->
+                        <div class="flex justify-center mb-4">
+                            <div class="grid grid-cols-3 gap-2 w-48">
                                 <div></div>
-                                <button id="moveUp" class="joystick-btn bg-gradient-to-br from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 rounded-full flex items-center justify-center text-xl font-bold">
-                                    ▲
+                                <button id="moveUp" class="control-btn py-3 bg-gradient-to-br from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 rounded-xl flex items-center justify-center text-xl font-bold shadow-lg">
+                                    <i class="fas fa-chevron-up"></i>
                                 </button>
                                 <div></div>
                                 
-                                <!-- LEFT, CENTER, RIGHT -->
-                                <button id="moveLeft" class="joystick-btn bg-gradient-to-br from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 rounded-full flex items-center justify-center text-xl font-bold">
-                                    ◄
+                                <button id="moveLeft" class="control-btn py-3 bg-gradient-to-br from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 rounded-xl flex items-center justify-center text-xl font-bold shadow-lg">
+                                    <i class="fas fa-chevron-left"></i>
                                 </button>
-                                <div class="bg-slate-700/50 rounded-full"></div>
-                                <button id="moveRight" class="joystick-btn bg-gradient-to-br from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 rounded-full flex items-center justify-center text-xl font-bold">
-                                    ►
+                                <div class="bg-slate-700/50 rounded-xl flex items-center justify-center">
+                                    <i class="fas fa-crosshairs text-gray-500"></i>
+                                </div>
+                                <button id="moveRight" class="control-btn py-3 bg-gradient-to-br from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 rounded-xl flex items-center justify-center text-xl font-bold shadow-lg">
+                                    <i class="fas fa-chevron-right"></i>
                                 </button>
                                 
-                                <!-- DOWN -->
                                 <div></div>
-                                <button id="moveDown" class="joystick-btn bg-gradient-to-br from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 rounded-full flex items-center justify-center text-xl font-bold">
-                                    ▼
+                                <button id="moveDown" class="control-btn py-3 bg-gradient-to-br from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 rounded-xl flex items-center justify-center text-xl font-bold shadow-lg">
+                                    <i class="fas fa-chevron-down"></i>
                                 </button>
                                 <div></div>
                             </div>
                         </div>
+                        
+                        <p class="text-xs text-gray-400 text-center">
+                            <i class="fas fa-info-circle"></i> Gunakan tombol di atas atau geser langsung pada canvas
+                        </p>
                     </div>
 
-                    <!-- ACTION BUTTONS -->
-                    <div class="glass-effect rounded-2xl p-6 space-y-3">
-                        <button id="saveImage" class="w-full py-4 px-6 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 rounded-xl font-semibold text-lg transition-all duration-300 flex items-center justify-center gap-2 btn-glow shadow-lg">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                            </svg>
-                            Download Twibbon
+                    <!-- Action Buttons -->
+                    <div class="glass-card rounded-2xl p-6 space-y-3">
+                        <button id="saveImage" class="w-full py-4 px-6 btn-success-custom rounded-xl font-semibold text-lg flex items-center justify-center gap-2 shadow-lg">
+                            <i class="fas fa-download text-xl"></i>
+                            <span>Unduh Twibbon</span>
                         </button>
                         
                         <button id="resetBtn" class="w-full py-3 px-6 bg-slate-700 hover:bg-slate-600 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                            </svg>
-                            Reset Posisi
+                            <i class="fas fa-undo"></i>
+                            <span>Reset Posisi</span>
                         </button>
                     </div>
 
                 </div>
             </div>
 
-            <!-- FOOTER INFO -->
-            <div class="mt-12 text-center text-gray-500 text-sm">
-                <p>💡 Tips: Gunakan mouse/touch untuk drag foto langsung di canvas, atau pakai joystick buat geser presisi</p>
-                <p class="mt-2">🔒 Semua proses dilakukan di browser lu, foto gak di-upload ke server manapun!</p>
+            <!-- Footer Info -->
+            <div class="mt-12 glass-card rounded-2xl p-6 text-center">
+                <div class="grid md:grid-cols-3 gap-6 text-sm">
+                    <div class="flex flex-col items-center gap-2">
+                        <i class="fas fa-shield-alt text-green-400 text-2xl"></i>
+                        <p class="text-gray-300"><strong>Privasi Terjamin</strong></p>
+                        <p class="text-gray-500 text-xs">Semua proses dilakukan di browser Anda. Foto tidak diunggah ke server.</p>
+                    </div>
+                    <div class="flex flex-col items-center gap-2">
+                        <i class="fas fa-mobile-alt text-blue-400 text-2xl"></i>
+                        <p class="text-gray-300"><strong>Responsif</strong></p>
+                        <p class="text-gray-500 text-xs">Dapat digunakan di perangkat desktop maupun mobile.</p>
+                    </div>
+                    <div class="flex flex-col items-center gap-2">
+                        <i class="fas fa-bolt text-yellow-400 text-2xl"></i>
+                        <p class="text-gray-300"><strong>Cepat & Mudah</strong></p>
+                        <p class="text-gray-500 text-xs">Buat twibbon dalam hitungan detik dengan mudah.</p>
+                    </div>
+                </div>
             </div>
 
         </div>
     </main>
 
-    <!-- FOOTER -->
-    <footer class="glass-effect mt-12 py-6">
-        <div class="container mx-auto px-4 text-center text-gray-400">
-            <p>© 2024 Twibbon Maker Pro - Made with ❤️ by <span class="text-blue-400 font-semibold">Jirang</span></p>
+    <!-- Footer -->
+    <footer class="glass-effect mt-12 py-6 border-t border-white/10">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-gray-400 text-sm">
+                © 2024 Twibbon SMKN 1 LEMBAH MELINTANG. All rights reserved.
+            </p>
+            <p class="text-gray-500 text-xs mt-2">
+                Developed with <i class="fas fa-heart text-red-500"></i> by <strong class="text-blue-400">Zhyllan Fyllah (Jirankun)</strong>
+            </p>
         </div>
     </footer>
 
-    <!-- JQUERY (BUAT COMPATIBILITY) -->
+    <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     
-    <!-- MAIN JAVASCRIPT -->
+    <!-- Main JavaScript -->
     <script>
-        // VARIABEL GLOBAL
+        // Variabel Global
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         const image = new Image();
@@ -351,30 +449,58 @@
         let scale = 1;
         let position = { x: 0, y: 0 };
         let dragStart = null;
+        let isDragging = false;
         const MOVE_AMOUNT = 10;
 
-        // SHOW/HIDE LOADING
+        // Loading Overlay
         function showLoading(show) {
-            document.getElementById('loadingOverlay').classList.toggle('hidden', !show);
+            const overlay = document.getElementById('loadingOverlay');
+            if (show) {
+                overlay.classList.remove('hidden');
+            } else {
+                overlay.classList.add('hidden');
+            }
         }
 
-        // LOAD TWIBBON FRAME
+        // Load Twibbon Frame
         twibbon.src = 'twibbon.png';
         twibbon.onload = function() {
             resizeCanvas();
             draw();
         };
         twibbon.onerror = function() {
-            alert('Error: File twibbon.png gak ketemu bre! Pastiin file-nya ada di folder yang sama sama HTML ini.');
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'File twibbon.png tidak ditemukan! Pastikan file berada di folder yang sama dengan file HTML.',
+                footer: '<a href="#">Pelajari lebih lanjut</a>',
+                background: 'rgba(30, 41, 59, 0.95)',
+                color: '#fff',
+                confirmButtonColor: '#3b82f6'
+            });
         };
 
-        // HANDLE UPLOAD FOTO
+        // Handle Upload Foto
         $('#imageUpload').change(function(e) {
             const file = e.target.files[0];
             if (!file) return;
 
-            // UPDATE FILE NAME DISPLAY
-            document.getElementById('fileName').textContent = `📁 ${file.name}`;
+            // Validasi file
+            if (!file.type.startsWith('image/')) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'File Tidak Valid',
+                    text: 'Mohon unggah file gambar (JPG, PNG, dll)',
+                    background: 'rgba(30, 41, 59, 0.95)',
+                    color: '#fff',
+                    confirmButtonColor: '#f59e0b'
+                });
+                return;
+            }
+
+            // Update file name display
+            document.getElementById('fileName').innerHTML = 
+                `<i class="fas fa-check-circle text-green-400"></i> ${file.name}`;
             document.getElementById('fileName').classList.remove('text-gray-500');
             document.getElementById('fileName').classList.add('text-green-400');
 
@@ -387,12 +513,33 @@
                     reset();
                     draw();
                     showLoading(false);
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Foto Berhasil Diunggah',
+                        text: 'Silakan atur posisi dan ukuran foto',
+                        timer: 2000,
+                        showConfirmButton: false,
+                        background: 'rgba(30, 41, 59, 0.95)',
+                        color: '#fff'
+                    });
                 };
+            };
+            reader.onerror = function() {
+                showLoading(false);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Gagal membaca file',
+                    background: 'rgba(30, 41, 59, 0.95)',
+                    color: '#fff',
+                    confirmButtonColor: '#ef4444'
+                });
             };
             reader.readAsDataURL(file);
         });
 
-        // RESET POSISI
+        // Reset Posisi
         function reset() {
             scale = 1;
             position = { x: 0, y: 0 };
@@ -400,7 +547,7 @@
             document.getElementById('zoomValue').textContent = '1.00x';
         }
 
-        // DRAW FUNCTION
+        // Draw Function
         function draw() {
             if (!image.src || image.src === window.location.href) return;
 
@@ -410,34 +557,56 @@
             const ch = canvas.height;
 
             const scaleFactor = Math.min(cw / iw, ch / ih);
-            const iwScaled = iw * scaleFactor * scale;
-            const ihScaled = ih * scaleFactor * scale;
-
+            
             ctx.clearRect(0, 0, cw, ch);
+            
+            // Draw image dengan transformasi
             ctx.save();
             ctx.translate(cw / 2, ch / 2);
             ctx.scale(scaleFactor * scale, scaleFactor * scale);
-            ctx.translate(-iw / 2 + position.x / (scaleFactor * scale), -ih / 2 + position.y / (scaleFactor * scale));
+            ctx.translate(-iw / 2 + position.x / (scaleFactor * scale), 
+                         -ih / 2 + position.y / (scaleFactor * scale));
             ctx.drawImage(image, 0, 0);
             ctx.restore();
+            
+            // Draw twibbon overlay
             ctx.drawImage(twibbon, 0, 0, cw, ch);
         }
 
-        // RESIZE CANVAS
+        // Resize Canvas
         function resizeCanvas() {
             canvas.width = twibbon.width;
             canvas.height = twibbon.height;
             draw();
         }
 
-        // ZOOM CONTROL
+        // Zoom Control
         $('#zoomControl').on('input', function() {
             scale = parseFloat($(this).val());
             document.getElementById('zoomValue').textContent = scale.toFixed(2) + 'x';
             draw();
         });
 
-        // JOYSTICK BUTTONS
+        // Zoom Buttons
+        document.getElementById('zoomIn').addEventListener('click', function() {
+            if (scale < 3) {
+                scale = Math.min(scale + 0.1, 3);
+                document.getElementById('zoomControl').value = scale;
+                document.getElementById('zoomValue').textContent = scale.toFixed(2) + 'x';
+                draw();
+            }
+        });
+
+        document.getElementById('zoomOut').addEventListener('click', function() {
+            if (scale > 0.1) {
+                scale = Math.max(scale - 0.1, 0.1);
+                document.getElementById('zoomControl').value = scale;
+                document.getElementById('zoomValue').textContent = scale.toFixed(2) + 'x';
+                draw();
+            }
+        });
+
+        // Joystick Buttons
         document.getElementById('moveLeft').addEventListener('click', () => {
             position.x -= MOVE_AMOUNT;
             draw();
@@ -458,71 +627,144 @@
             draw();
         });
 
-        // RESET BUTTON
+        // Reset Button
         document.getElementById('resetBtn').addEventListener('click', () => {
             reset();
             draw();
+            Swal.fire({
+                icon: 'info',
+                title: 'Reset Berhasil',
+                text: 'Posisi dan ukuran telah dikembalikan ke default',
+                timer: 1500,
+                showConfirmButton: false,
+                background: 'rgba(30, 41, 59, 0.95)',
+                color: '#fff'
+            });
         });
 
-        // DRAG CANVAS (MOUSE)
+        // Mouse Drag Events
         canvas.addEventListener('mousedown', function(evt) {
-            dragStart = { x: evt.offsetX - position.x, y: evt.offsetY - position.y };
+            isDragging = true;
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = evt.clientX - rect.left;
+            const mouseY = evt.clientY - rect.top;
+            dragStart = { 
+                x: mouseX - position.x, 
+                y: mouseY - position.y 
+            };
+            canvas.style.cursor = 'grabbing';
         });
 
         canvas.addEventListener('mousemove', function(evt) {
-            if (dragStart) {
-                position.x = evt.offsetX - dragStart.x;
-                position.y = evt.offsetY - dragStart.y;
-                draw();
-            }
-        });
-
-        canvas.addEventListener('mouseup', () => dragStart = null);
-        canvas.addEventListener('mouseleave', () => dragStart = null);
-
-        // DRAG CANVAS (TOUCH)
-        canvas.addEventListener('touchstart', function(evt) {
-            evt.preventDefault();
-            const touch = evt.touches[0];
+            if (!isDragging || !dragStart) return;
+            
             const rect = canvas.getBoundingClientRect();
-            const mouseX = touch.clientX - rect.left;
-            const mouseY = touch.clientY - rect.top;
-            dragStart = { x: mouseX - position.x, y: mouseY - position.y };
+            const mouseX = evt.clientX - rect.left;
+            const mouseY = evt.clientY - rect.top;
+            
+            position.x = mouseX - dragStart.x;
+            position.y = mouseY - dragStart.y;
+            draw();
         });
 
-        canvas.addEventListener('touchmove', function(evt) {
-            evt.preventDefault();
-            if (dragStart) {
-                const touch = evt.touches[0];
+        canvas.addEventListener('mouseup', endDrag);
+        canvas.addEventListener('mouseleave', endDrag);
+
+        function endDrag() {
+            isDragging = false;
+            dragStart = null;
+            canvas.style.cursor = 'grab';
+        }
+
+        // Touch Events untuk Drag
+        canvas.addEventListener('touchstart', function(evt) {
+            if (evt.touches.length === 1) {
+                isDragging = true;
                 const rect = canvas.getBoundingClientRect();
+                const touch = evt.touches[0];
                 const mouseX = touch.clientX - rect.left;
                 const mouseY = touch.clientY - rect.top;
-                position.x = mouseX - dragStart.x;
-                position.y = mouseY - dragStart.y;
-                draw();
+                dragStart = { 
+                    x: mouseX - position.x, 
+                    y: mouseY - position.y 
+                };
             }
+        }, { passive: false });
+
+        canvas.addEventListener('touchmove', function(evt) {
+            if (!isDragging || !dragStart || evt.touches.length !== 1) return;
+            evt.preventDefault();
+            
+            const rect = canvas.getBoundingClientRect();
+            const touch = evt.touches[0];
+            const mouseX = touch.clientX - rect.left;
+            const mouseY = touch.clientY - rect.top;
+            
+            position.x = mouseX - dragStart.x;
+            position.y = mouseY - dragStart.y;
+            draw();
+        }, { passive: false });
+
+        canvas.addEventListener('touchend', endDrag);
+
+        // Hammer.js untuk Pinch-to-Zoom
+        const hammer = new Hammer(canvas);
+        hammer.get('pinch').set({ enable: true });
+        
+        let initialScale = 1;
+        
+        hammer.on('pinchstart', function(evt) {
+            initialScale = scale;
+        });
+        
+        hammer.on('pinchmove', function(evt) {
+            evt.preventDefault();
+            scale = Math.max(0.1, Math.min(3, initialScale * evt.scale));
+            document.getElementById('zoomControl').value = scale;
+            document.getElementById('zoomValue').textContent = scale.toFixed(2) + 'x';
+            draw();
         });
 
-        canvas.addEventListener('touchend', () => dragStart = null);
-
-        // DOWNLOAD BUTTON
+        // Download Button
         document.getElementById('saveImage').addEventListener('click', function() {
             if (!image.src || image.src === window.location.href) {
-                alert('Upload foto lu dulu bre!');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Belum Ada Foto',
+                    text: 'Silakan unggah foto terlebih dahulu',
+                    background: 'rgba(30, 41, 59, 0.95)',
+                    color: '#fff',
+                    confirmButtonColor: '#f59e0b'
+                });
                 return;
             }
 
+            // Create temporary link untuk download
             const dataURL = canvas.toDataURL('image/png');
             const link = document.createElement('a');
-            link.download = 'twibbon-keren-lu.png';
+            link.download = 'twibbon-smkn1-lembahmelintang.png';
             link.href = dataURL;
             link.click();
+            
+            Swal.fire({
+                icon: 'success',
+                title: 'Download Berhasil',
+                text: 'Twibbon Anda sedang diunduh',
+                timer: 2000,
+                showConfirmButton: false,
+                background: 'rgba(30, 41, 59, 0.95)',
+                color: '#fff'
+            });
         });
 
-        // WINDOW RESIZE
+        // Window Resize
         $(window).resize(resizeCanvas);
+        
+        // Initialize
         resizeCanvas();
+        
+        // Set cursor awal
+        canvas.style.cursor = 'grab';
     </script>
-
 </body>
 </html>
