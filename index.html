@@ -18,7 +18,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Hammer.js untuk Pinch-to-Zoom -->
+    <!-- Hammer.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
     
     <!-- SweetAlert2 -->
@@ -29,22 +29,11 @@
             darkMode: 'class',
             theme: {
                 extend: {
-                    fontFamily: {
-                        'poppins': ['Poppins', 'sans-serif'],
-                    },
-                    animation: {
-                        'gradient': 'gradient 15s ease infinite',
-                        'flash': 'flash 0.3s ease-out',
-                    },
+                    fontFamily: { 'poppins': ['Poppins', 'sans-serif'] },
+                    animation: { 'gradient': 'gradient 15s ease infinite', 'flash': 'flash 0.3s ease-out' },
                     keyframes: {
-                        gradient: {
-                            '0%, 100%': { 'background-position': '0% 50%' },
-                            '50%': { 'background-position': '100% 50%' },
-                        },
-                        flash: {
-                            '0%': { opacity: '1' },
-                            '100%': { opacity: '0' },
-                        }
+                        gradient: { '0%, 100%': { 'background-position': '0% 50%' }, '50%': { 'background-position': '100% 50%' } },
+                        flash: { '0%': { opacity: '1' }, '100%': { opacity: '0' } }
                     }
                 }
             }
@@ -53,124 +42,52 @@
     
     <style>
         html, body {
-            overflow: hidden;
-            height: 100vh;
-            width: 100vw;
-            touch-action: none;
+            overflow: hidden; height: 100vh; width: 100vw; touch-action: none;
             -webkit-overflow-scrolling: touch;
         }
-        
-        * {
-            font-family: 'Poppins', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-            box-sizing: border-box;
-        }
-        
+        * { font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         body {
             background: linear-gradient(-45deg, #0f172a, #1e1b4b, #312e81, #1e293b);
-            background-size: 400% 400%;
-            animation: gradient 15s ease infinite;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            background-size: 400% 400%; animation: gradient 15s ease infinite;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
-        
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
+        .glass-effect { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.1); }
         .canvas-wrapper {
-            position: relative;
-            border-radius: 1rem;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            background: #0f172a;
-            width: 100%;
-            max-width: 400px;
+            position: relative; border-radius: 1rem; overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); background: #0f172a; width: 100%; max-width: 400px;
         }
-        
-        canvas {
-            cursor: grab;
-            touch-action: none;
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-        
-        canvas:active {
-            cursor: grabbing;
-        }
-        
+        canvas { cursor: grab; touch-action: none; width: 100%; height: auto; display: block; }
+        canvas:active { cursor: grabbing; }
         .drawer-overlay { transition: opacity 0.3s ease; }
         .drawer-content { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .drawer-open .drawer-overlay { opacity: 1; pointer-events: auto; }
         .drawer-open .drawer-content { transform: translateY(0); }
-        
         #cameraModal { transition: opacity 0.3s ease; }
+        #cameraFeed { object-fit: cover; width: 100%; height: 100%; }
         
-        #cameraFeed {
-            object-fit: cover;
-            width: 100%;
-            height: 100%;
-        }
-        
-        .shutter-btn {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            background: white;
-            border: 4px solid rgba(255,255,255,0.3);
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-            transition: transform 0.1s;
-        }
-        
-        .shutter-btn:active {
-            transform: scale(0.9);
-            background: #e2e8f0;
-        }
-        
-        .loading-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(15, 23, 42, 0.9);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 50;
-        }
-        
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid rgba(255, 255, 255, 0.1);
-            border-top: 3px solid #3b82f6;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        /* MIRRORING CAMERA DEPAN */
+        .camera-mirror { transform: scaleX(-1); }
 
-        .btn-disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            filter: grayscale(100%);
+        .shutter-btn {
+            width: 70px; height: 70px; border-radius: 50%; background: white;
+            border: 4px solid rgba(255,255,255,0.3); box-shadow: 0 0 20px rgba(0,0,0,0.5); transition: transform 0.1s;
         }
+        .shutter-btn:active { transform: scale(0.9); background: #e2e8f0; }
+        .loading-overlay {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.9); display: flex; align-items: center; justify-content: center; z-index: 50;
+        }
+        .spinner {
+            width: 40px; height: 40px; border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid #3b82f6; border-radius: 50%; animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .btn-disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(100%); }
     </style>
 </head>
 
 <body class="text-white">
     <main class="w-full max-w-md px-4 py-6 flex flex-col items-center justify-between h-full">
-        
         <div class="text-center mb-4">
             <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-1">
                 SMKN 1 LEMBAH MELINTANG
@@ -198,12 +115,10 @@
                 <i class="fas fa-magic"></i>
                 <span id="mainBtnText">Buat Twibbon Saya</span>
             </button>
-
             <button id="downloadBtn" class="w-full py-4 px-6 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 shadow-lg active:scale-95 btn-disabled" disabled>
                 <i class="fas fa-download"></i>
                 <span>Unduh Twibbon</span>
             </button>
-
             <p class="text-center text-xs text-gray-500 pt-1">
                 Dev.Tim <a href="https://zhyllanos.pages.dev/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 font-medium transition-colors duration-200">Jurnalistik OSIS</a>
             </p>
@@ -222,20 +137,16 @@
         <div class="drawer-overlay absolute inset-0 bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none" onclick="closeDrawer()"></div>
         <div class="drawer-content absolute bottom-0 left-0 right-0 bg-slate-800 rounded-t-3xl p-6 transform translate-y-full border-t border-white/10 shadow-2xl">
             <div class="w-12 h-1.5 bg-gray-600 rounded-full mx-auto mb-6"></div>
-            
             <h3 class="text-lg font-semibold text-center mb-6 text-white">Pilih Sumber Foto</h3>
-            
             <div class="space-y-3">
                 <button id="btnTakePhoto" class="w-full py-4 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl font-medium flex items-center justify-center gap-3 text-white shadow-lg active:scale-95 transition">
                     <i class="fas fa-camera text-xl"></i>
                     <span>Ambil Gambar</span>
                 </button>
-                
                 <button id="btnPickPhoto" class="w-full py-4 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl font-medium flex items-center justify-center gap-3 text-white shadow-lg active:scale-95 transition">
                     <i class="fas fa-image text-xl"></i>
                     <span>Pilih Foto</span>
                 </button>
-                
                 <button onclick="closeDrawer()" class="w-full py-4 bg-slate-700 hover:bg-slate-600 rounded-xl font-medium flex items-center justify-center gap-3 text-gray-300 active:scale-95 transition">
                     <i class="fas fa-times text-xl"></i>
                     <span>Batal</span>
@@ -244,21 +155,27 @@
         </div>
     </div>
 
+    <!-- CAMERA UI -->
     <div id="cameraModal" class="fixed inset-0 z-[60] hidden bg-black opacity-0 pointer-events-none">
         <div class="relative w-full h-full">
             <video id="cameraFeed" autoplay playsinline class="w-full h-full"></video>
-            
             <div id="flashEffect" class="absolute inset-0 bg-white opacity-0 pointer-events-none"></div>
             
-            <div class="absolute top-0 left-0 right-0 p-4 flex justify-between items-center bg-gradient-to-b from-black/70 to-transparent">
+            <!-- Top Bar -->
+            <div class="absolute top-0 left-0 right-0 p-4 flex justify-between items-center bg-gradient-to-b from-black/70 to-transparent z-10">
                 <button id="closeCamera" class="w-10 h-10 rounded-full bg-black/50 backdrop-blur flex items-center justify-center text-white text-xl active:scale-90 transition">
                     <i class="fas fa-times"></i>
                 </button>
                 <span class="text-white font-medium text-sm">Kamera</span>
-                <div class="w-10"></div>
+                
+                <!-- TOMBOL FLIP CAMERA BARU BRE! -->
+                <button id="flipCameraBtn" class="w-10 h-10 rounded-full bg-black/50 backdrop-blur flex items-center justify-center text-white text-xl active:scale-90 transition">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
             </div>
             
-            <div class="absolute bottom-0 left-0 right-0 p-8 flex justify-center items-center bg-gradient-to-t from-black/70 to-transparent">
+            <!-- Bottom Controls -->
+            <div class="absolute bottom-0 left-0 right-0 p-8 flex justify-center items-center bg-gradient-to-t from-black/70 to-transparent z-10">
                 <button id="shutterBtn" class="shutter-btn active:scale-90"></button>
             </div>
         </div>
@@ -267,10 +184,7 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     
     <script>
-        // === KONFIGURASI DUAL-CANVAS BRE! ===
-        const MAX_PREVIEW_DIM = 1080; // Max dimensi canvas preview (aman buat drag)
-        
-        // Variabel Global
+        const MAX_PREVIEW_DIM = 1080;
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         const image = new Image();
@@ -280,26 +194,22 @@
         let dragStart = null;
         let isDragging = false;
         let hasImage = false;
-
-        // === OPTIMASI PERFORMANCE ===
-        let previewImage = null;       // Foto user yang di-resize (buat preview)
-        let twibbonCache = null;       // Offscreen canvas twibbon (preview size)
-        let rafId = null;              // RAF throttling
-        let previewScale = 1;          // Rasio preview vs full resolution
+        let previewImage = null;
+        let twibbonCache = null;
+        let rafId = null;
+        let previewScale = 1;
 
         // Camera Variables
         let cameraStream = null;
         const videoElement = document.getElementById('cameraFeed');
         const captureCanvas = document.createElement('canvas');
+        let currentFacingMode = 'user'; // Default kamera depan
 
-        // DOM Elements
         const downloadBtn = document.getElementById('downloadBtn');
         const mainBtnText = document.getElementById('mainBtnText');
 
         function showLoading(show) {
-            const overlay = document.getElementById('loadingOverlay');
-            if (show) overlay.classList.remove('hidden');
-            else overlay.classList.add('hidden');
+            document.getElementById('loadingOverlay').classList.toggle('hidden', !show);
         }
 
         function updateUIState() {
@@ -314,64 +224,42 @@
             }
         }
 
-        // === PRE-SCALE FOTO USER ===
         function createPreviewImage(src, callback) {
             const tempImg = new Image();
             tempImg.onload = function() {
                 let w = tempImg.width;
                 let h = tempImg.height;
-                
-                // Scale down ke max 2000px (cukup buat zoom 3x di preview 1080px)
                 const MAX_IMG_DIM = 2000;
                 if (w > MAX_IMG_DIM || h > MAX_IMG_DIM) {
                     const ratio = Math.min(MAX_IMG_DIM / w, MAX_IMG_DIM / h);
                     w = Math.round(w * ratio);
                     h = Math.round(h * ratio);
                 }
-                
                 const tempCanvas = document.createElement('canvas');
                 tempCanvas.width = w;
                 tempCanvas.height = h;
-                const tempCtx = tempCanvas.getContext('2d');
-                tempCtx.drawImage(tempImg, 0, 0, w, h);
-                
+                tempCanvas.getContext('2d').drawImage(tempImg, 0, 0, w, h);
                 previewImage = new Image();
-                previewImage.onload = function() {
-                    callback();
-                };
+                previewImage.onload = callback;
                 previewImage.src = tempCanvas.toDataURL('image/png');
             };
             tempImg.src = src;
         }
 
-        // Load Twibbon Frame
         twibbon.src = 'twibbon.png';
         twibbon.onload = function() {
-            // === HITUNG PREVIEW SCALE (MAINTAIN ASPECT RATIO) ===
             const maxDim = Math.max(twibbon.width, twibbon.height);
             previewScale = Math.min(1, MAX_PREVIEW_DIM / maxDim);
-            
-            // Set canvas preview ke ukuran yang di-scale down (proporsional!)
             canvas.width = Math.round(twibbon.width * previewScale);
             canvas.height = Math.round(twibbon.height * previewScale);
-            
-            // Cache twibbon di offscreen canvas (preview size)
             twibbonCache = document.createElement('canvas');
             twibbonCache.width = canvas.width;
             twibbonCache.height = canvas.height;
             twibbonCache.getContext('2d').drawImage(twibbon, 0, 0, canvas.width, canvas.height);
-            
             draw();
         };
         twibbon.onerror = function() {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'File twibbon.png tidak ditemukan!',
-                background: 'rgba(30, 41, 59, 0.95)',
-                color: '#fff',
-                confirmButtonColor: '#3b82f6'
-            });
+            Swal.fire({ icon: 'error', title: 'Oops...', text: 'File twibbon.png tidak ditemukan!', background: 'rgba(30, 41, 59, 0.95)', color: '#fff', confirmButtonColor: '#3b82f6' });
         };
 
         function openDrawer() {
@@ -384,85 +272,60 @@
         function closeDrawer() {
             const drawer = document.getElementById('actionDrawer');
             drawer.classList.remove('drawer-open');
-            setTimeout(() => {
-                drawer.classList.add('hidden');
-            }, 300);
+            setTimeout(() => drawer.classList.add('hidden'), 300);
         }
 
         document.getElementById('mainActionBtn').addEventListener('click', openDrawer);
-
         document.getElementById('btnPickPhoto').addEventListener('click', () => {
             closeDrawer();
-            setTimeout(() => {
-                document.getElementById('fileInput').click();
-            }, 300);
+            setTimeout(() => document.getElementById('fileInput').click(), 300);
         });
 
         document.getElementById('fileInput').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
-
             if (!file.type.startsWith('image/')) {
                 Swal.fire({ icon: 'warning', title: 'File Tidak Valid', text: 'Mohon unggah file gambar', background: 'rgba(30, 41, 59, 0.95)', color: '#fff', confirmButtonColor: '#f59e0b' });
                 return;
             }
-
             showLoading(true);
             const reader = new FileReader();
-            reader.onload = function(event) {
-                processImage(event.target.result);
-            };
+            reader.onload = (event) => processImage(event.target.result);
             reader.readAsDataURL(file);
             this.value = '';
         });
 
         async function checkAndOpenCamera() {
             closeDrawer();
-            
             const loadingToast = Swal.fire({
-                title: 'Memeriksa izin kamera...',
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                showConfirmButton: false,
-                background: 'rgba(30, 41, 59, 0.95)',
-                color: '#fff',
-                didOpen: () => { Swal.showLoading(); }
+                title: 'Memeriksa izin kamera...', allowOutsideClick: false, allowEscapeKey: false, showConfirmButton: false,
+                background: 'rgba(30, 41, 59, 0.95)', color: '#fff', didOpen: () => { Swal.showLoading(); }
             });
-
             try {
                 if (navigator.permissions) {
                     try {
                         const permissionStatus = await navigator.permissions.query({ name: 'camera' });
                         if (permissionStatus.state === 'denied') {
                             loadingToast.close();
-                            Swal.fire({
-                                icon: 'error', title: 'Izin Kamera Ditolak',
-                                html: 'Anda telah menolak akses kamera.<br>Silakan buka pengaturan browser untuk mengizinkan.',
-                                confirmButtonText: 'Mengerti', background: 'rgba(30, 41, 59, 0.95)', color: '#fff', confirmButtonColor: '#ef4444'
-                            });
+                            Swal.fire({ icon: 'error', title: 'Izin Kamera Ditolak', html: 'Anda telah menolak akses kamera.<br>Silakan buka pengaturan browser.', confirmButtonText: 'Mengerti', background: 'rgba(30, 41, 59, 0.95)', color: '#fff', confirmButtonColor: '#ef4444' });
                             return;
                         }
                         await requestCameraAccess(loadingToast);
-                    } catch (permError) {
-                        await requestCameraAccess(loadingToast);
-                    }
-                } else {
-                    await requestCameraAccess(loadingToast);
-                }
+                    } catch (permError) { await requestCameraAccess(loadingToast); }
+                } else { await requestCameraAccess(loadingToast); }
             } catch (err) {
                 loadingToast.close();
-                Swal.fire({
-                    icon: 'error', title: 'Gagal Mengakses Kamera',
-                    html: 'Pastikan:<br>1. Browser mendukung kamera<br>2. Gunakan HTTPS atau localhost<br>3. Perangkat memiliki kamera',
-                    confirmButtonText: 'Mengerti', background: 'rgba(30, 41, 59, 0.95)', color: '#fff', confirmButtonColor: '#ef4444'
-                });
+                Swal.fire({ icon: 'error', title: 'Gagal Mengakses Kamera', html: 'Pastikan:<br>1. Browser mendukung kamera<br>2. Gunakan HTTPS/localhost<br>3. Perangkat memiliki kamera', confirmButtonText: 'Mengerti', background: 'rgba(30, 41, 59, 0.95)', color: '#fff', confirmButtonColor: '#ef4444' });
             }
         }
 
         async function requestCameraAccess(loadingToast) {
             try {
+                if (cameraStream) {
+                    cameraStream.getTracks().forEach(track => track.stop());
+                }
                 cameraStream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 1280 } },
+                    video: { facingMode: currentFacingMode, width: { ideal: 1280 }, height: { ideal: 1280 } },
                     audio: false
                 });
                 loadingToast.close();
@@ -470,16 +333,7 @@
             } catch (err) {
                 loadingToast.close();
                 if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
-                    Swal.fire({
-                        icon: 'warning', title: 'Izin Kamera Diperlukan',
-                        html: 'Aplikasi ini memerlukan akses kamera.<br>Silakan izinkan saat browser meminta.',
-                        confirmButtonText: 'Coba Lagi', cancelButtonText: 'Batal', showCancelButton: true,
-                        background: 'rgba(30, 41, 59, 0.95)', color: '#fff', confirmButtonColor: '#3b82f6', cancelButtonColor: '#6b7280'
-                    }).then((result) => { if (result.isConfirmed) checkAndOpenCamera(); });
-                } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
-                    Swal.fire({ icon: 'error', title: 'Kamera Tidak Ditemukan', text: 'Perangkat tidak memiliki kamera.', background: 'rgba(30, 41, 59, 0.95)', color: '#fff', confirmButtonColor: '#ef4444' });
-                } else if (err.name === 'NotReadableError' || err.name === 'TrackStartError') {
-                    Swal.fire({ icon: 'error', title: 'Kamera Sedang Digunakan', text: 'Tutup aplikasi lain yang menggunakan kamera.', background: 'rgba(30, 41, 59, 0.95)', color: '#fff', confirmButtonColor: '#ef4444' });
+                    Swal.fire({ icon: 'warning', title: 'Izin Kamera Diperlukan', html: 'Silakan izinkan akses kamera.', confirmButtonText: 'Coba Lagi', cancelButtonText: 'Batal', showCancelButton: true, background: 'rgba(30, 41, 59, 0.95)', color: '#fff', confirmButtonColor: '#3b82f6', cancelButtonColor: '#6b7280' }).then((result) => { if (result.isConfirmed) checkAndOpenCamera(); });
                 } else {
                     Swal.fire({ icon: 'error', title: 'Error Kamera', text: err.message, background: 'rgba(30, 41, 59, 0.95)', color: '#fff', confirmButtonColor: '#ef4444' });
                 }
@@ -492,6 +346,13 @@
             void modal.offsetWidth;
             modal.classList.remove('opacity-0', 'pointer-events-none');
             videoElement.srcObject = cameraStream;
+            
+            // Set Mirror Class (Kamera depan harus mirror)
+            if (currentFacingMode === 'user') {
+                videoElement.classList.add('camera-mirror');
+            } else {
+                videoElement.classList.remove('camera-mirror');
+            }
         }
 
         function closeCamera() {
@@ -515,12 +376,52 @@
             captureCanvas.width = videoElement.videoWidth;
             captureCanvas.height = videoElement.videoHeight;
             const captureCtx = captureCanvas.getContext('2d');
-            captureCtx.drawImage(videoElement, 0, 0, captureCanvas.width, captureCanvas.height);
-            const dataURL = captureCanvas.toDataURL('image/png');
             
+            // JIKA KAMERA DEPAN, KITA MIRROR PAS CAPTURE BIAR SAMA DENGAN PREVIEW
+            if (currentFacingMode === 'user') {
+                captureCtx.save();
+                captureCtx.scale(-1, 1);
+                captureCtx.drawImage(videoElement, -captureCanvas.width, 0, captureCanvas.width, captureCanvas.height);
+                captureCtx.restore();
+            } else {
+                captureCtx.drawImage(videoElement, 0, 0, captureCanvas.width, captureCanvas.height);
+            }
+            
+            const dataURL = captureCanvas.toDataURL('image/png');
             closeCamera();
             setTimeout(() => { processImage(dataURL); }, 300);
         }
+
+        // FLIP CAMERA BUTTON LOGIC
+        document.getElementById('flipCameraBtn').addEventListener('click', async () => {
+            currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
+            // Tampilin loading dikit pas ganti
+            const btn = document.getElementById('flipCameraBtn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            try {
+                if (cameraStream) {
+                    cameraStream.getTracks().forEach(track => track.stop());
+                }
+                cameraStream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: currentFacingMode, width: { ideal: 1280 }, height: { ideal: 1280 } },
+                    audio: false
+                });
+                videoElement.srcObject = cameraStream;
+                
+                // Update Mirror
+                if (currentFacingMode === 'user') {
+                    videoElement.classList.add('camera-mirror');
+                } else {
+                    videoElement.classList.remove('camera-mirror');
+                }
+            } catch (e) {
+                console.error(e);
+                Swal.fire({ icon: 'error', title: 'Gagal Ganti Kamera', text: 'Perangkat mungkin tidak memiliki kamera belakang.', background: 'rgba(30, 41, 59, 0.95)', color: '#fff', confirmButtonColor: '#ef4444' });
+                currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user'; // Revert
+            } finally {
+                btn.innerHTML = '<i class="fas fa-sync-alt"></i>';
+            }
+        });
 
         document.getElementById('btnTakePhoto').addEventListener('click', checkAndOpenCamera);
         document.getElementById('closeCamera').addEventListener('click', closeCamera);
@@ -531,89 +432,58 @@
             image.src = src;
             image.onload = function() {
                 hasImage = true;
-                
                 createPreviewImage(src, function() {
                     reset();
                     draw();
                     showLoading(false);
                     updateUIState();
-                    
-                    Swal.fire({
-                        icon: 'success', title: 'Foto Berhasil!', text: 'Geser & cubit untuk mengatur',
-                        timer: 1500, showConfirmButton: false, background: 'rgba(30, 41, 59, 0.95)', color: '#fff'
-                    });
+                    Swal.fire({ icon: 'success', title: 'Foto Berhasil!', text: 'Geser & cubit untuk mengatur', timer: 1500, showConfirmButton: false, background: 'rgba(30, 41, 59, 0.95)', color: '#fff' });
                 });
             };
         }
 
-        // === DOWNLOAD: RENDER DI RESOLUSI PENUH (3375x4219) ===
         downloadBtn.addEventListener('click', function() {
             if (!hasImage) {
-                Swal.fire({
-                    icon: 'warning', title: 'Belum Ada Foto', text: 'Silakan unggah atau ambil foto terlebih dahulu.',
-                    background: 'rgba(30, 41, 59, 0.95)', color: '#fff', confirmButtonColor: '#f59e0b'
-                });
+                Swal.fire({ icon: 'warning', title: 'Belum Ada Foto', text: 'Silakan unggah atau ambil foto terlebih dahulu.', background: 'rgba(30, 41, 59, 0.95)', color: '#fff', confirmButtonColor: '#f59e0b' });
                 return;
             }
-
             showLoading(true);
-            
             setTimeout(() => {
                 try {
-                    // Buat canvas full-resolution (hidden)
                     const fullCanvas = document.createElement('canvas');
                     fullCanvas.width = twibbon.width;
                     fullCanvas.height = twibbon.height;
-                    
-                    // Render ke full canvas dengan resolusi penuh
                     renderToCanvas(fullCanvas, true);
-                    
                     const dataURL = fullCanvas.toDataURL('image/png');
                     const link = document.createElement('a');
                     link.download = 'Twibbon-SMKN1-LM.png';
                     link.href = dataURL;
                     link.click();
-                    
                     showLoading(false);
-                    Swal.fire({
-                        icon: 'success', title: 'Download Berhasil!', text: 'Twibbon tersimpan di galeri Anda.',
-                        timer: 2000, showConfirmButton: false, background: 'rgba(30, 41, 59, 0.95)', color: '#fff'
-                    });
+                    Swal.fire({ icon: 'success', title: 'Download Berhasil!', text: 'Twibbon tersimpan di galeri Anda.', timer: 2000, showConfirmButton: false, background: 'rgba(30, 41, 59, 0.95)', color: '#fff' });
                 } catch (err) {
                     showLoading(false);
-                    Swal.fire({
-                        icon: 'error', title: 'Gagal Download', text: 'Terjadi kesalahan saat menyimpan gambar.',
-                        background: 'rgba(30, 41, 59, 0.95)', color: '#fff', confirmButtonColor: '#ef4444'
-                    });
+                    Swal.fire({ icon: 'error', title: 'Gagal Download', text: 'Terjadi kesalahan saat menyimpan gambar.', background: 'rgba(30, 41, 59, 0.95)', color: '#fff', confirmButtonColor: '#ef4444' });
                 }
             }, 500);
         });
 
         function reset() { scale = 1; position = { x: 0, y: 0 }; }
 
-        // === UNIVERSAL RENDER FUNCTION (Buat preview & download) ===
         function renderToCanvas(targetCanvas, useFullRes) {
             const tCtx = targetCanvas.getContext('2d');
             const cw = targetCanvas.width;
             const ch = targetCanvas.height;
-
-            // Background
             tCtx.fillStyle = '#0f172a';
             tCtx.fillRect(0, 0, cw, ch);
-
-            // Pilih gambar: full-res (image) buat download, preview buat drag
             const imgToDraw = useFullRes ? image : (previewImage && previewImage.complete ? previewImage : image);
-
             if (hasImage && imgToDraw && imgToDraw.complete && imgToDraw.naturalWidth > 0) {
                 const iw = imgToDraw.width;
                 const ih = imgToDraw.height;
                 const scaleFactor = Math.min(cw / iw, ch / ih);
-                
-                // Scale position dari preview coords ke target coords
                 const posScale = cw / canvas.width;
                 const scaledPosX = position.x * posScale;
                 const scaledPosY = position.y * posScale;
-                
                 tCtx.save();
                 tCtx.translate(cw / 2, ch / 2);
                 tCtx.scale(scaleFactor * scale, scaleFactor * scale);
@@ -632,8 +502,6 @@
                 tCtx.fillStyle = '#64748b';
                 tCtx.fillText('klik tombol "Buat Twibon Saya"', cw / 2, ch / 2 + 20);
             }
-            
-            // Draw twibbon
             if (useFullRes && twibbon && twibbon.complete) {
                 tCtx.drawImage(twibbon, 0, 0, cw, ch);
             } else if (twibbonCache) {
@@ -641,12 +509,8 @@
             }
         }
 
-        // Draw function untuk preview canvas
-        function draw() {
-            renderToCanvas(canvas, false);
-        }
+        function draw() { renderToCanvas(canvas, false); }
 
-        // RAF Throttling
         function requestDraw() {
             if (rafId) return;
             rafId = requestAnimationFrame(() => {
@@ -681,11 +545,7 @@
             requestDraw();
         }
 
-        function endDrag() { 
-            isDragging = false; 
-            dragStart = null; 
-            draw();
-        }
+        function endDrag() { isDragging = false; dragStart = null; draw(); }
 
         canvas.addEventListener('mousedown', startDrag);
         canvas.addEventListener('mousemove', doDrag);
@@ -706,7 +566,6 @@
             requestDraw();
         });
 
-        // Initialize
         updateUIState();
     </script>
 </body>
