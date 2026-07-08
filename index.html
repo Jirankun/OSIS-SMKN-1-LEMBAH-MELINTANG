@@ -16,12 +16,12 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Hammer.js untuk Touch Gestures -->
+    <!-- Hammer.js untuk Pinch-to-Zoom -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
     
-    <!-- SweetAlert2 untuk Alert yang Cantik -->
+    <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <script>
@@ -34,16 +34,11 @@
                     },
                     animation: {
                         'gradient': 'gradient 15s ease infinite',
-                        'float': 'float 3s ease-in-out infinite',
                     },
                     keyframes: {
                         gradient: {
                             '0%, 100%': { 'background-position': '0% 50%' },
                             '50%': { 'background-position': '100% 50%' },
-                        },
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0px)' },
-                            '50%': { transform: 'translateY(-10px)' },
                         }
                     }
                 }
@@ -71,19 +66,12 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        .glass-card {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        }
-        
         .canvas-wrapper {
             position: relative;
             border-radius: 1rem;
             overflow: hidden;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            background: #0f172a;
         }
         
         canvas {
@@ -91,36 +79,11 @@
             touch-action: none;
             max-width: 100%;
             height: auto;
+            display: block;
         }
         
         canvas:active {
             cursor: grabbing;
-        }
-        
-        .btn-primary-custom {
-            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .btn-primary-custom:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.5);
-        }
-        
-        .btn-primary-custom:active {
-            transform: translateY(0);
-        }
-        
-        .btn-success-custom {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            transition: all 0.3s ease;
-        }
-        
-        .btn-success-custom:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.5);
         }
         
         .file-input-wrapper {
@@ -138,50 +101,6 @@
             width: 100%;
             height: 100%;
             cursor: pointer;
-        }
-        
-        .control-btn {
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-        }
-        
-        .control-btn:hover {
-            transform: scale(1.1);
-        }
-        
-        .control-btn:active {
-            transform: scale(0.95);
-        }
-        
-        .zoom-slider {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 100%;
-            height: 6px;
-            border-radius: 5px;
-            background: rgba(255, 255, 255, 0.2);
-            outline: none;
-        }
-        
-        .zoom-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            cursor: pointer;
-            box-shadow: 0 2px 10px rgba(59, 130, 246, 0.5);
-        }
-        
-        .zoom-slider::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            cursor: pointer;
-            border: none;
-            box-shadow: 0 2px 10px rgba(59, 130, 246, 0.5);
         }
         
         .loading-overlay {
@@ -210,231 +129,67 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        
-        .brand-logo {
-            animation: float 3s ease-in-out infinite;
-        }
-        
-        @media (max-width: 640px) {
-            .canvas-wrapper {
-                max-width: 100%;
-            }
-        }
     </style>
 </head>
 
 <body class="text-white">
-    <!-- Header -->
-    <header class="glass-effect sticky top-0 z-50 shadow-lg">
-        <div class="container mx-auto px-4 py-4">
-            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-                <div class="flex items-center gap-3 brand-logo">
-                    <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                        <i class="fas fa-image text-2xl"></i>
-                    </div>
-                    <div>
-                        <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                            Twibbon SMKN 1 LEMBAH MELINTANG
-                        </h1>
-                        <p class="text-xs text-gray-400">Aplikasi Pembuat Twibbon Profesional</p>
-                    </div>
-                </div>
-                <div class="text-sm text-gray-400 flex items-center gap-2">
-                    <i class="fas fa-code"></i>
-                    <span>Dikembangkan oleh <strong class="text-blue-400">Zhyllan Fyllah (Jirankun)</strong></span>
-                </div>
-            </div>
-        </div>
-    </header>
-
     <!-- Main Content -->
-    <main class="container mx-auto px-4 py-8">
-        <div class="max-w-6xl mx-auto">
-            
-            <!-- Info Card -->
-            <div class="glass-card rounded-2xl p-6 mb-8 text-center">
-                <h2 class="text-3xl font-bold mb-3 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                    Selamat Datang di Twibbon Maker
-                </h2>
-                <p class="text-gray-300 text-sm md:text-base">
-                    Unggah foto Anda, sesuaikan posisi dan ukuran, kemudian unduh hasil twibbon dengan mudah.
-                    <br>Dukungan gesture pinch-to-zoom untuk pengalaman yang lebih baik.
-                </p>
-            </div>
-
-            <div class="grid lg:grid-cols-2 gap-8">
-                
-                <!-- Canvas Preview -->
-                <div class="space-y-4">
-                    <div class="glass-card rounded-2xl p-6">
-                        <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">
-                            <i class="fas fa-eye text-blue-400"></i>
-                            Pratinjau Twibbon
-                        </h3>
-                        
-                        <div class="canvas-wrapper bg-slate-900/50 aspect-square flex items-center justify-center">
-                            <canvas id="canvas"></canvas>
-                            <div id="loadingOverlay" class="loading-overlay hidden">
-                                <div class="text-center">
-                                    <div class="spinner mx-auto mb-3"></div>
-                                    <p class="text-gray-400">Memuat...</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="mt-4 flex items-center justify-center gap-4 text-sm text-gray-400">
-                            <span class="flex items-center gap-2">
-                                <i class="fas fa-hand-pointer text-blue-400"></i>
-                                Geser untuk memindahkan
-                            </span>
-                            <span class="hidden md:inline">|</span>
-                            <span class="flex items-center gap-2">
-                                <i class="fas fa-compress-arrows-alt text-purple-400"></i>
-                                Cubit untuk zoom
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Control Panel -->
-                <div class="space-y-4">
-                    
-                    <!-- Upload Section -->
-                    <div class="glass-card rounded-2xl p-6">
-                        <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">
-                            <i class="fas fa-upload text-green-400"></i>
-                            Unggah Foto
-                        </h3>
-                        
-                        <div class="file-input-wrapper">
-                            <button class="w-full py-4 px-6 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 shadow-lg">
-                                <i class="fas fa-folder-open"></i>
-                                <span>Pilih Foto dari Perangkat</span>
-                            </button>
-                            <input type="file" id="imageUpload" accept="image/*">
-                        </div>
-                        
-                        <p id="fileName" class="text-sm text-gray-500 mt-3 text-center">
-                            <i class="fas fa-info-circle"></i> Belum ada foto yang dipilih
-                        </p>
-                    </div>
-
-                    <!-- Zoom Control -->
-                    <div class="glass-card rounded-2xl p-6">
-                        <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">
-                            <i class="fas fa-search-plus text-purple-400"></i>
-                            Atur Ukuran (Zoom)
-                        </h3>
-                        
-                        <div class="space-y-3">
-                            <input type="range" id="zoomControl" min="0.1" max="3" value="1" step="0.01" 
-                                class="zoom-slider">
-                            <div class="flex justify-between text-sm text-gray-400">
-                                <span>0.1x</span>
-                                <span id="zoomValue" class="text-purple-400 font-bold text-lg">1.00x</span>
-                                <span>3.0x</span>
-                            </div>
-                        </div>
-                        
-                        <div class="mt-4 flex gap-2">
-                            <button id="zoomOut" class="flex-1 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition control-btn">
-                                <i class="fas fa-minus"></i> Kecilkan
-                            </button>
-                            <button id="zoomIn" class="flex-1 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition control-btn">
-                                <i class="fas fa-plus"></i> Besarkan
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Position Control -->
-                    <div class="glass-card rounded-2xl p-6">
-                        <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">
-                            <i class="fas fa-arrows-alt text-orange-400"></i>
-                            Atur Posisi Foto
-                        </h3>
-                        
-                        <div class="flex justify-center mb-4">
-                            <div class="grid grid-cols-3 gap-2 w-48">
-                                <div></div>
-                                <button id="moveUp" class="control-btn py-3 bg-gradient-to-br from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 rounded-xl flex items-center justify-center text-xl font-bold shadow-lg">
-                                    <i class="fas fa-chevron-up"></i>
-                                </button>
-                                <div></div>
-                                
-                                <button id="moveLeft" class="control-btn py-3 bg-gradient-to-br from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 rounded-xl flex items-center justify-center text-xl font-bold shadow-lg">
-                                    <i class="fas fa-chevron-left"></i>
-                                </button>
-                                <div class="bg-slate-700/50 rounded-xl flex items-center justify-center">
-                                    <i class="fas fa-crosshairs text-gray-500"></i>
-                                </div>
-                                <button id="moveRight" class="control-btn py-3 bg-gradient-to-br from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 rounded-xl flex items-center justify-center text-xl font-bold shadow-lg">
-                                    <i class="fas fa-chevron-right"></i>
-                                </button>
-                                
-                                <div></div>
-                                <button id="moveDown" class="control-btn py-3 bg-gradient-to-br from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 rounded-xl flex items-center justify-center text-xl font-bold shadow-lg">
-                                    <i class="fas fa-chevron-down"></i>
-                                </button>
-                                <div></div>
-                            </div>
-                        </div>
-                        
-                        <p class="text-xs text-gray-400 text-center">
-                            <i class="fas fa-info-circle"></i> Gunakan tombol di atas atau geser langsung pada canvas
-                        </p>
-                    </div>
-
-                    <!-- Action Buttons -->
-                    <div class="glass-card rounded-2xl p-6 space-y-3">
-                        <button id="saveImage" class="w-full py-4 px-6 btn-success-custom rounded-xl font-semibold text-lg flex items-center justify-center gap-2 shadow-lg">
-                            <i class="fas fa-download text-xl"></i>
-                            <span>Unduh Twibbon</span>
-                        </button>
-                        
-                        <button id="resetBtn" class="w-full py-3 px-6 bg-slate-700 hover:bg-slate-600 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2">
-                            <i class="fas fa-undo"></i>
-                            <span>Reset Posisi</span>
-                        </button>
-                    </div>
-
-                </div>
-            </div>
-
-            <!-- Footer Info -->
-            <div class="mt-12 glass-card rounded-2xl p-6 text-center">
-                <div class="grid md:grid-cols-3 gap-6 text-sm">
-                    <div class="flex flex-col items-center gap-2">
-                        <i class="fas fa-shield-alt text-green-400 text-2xl"></i>
-                        <p class="text-gray-300"><strong>Privasi Terjamin</strong></p>
-                        <p class="text-gray-500 text-xs">Semua proses dilakukan di browser Anda. Foto tidak diunggah ke server.</p>
-                    </div>
-                    <div class="flex flex-col items-center gap-2">
-                        <i class="fas fa-mobile-alt text-blue-400 text-2xl"></i>
-                        <p class="text-gray-300"><strong>Responsif</strong></p>
-                        <p class="text-gray-500 text-xs">Dapat digunakan di perangkat desktop maupun mobile.</p>
-                    </div>
-                    <div class="flex flex-col items-center gap-2">
-                        <i class="fas fa-bolt text-yellow-400 text-2xl"></i>
-                        <p class="text-gray-300"><strong>Cepat & Mudah</strong></p>
-                        <p class="text-gray-500 text-xs">Buat twibbon dalam hitungan detik dengan mudah.</p>
-                    </div>
-                </div>
-            </div>
-
+    <main class="container mx-auto px-4 py-6 max-w-md">
+        
+        <!-- Title -->
+        <div class="text-center mb-6">
+            <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-2">
+                Twibbon SMKN 1 LEMBAH MELINTANG
+            </h1>
+            <p class="text-xs text-gray-400">Selamat Datang Peserta Didik Baru</p>
         </div>
+
+        <!-- Canvas Preview -->
+        <div class="glass-effect rounded-2xl p-4 mb-6">
+            <div class="canvas-wrapper bg-slate-900 aspect-square">
+                <canvas id="canvas"></canvas>
+                <div id="loadingOverlay" class="loading-overlay hidden">
+                    <div class="text-center">
+                        <div class="spinner mx-auto mb-3"></div>
+                        <p class="text-gray-400 text-sm">Memuat...</p>
+                    </div>
+                </div>
+            </div>
+            <p class="text-xs text-gray-500 mt-3 text-center">
+                <i class="fas fa-hand-pointer text-blue-400"></i> Sentuh & geser untuk mengatur posisi
+            </p>
+        </div>
+
+        <!-- Upload Button -->
+        <div class="glass-effect rounded-2xl p-4 mb-4">
+            <div class="file-input-wrapper">
+                <button class="w-full py-4 px-6 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 shadow-lg">
+                    <i class="fas fa-camera"></i>
+                    <span>Unggah Foto</span>
+                </button>
+                <input type="file" id="imageUpload" accept="image/*">
+            </div>
+        </div>
+
+        <!-- Download Button -->
+        <div class="glass-effect rounded-2xl p-4 mb-6">
+            <button id="saveImage" class="w-full py-4 px-6 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 shadow-lg">
+                <i class="fas fa-download"></i>
+                <span>Unduh Twibbon</span>
+            </button>
+        </div>
+
+        <!-- Footer -->
+        <footer class="text-center pb-6">
+            <p class="text-gray-500 text-xs">
+                © 2024 Twibbon SMKN 1 LEMBAH MELINTANG
+            </p>
+            <p class="text-gray-600 text-xs mt-1">
+                Developed by <strong class="text-blue-400">Zhyllan Fyllah (Jirankun)</strong>
+            </p>
+        </footer>
+
     </main>
-
-    <!-- Footer -->
-    <footer class="glass-effect mt-12 py-6 border-t border-white/10">
-        <div class="container mx-auto px-4 text-center">
-            <p class="text-gray-400 text-sm">
-                © 2024 Twibbon SMKN 1 LEMBAH MELINTANG. All rights reserved.
-            </p>
-            <p class="text-gray-500 text-xs mt-2">
-                Developed with <i class="fas fa-heart text-red-500"></i> by <strong class="text-blue-400">Zhyllan Fyllah (Jirankun)</strong>
-            </p>
-        </div>
-    </footer>
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -450,7 +205,7 @@
         let position = { x: 0, y: 0 };
         let dragStart = null;
         let isDragging = false;
-        const MOVE_AMOUNT = 10;
+        let hasImage = false;
 
         // Loading Overlay
         function showLoading(show) {
@@ -472,8 +227,7 @@
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'File twibbon.png tidak ditemukan! Pastikan file berada di folder yang sama dengan file HTML.',
-                footer: '<a href="#">Pelajari lebih lanjut</a>',
+                text: 'File twibbon.png tidak ditemukan!',
                 background: 'rgba(30, 41, 59, 0.95)',
                 color: '#fff',
                 confirmButtonColor: '#3b82f6'
@@ -485,12 +239,11 @@
             const file = e.target.files[0];
             if (!file) return;
 
-            // Validasi file
             if (!file.type.startsWith('image/')) {
                 Swal.fire({
                     icon: 'warning',
                     title: 'File Tidak Valid',
-                    text: 'Mohon unggah file gambar (JPG, PNG, dll)',
+                    text: 'Mohon unggah file gambar',
                     background: 'rgba(30, 41, 59, 0.95)',
                     color: '#fff',
                     confirmButtonColor: '#f59e0b'
@@ -498,43 +251,27 @@
                 return;
             }
 
-            // Update file name display
-            document.getElementById('fileName').innerHTML = 
-                `<i class="fas fa-check-circle text-green-400"></i> ${file.name}`;
-            document.getElementById('fileName').classList.remove('text-gray-500');
-            document.getElementById('fileName').classList.add('text-green-400');
-
             showLoading(true);
 
             const reader = new FileReader();
             reader.onload = function(event) {
                 image.src = event.target.result;
                 image.onload = function() {
+                    hasImage = true;
                     reset();
                     draw();
                     showLoading(false);
                     
                     Swal.fire({
                         icon: 'success',
-                        title: 'Foto Berhasil Diunggah',
-                        text: 'Silakan atur posisi dan ukuran foto',
-                        timer: 2000,
+                        title: 'Foto Berhasil!',
+                        text: 'Geser & cubit untuk mengatur',
+                        timer: 1500,
                         showConfirmButton: false,
                         background: 'rgba(30, 41, 59, 0.95)',
                         color: '#fff'
                     });
                 };
-            };
-            reader.onerror = function() {
-                showLoading(false);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Gagal membaca file',
-                    background: 'rgba(30, 41, 59, 0.95)',
-                    color: '#fff',
-                    confirmButtonColor: '#ef4444'
-                });
             };
             reader.readAsDataURL(file);
         });
@@ -543,33 +280,47 @@
         function reset() {
             scale = 1;
             position = { x: 0, y: 0 };
-            document.getElementById('zoomControl').value = 1;
-            document.getElementById('zoomValue').textContent = '1.00x';
         }
 
         // Draw Function
         function draw() {
-            if (!image.src || image.src === window.location.href) return;
-
-            const iw = image.width;
-            const ih = image.height;
             const cw = canvas.width;
             const ch = canvas.height;
 
-            const scaleFactor = Math.min(cw / iw, ch / ih);
+            // Clear canvas dengan background hitam
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(0, 0, cw, ch);
+
+            // Jika ada foto, gambar foto
+            if (hasImage && image.src && image.src !== window.location.href) {
+                const iw = image.width;
+                const ih = image.height;
+                const scaleFactor = Math.min(cw / iw, ch / ih);
+                
+                ctx.save();
+                ctx.translate(cw / 2, ch / 2);
+                ctx.scale(scaleFactor * scale, scaleFactor * scale);
+                ctx.translate(-iw / 2 + position.x / (scaleFactor * scale), 
+                             -ih / 2 + position.y / (scaleFactor * scale));
+                ctx.drawImage(image, 0, 0);
+                ctx.restore();
+            } else {
+                // Tampilkan placeholder jika belum ada foto
+                ctx.fillStyle = '#1e293b';
+                ctx.fillRect(0, 0, cw, ch);
+                
+                ctx.fillStyle = '#475569';
+                ctx.font = '20px Poppins';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('Upload Foto Anda', cw / 2, ch / 2 - 30);
+                
+                ctx.font = '14px Poppins';
+                ctx.fillStyle = '#64748b';
+                ctx.fillText('Klik tombol di bawah', cw / 2, ch / 2 + 10);
+            }
             
-            ctx.clearRect(0, 0, cw, ch);
-            
-            // Draw image dengan transformasi
-            ctx.save();
-            ctx.translate(cw / 2, ch / 2);
-            ctx.scale(scaleFactor * scale, scaleFactor * scale);
-            ctx.translate(-iw / 2 + position.x / (scaleFactor * scale), 
-                         -ih / 2 + position.y / (scaleFactor * scale));
-            ctx.drawImage(image, 0, 0);
-            ctx.restore();
-            
-            // Draw twibbon overlay
+            // Selalu gambar twibbon overlay
             ctx.drawImage(twibbon, 0, 0, cw, ch);
         }
 
@@ -580,95 +331,40 @@
             draw();
         }
 
-        // Zoom Control
-        $('#zoomControl').on('input', function() {
-            scale = parseFloat($(this).val());
-            document.getElementById('zoomValue').textContent = scale.toFixed(2) + 'x';
-            draw();
-        });
-
-        // Zoom Buttons
-        document.getElementById('zoomIn').addEventListener('click', function() {
-            if (scale < 3) {
-                scale = Math.min(scale + 0.1, 3);
-                document.getElementById('zoomControl').value = scale;
-                document.getElementById('zoomValue').textContent = scale.toFixed(2) + 'x';
-                draw();
-            }
-        });
-
-        document.getElementById('zoomOut').addEventListener('click', function() {
-            if (scale > 0.1) {
-                scale = Math.max(scale - 0.1, 0.1);
-                document.getElementById('zoomControl').value = scale;
-                document.getElementById('zoomValue').textContent = scale.toFixed(2) + 'x';
-                draw();
-            }
-        });
-
-        // Joystick Buttons
-        document.getElementById('moveLeft').addEventListener('click', () => {
-            position.x -= MOVE_AMOUNT;
-            draw();
-        });
-
-        document.getElementById('moveRight').addEventListener('click', () => {
-            position.x += MOVE_AMOUNT;
-            draw();
-        });
-
-        document.getElementById('moveUp').addEventListener('click', () => {
-            position.y -= MOVE_AMOUNT;
-            draw();
-        });
-
-        document.getElementById('moveDown').addEventListener('click', () => {
-            position.y += MOVE_AMOUNT;
-            draw();
-        });
-
-        // Reset Button
-        document.getElementById('resetBtn').addEventListener('click', () => {
-            reset();
-            draw();
-            Swal.fire({
-                icon: 'info',
-                title: 'Reset Berhasil',
-                text: 'Posisi dan ukuran telah dikembalikan ke default',
-                timer: 1500,
-                showConfirmButton: false,
-                background: 'rgba(30, 41, 59, 0.95)',
-                color: '#fff'
-            });
-        });
-
-        // Mouse Drag Events
-        canvas.addEventListener('mousedown', function(evt) {
-            isDragging = true;
+        // Touch & Mouse Events
+        function getEventPos(evt) {
             const rect = canvas.getBoundingClientRect();
-            const mouseX = evt.clientX - rect.left;
-            const mouseY = evt.clientY - rect.top;
+            if (evt.touches && evt.touches.length > 0) {
+                return {
+                    x: evt.touches[0].clientX - rect.left,
+                    y: evt.touches[0].clientY - rect.top
+                };
+            }
+            return {
+                x: evt.clientX - rect.left,
+                y: evt.clientY - rect.top
+            };
+        }
+
+        function startDrag(evt) {
+            if (!hasImage) return;
+            isDragging = true;
+            const pos = getEventPos(evt);
             dragStart = { 
-                x: mouseX - position.x, 
-                y: mouseY - position.y 
+                x: pos.x - position.x, 
+                y: pos.y - position.y 
             };
             canvas.style.cursor = 'grabbing';
-        });
+        }
 
-        canvas.addEventListener('mousemove', function(evt) {
-            if (!isDragging || !dragStart) return;
-            
-            const rect = canvas.getBoundingClientRect();
-            const mouseX = evt.clientX - rect.left;
-            const mouseY = evt.clientY - rect.top;
-            
-            position.x = mouseX - dragStart.x;
-            position.y = mouseY - dragStart.y;
+        function doDrag(evt) {
+            if (!isDragging || !dragStart || !hasImage) return;
+            evt.preventDefault();
+            const pos = getEventPos(evt);
+            position.x = pos.x - dragStart.x;
+            position.y = pos.y - dragStart.y;
             draw();
-        });
-
-        canvas.addEventListener('mouseup', endDrag);
-        canvas.addEventListener('mouseleave', endDrag);
+        }
 
         function endDrag() {
             isDragging = false;
@@ -676,35 +372,15 @@
             canvas.style.cursor = 'grab';
         }
 
-        // Touch Events untuk Drag
-        canvas.addEventListener('touchstart', function(evt) {
-            if (evt.touches.length === 1) {
-                isDragging = true;
-                const rect = canvas.getBoundingClientRect();
-                const touch = evt.touches[0];
-                const mouseX = touch.clientX - rect.left;
-                const mouseY = touch.clientY - rect.top;
-                dragStart = { 
-                    x: mouseX - position.x, 
-                    y: mouseY - position.y 
-                };
-            }
-        }, { passive: false });
+        // Mouse Events
+        canvas.addEventListener('mousedown', startDrag);
+        canvas.addEventListener('mousemove', doDrag);
+        canvas.addEventListener('mouseup', endDrag);
+        canvas.addEventListener('mouseleave', endDrag);
 
-        canvas.addEventListener('touchmove', function(evt) {
-            if (!isDragging || !dragStart || evt.touches.length !== 1) return;
-            evt.preventDefault();
-            
-            const rect = canvas.getBoundingClientRect();
-            const touch = evt.touches[0];
-            const mouseX = touch.clientX - rect.left;
-            const mouseY = touch.clientY - rect.top;
-            
-            position.x = mouseX - dragStart.x;
-            position.y = mouseY - dragStart.y;
-            draw();
-        }, { passive: false });
-
+        // Touch Events
+        canvas.addEventListener('touchstart', startDrag, { passive: false });
+        canvas.addEventListener('touchmove', doDrag, { passive: false });
         canvas.addEventListener('touchend', endDrag);
 
         // Hammer.js untuk Pinch-to-Zoom
@@ -714,20 +390,20 @@
         let initialScale = 1;
         
         hammer.on('pinchstart', function(evt) {
+            if (!hasImage) return;
             initialScale = scale;
         });
         
         hammer.on('pinchmove', function(evt) {
+            if (!hasImage) return;
             evt.preventDefault();
             scale = Math.max(0.1, Math.min(3, initialScale * evt.scale));
-            document.getElementById('zoomControl').value = scale;
-            document.getElementById('zoomValue').textContent = scale.toFixed(2) + 'x';
             draw();
         });
 
         // Download Button
         document.getElementById('saveImage').addEventListener('click', function() {
-            if (!image.src || image.src === window.location.href) {
+            if (!hasImage) {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Belum Ada Foto',
@@ -739,31 +415,25 @@
                 return;
             }
 
-            // Create temporary link untuk download
             const dataURL = canvas.toDataURL('image/png');
             const link = document.createElement('a');
-            link.download = 'twibbon-smkn1-lembahmelintang.png';
+            link.download = 'twibbon-smkn1-lm.png';
             link.href = dataURL;
             link.click();
             
             Swal.fire({
                 icon: 'success',
-                title: 'Download Berhasil',
-                text: 'Twibbon Anda sedang diunduh',
-                timer: 2000,
+                title: 'Berhasil!',
+                text: 'Twibbon telah diunduh',
+                timer: 1500,
                 showConfirmButton: false,
                 background: 'rgba(30, 41, 59, 0.95)',
                 color: '#fff'
             });
         });
 
-        // Window Resize
-        $(window).resize(resizeCanvas);
-        
         // Initialize
         resizeCanvas();
-        
-        // Set cursor awal
         canvas.style.cursor = 'grab';
     </script>
 </body>
