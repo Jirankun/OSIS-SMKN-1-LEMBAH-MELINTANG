@@ -6,6 +6,10 @@ date: 2026-07-18
 author: Zhyllan Fyllah
 image: img/Screenshot_20260718_133808.jpg
 ---
+> Di transkrip dari Instagram kami,silahkan lihat videonya di :
+>
+> [https://www.instagram.com/reel/Da6pw3gTSNE/?igsh=eXg3YnUybzRnMHUy](https://www.instagram.com/reel/Da6pw3gTSNE/?igsh=eXg3YnUybzRnMHUy)
+
 Dalam rangka membentuk karakter dan kedisiplinan siswa baru, pihak Koramil memberikan materi tentang Peraturan Baris-Berbaris (PBB), kedisiplinan, bahaya narkoba, serta etika dalam menggunakan media sosial. Kegiatan ini disambut antusias oleh para siswa yang mengikuti pembekalan.
 
 Saat diwawancarai, perwakilan Koramil mengaku senang melihat semangat para peserta didik baru. Menurutnya, antusiasme yang ditunjukkan para siswa menjadi modal penting dalam menjalani proses pendidikan.
