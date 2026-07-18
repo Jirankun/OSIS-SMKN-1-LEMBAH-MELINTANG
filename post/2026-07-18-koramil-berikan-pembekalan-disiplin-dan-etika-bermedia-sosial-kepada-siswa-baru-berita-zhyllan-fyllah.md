@@ -1,8 +1,10 @@
 ---
-title: Koramil Berikan Pembekalan Disiplin dan Etika Bermedia Sosial kepada Siswa Baru
+title: Koramil Lembah Melintang Berikan Pembekalan Disiplin dan Etika Bermedia
+  Sosial kepada Siswa Baru
 type: berita
 date: 2026-07-18
 author: Zhyllan Fyllah
+image: img/Screenshot_20260718_133808.jpg
 ---
 Dalam rangka membentuk karakter dan kedisiplinan siswa baru, pihak Koramil memberikan materi tentang Peraturan Baris-Berbaris (PBB), kedisiplinan, bahaya narkoba, serta etika dalam menggunakan media sosial. Kegiatan ini disambut antusias oleh para siswa yang mengikuti pembekalan.
 
